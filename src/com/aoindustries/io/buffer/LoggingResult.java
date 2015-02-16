@@ -62,7 +62,7 @@ public class LoggingResult implements BufferResult {
 		if(encoder==null) log.write("null");
 		else {
 			String className = encoder.getClass().getName();
-			// Some shortcuts from the ao-encoding project
+			// Some shortcuts from the ao-encoding project, classnames used here to avoid hard dependency
 			if("com.aoindustries.encoding.JavaScriptInXhtmlAttributeEncoder".equals(className)) {
 				log.write("javaScriptInXhtmlAttributeEncoder");
 			} else if("com.aoindustries.encoding.JavaScriptInXhtmlEncoder".equals(className)) {
