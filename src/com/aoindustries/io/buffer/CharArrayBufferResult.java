@@ -124,14 +124,14 @@ public class CharArrayBufferResult implements BufferResult {
 		// Skip past the beginning whitespace characters
 		while(newStart<end) {
 			char ch = buf[newStart];
-			if(ch>' ') break;
+			if(!Character.isWhitespace(ch)) break;
 			newStart++;
 		}
 		// Skip past the ending whitespace characters
 		int newEnd = end;
 		while(newEnd>newStart) {
 			char ch = buf[newEnd-1];
-			if(ch>' ') break;
+			if(!Character.isWhitespace(ch)) break;
 			newEnd--;
 		}
 		// Keep this object if already trimmed

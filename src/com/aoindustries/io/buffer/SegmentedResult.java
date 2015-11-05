@@ -555,7 +555,7 @@ public class SegmentedResult implements BufferResult {
 			// do...while because segments are never empty
 			do {
 				char ch = charAt(type, value, newStartSegmentOffset);
-				if(ch>' ') break TRIM_LEFT;
+				if(!Character.isWhitespace(ch)) break TRIM_LEFT;
 				newStart++;
 				newStartSegmentOffset++;
 				newStartSegmentLength--;
@@ -591,7 +591,7 @@ public class SegmentedResult implements BufferResult {
 				// do...while because segments are never empty
 				do {
 					char ch = charAt(type, value, newEndSegmentOffset + newEndSegmentLength - 1);
-					if(ch>' ') break TRIM_RIGHT;
+					if(!Character.isWhitespace(ch)) break TRIM_RIGHT;
 					newEnd--;
 					newEndSegmentLength--;
 					// Also trim start segment numbers of equal to end segment index

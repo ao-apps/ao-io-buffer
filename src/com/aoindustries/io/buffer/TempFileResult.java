@@ -209,7 +209,7 @@ public class TempFileResult implements BufferResult {
 			raf.seek(newStart<<1);
 			while(newStart<end) {
 				char ch = raf.readChar();
-				if(ch>' ') break;
+				if(!Character.isWhitespace(ch)) break;
 				newStart++;
 			}
 			// Skip past the ending whitespace characters
@@ -217,7 +217,7 @@ public class TempFileResult implements BufferResult {
 			while(newEnd>newStart) {
 				raf.seek((newEnd-1)<<1);
 				char ch = raf.readChar();
-				if(ch>' ') break;
+				if(!Character.isWhitespace(ch)) break;
 				newEnd--;
 			}
 			// Keep this object if already trimmed
