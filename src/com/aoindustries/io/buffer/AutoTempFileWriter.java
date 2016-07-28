@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2010, 2011, 2012, 2013, 2015  AO Industries, Inc.
+ * Copyright (C) 2010, 2011, 2012, 2013, 2015, 2016  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -39,8 +39,13 @@ public class AutoTempFileWriter extends BufferWriter {
 
     private static final Logger logger = Logger.getLogger(AutoTempFileWriter.class.getName());
 
-	private final long tempFileThreshold;
+	/**
+	 * A reasonable default temp file threshold, currently 4 MB.
+	 */
+	public static final long DEFAULT_TEMP_FILE_THRESHOLD = 4L * 1024L * 1024L;
+
 	private final TempFileList tempFileList;
+	private final long tempFileThreshold;
 
 	private BufferWriter buffer;
 
@@ -51,16 +56,27 @@ public class AutoTempFileWriter extends BufferWriter {
 
 	public AutoTempFileWriter(
 		BufferWriter initialBuffer,
-		long tempFileThreshold,
-		TempFileList tempFileList
+		TempFileList tempFileList,
+		long tempFileThreshold
 	) {
-        this.tempFileThreshold = tempFileThreshold;
 		this.tempFileList = tempFileList;
+        this.tempFileThreshold = tempFileThreshold;
 		this.buffer = initialBuffer;
 		this.isInitialBuffer = !(initialBuffer instanceof TempFileWriter); // If already a temp file, no need to ever switch
     }
 
-    private void switchIfNeeded(long newLength) throws IOException {
+	/**
+	 * Uses the default temp file threshold.
+	 */
+	public AutoTempFileWriter(BufferWriter initialBuffer, TempFileList tempFileList) {
+		this(
+			initialBuffer,
+			tempFileList,
+			DEFAULT_TEMP_FILE_THRESHOLD
+		);
+    }
+
+	private void switchIfNeeded(long newLength) throws IOException {
         if(isInitialBuffer && newLength>=tempFileThreshold) {
 			TempFile tempFile = tempFileList.createTempFile();
             if(logger.isLoggable(Level.FINE)) logger.log(Level.FINE, "Switching to temp file: {0}", tempFile);
@@ -156,7 +172,7 @@ public class AutoTempFileWriter extends BufferWriter {
 
     @Override
     public String toString() {
-		return "AutoTempFileWriter(" + buffer + ")";
+		return "AutoTempFileWriter(" + buffer + ", " + tempFileThreshold + ")";
     }
 
 	@Override
