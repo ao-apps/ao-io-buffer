@@ -39,6 +39,8 @@ import java.util.logging.Logger;
  *
  * This class is not thread safe.
  *
+ * TODO: Performance: When reading blocks, align to block boundary instead of remaining offset by start / writeStart.
+ *
  * @author  AO Industries, Inc.
  */
 public class TempFileResult implements BufferResult {
