@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2013, 2015  AO Industries, Inc.
+ * Copyright (C) 2013, 2015, 2016  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -60,12 +60,12 @@ public class TempFileResult implements BufferResult {
 		this.tempFile = tempFile;
 		this.start = start;
 		this.end = end;
-    }
+	}
 
 	@Override
-    public long getLength() {
-        return end - start;
-    }
+	public long getLength() {
+		return end - start;
+	}
 
 	private String toStringCache;
 
@@ -75,7 +75,7 @@ public class TempFileResult implements BufferResult {
 	}
 
 	@Override
-    public String toString() {
+	public String toString() {
 		if(toStringCache==null) {
 			try {
 				if(logger.isLoggable(Level.INFO)) {
@@ -120,21 +120,21 @@ public class TempFileResult implements BufferResult {
 			}
 		}
 		return toStringCache;
-    }
+	}
 
 	@Override
-    public void writeTo(Writer out) throws IOException {
+	public void writeTo(Writer out) throws IOException {
 		writeToImpl(out, start, end);
 	}
 
 	@Override
-    public void writeTo(Writer out, long off, long len) throws IOException {
+	public void writeTo(Writer out, long off, long len) throws IOException {
 		if((start + off + len) > end) throw new IndexOutOfBoundsException();
 		writeToImpl(out, start + off, start + off + len);
 	}
 
 	@Override
-    public void writeTo(Encoder encoder, Writer out) throws IOException {
+	public void writeTo(Encoder encoder, Writer out) throws IOException {
 		writeTo(
 			encoder!=null
 				? new EncoderWriter(encoder, out)
@@ -143,7 +143,7 @@ public class TempFileResult implements BufferResult {
 	}
 
 	@Override
-    public void writeTo(Encoder encoder, Writer out, long off, long len) throws IOException {
+	public void writeTo(Encoder encoder, Writer out, long off, long len) throws IOException {
 		writeTo(
 			encoder!=null
 				? new EncoderWriter(encoder, out)
@@ -161,7 +161,7 @@ public class TempFileResult implements BufferResult {
 	 * @param writeEnd    The absolute index one past last character to write
 	 * @throws IOException 
 	 */
-    private void writeToImpl(Writer out, long writeStart, long writeEnd) throws IOException {
+	private void writeToImpl(Writer out, long writeStart, long writeEnd) throws IOException {
 		// TODO: If copying to another SegmentedBufferedWriter or AutoTempFileWriter, we have a chance here for disk-to-disk block level copying instead of going through all the conversions.
 		RandomAccessFile raf = new RandomAccessFile(tempFile.getFile(), "r");
 		try {
@@ -199,14 +199,16 @@ public class TempFileResult implements BufferResult {
 		} finally {
 			raf.close();
 		}
-    }
+	}
 
 	@Override
 	public BufferResult trim() throws IOException {
 		// Trim from temp file
+		long newStart;
+		long newEnd;
 		RandomAccessFile raf = new RandomAccessFile(tempFile.getFile(), "r");
 		try {
-			long newStart = this.start;
+			newStart = this.start;
 			// Skip past the beginning whitespace characters
 			raf.seek(newStart<<1);
 			while(newStart<end) {
@@ -215,34 +217,34 @@ public class TempFileResult implements BufferResult {
 				newStart++;
 			}
 			// Skip past the ending whitespace characters
-			long newEnd = end;
+			newEnd = end;
 			while(newEnd>newStart) {
 				raf.seek((newEnd-1)<<1);
 				char ch = raf.readChar();
 				if(!Character.isWhitespace(ch)) break;
 				newEnd--;
 			}
-			// Keep this object if already trimmed
-			if(
-				start==newStart
-				&& end==newEnd
-			) {
-				return this;
-			} else {
-				// Check if empty
-				if(newStart==newEnd) {
-					return EmptyResult.getInstance();
-				} else {
-					// Otherwise, return new substring
-					return new TempFileResult(
-						tempFile,
-						newStart,
-						newEnd
-					);
-				}
-			}
 		} finally {
 			raf.close();
+		}
+		// Keep this object if already trimmed
+		if(
+			start==newStart
+			&& end==newEnd
+		) {
+			return this;
+		} else {
+			// Check if empty
+			if(newStart==newEnd) {
+				return EmptyResult.getInstance();
+			} else {
+				// Otherwise, return new substring
+				return new TempFileResult(
+					tempFile,
+					newStart,
+					newEnd
+				);
+			}
 		}
 	}
 }
