@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2010, 2011, 2012, 2013, 2015  AO Industries, Inc.
+ * Copyright (C) 2010, 2011, 2012, 2013, 2015, 2016  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -38,19 +38,19 @@ import java.util.logging.Logger;
  */
 public class CharArrayBufferWriter extends BufferWriter {
 
-    private static final Logger logger = Logger.getLogger(CharArrayBufferWriter.class.getName());
+	private static final Logger logger = Logger.getLogger(CharArrayBufferWriter.class.getName());
 
 	/**
 	 * The length of the writer is the sum of the data written to the buffer.
 	 * Once closed, this length will not be modified.
 	 */
-    private long length;
+	private long length;
 
 	/**
 	 * The buffer used to capture data before switching to file-backed storage.
 	 * Once closed, this buffer will not be modified.
 	 */
-    final private AoCharArrayWriter buffer;
+	final private AoCharArrayWriter buffer;
 
 	/**
 	 * Once closed, no further information may be written.
@@ -59,77 +59,77 @@ public class CharArrayBufferWriter extends BufferWriter {
 	private boolean isClosed = false;
 
 	public CharArrayBufferWriter(int initialSize) {
-        this.length = 0;
-        this.buffer = new AoCharArrayWriter(initialSize);
-    }
+		this.length = 0;
+		this.buffer = new AoCharArrayWriter(initialSize);
+	}
 
-    @Override
-    public void write(int c) throws IOException {
+	@Override
+	public void write(int c) throws IOException {
 		if(isClosed) throw new ClosedChannelException();
-        buffer.write(c);
-        length += 1;
-    }
+		buffer.write(c);
+		length += 1;
+	}
 
-    @Override
-    public void write(char cbuf[]) throws IOException {
+	@Override
+	public void write(char cbuf[]) throws IOException {
 		if(isClosed) throw new ClosedChannelException();
-        buffer.write(cbuf);
-        length += cbuf.length;
-    }
+		buffer.write(cbuf);
+		length += cbuf.length;
+	}
 
-    @Override
-    public void write(char cbuf[], int off, int len) throws IOException {
+	@Override
+	public void write(char cbuf[], int off, int len) throws IOException {
 		if(isClosed) throw new ClosedChannelException();
-        buffer.write(cbuf, off, len);
-        length += len;
-    }
+		buffer.write(cbuf, off, len);
+		length += len;
+	}
 
-    @Override
-    public void write(String str) throws IOException {
+	@Override
+	public void write(String str) throws IOException {
 		if(isClosed) throw new ClosedChannelException();
-        buffer.write(str);
-        length += str.length();
-    }
+		buffer.write(str);
+		length += str.length();
+	}
 
-    @Override
-    public void write(String str, int off, int len) throws IOException {
+	@Override
+	public void write(String str, int off, int len) throws IOException {
 		if(isClosed) throw new ClosedChannelException();
-        buffer.write(str, off, len);
-        length += len;
-    }
+		buffer.write(str, off, len);
+		length += len;
+	}
 
-    @Override
-    public CharArrayBufferWriter append(CharSequence csq) throws IOException {
+	@Override
+	public CharArrayBufferWriter append(CharSequence csq) throws IOException {
 		if(isClosed) throw new ClosedChannelException();
-        buffer.append(csq);
-        length += csq.length();
-        return this;
-    }
+		buffer.append(csq);
+		length += csq.length();
+		return this;
+	}
 
-    @Override
-    public CharArrayBufferWriter append(CharSequence csq, int start, int end) throws IOException {
+	@Override
+	public CharArrayBufferWriter append(CharSequence csq, int start, int end) throws IOException {
 		if(isClosed) throw new ClosedChannelException();
-        buffer.append(csq, start, end);
-        length += (end-start);
-        return this;
-    }
+		buffer.append(csq, start, end);
+		length += (end-start);
+		return this;
+	}
 
-    @Override
-    public CharArrayBufferWriter append(char c) throws IOException {
+	@Override
+	public CharArrayBufferWriter append(char c) throws IOException {
 		if(isClosed) throw new ClosedChannelException();
-        buffer.append(c);
-        length++;
-        return this;
-    }
+		buffer.append(c);
+		length++;
+		return this;
+	}
 
-    @Override
-    public void flush() {
+	@Override
+	public void flush() {
 		buffer.flush();
-    }
+	}
 
 	//private static long biggest = 0;
-    @Override
-    public void close() throws IOException {
+	@Override
+	public void close() throws IOException {
 		buffer.close();
 		isClosed = true;
 		/*
@@ -138,17 +138,17 @@ public class CharArrayBufferWriter extends BufferWriter {
 			biggest = heap;
 			System.err.println("CharArrayBufferWriter: Biggest heap: " + biggest);
 		}*/
-    }
+	}
 
 	@Override
-    public long getLength() {
-        return length;
-    }
+	public long getLength() {
+		return length;
+	}
 
-    @Override
-    public String toString() {
+	@Override
+	public String toString() {
 		return "CharArrayBufferWriter(length=" + length + ")";
-    }
+	}
 
 	// The result is cached after first created
 	private BufferResult result;

@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2013, 2014, 2015  AO Industries, Inc.
+ * Copyright (C) 2013, 2014, 2015, 2016  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -41,7 +41,7 @@ import java.util.logging.Logger;
  */
 public class SegmentedWriter extends BufferWriter {
 
-    private static final Logger logger = Logger.getLogger(SegmentedWriter.class.getName());
+	private static final Logger logger = Logger.getLogger(SegmentedWriter.class.getName());
 
 	/**
 	 * The number of starting elements in segment arrays.
@@ -96,7 +96,7 @@ public class SegmentedWriter extends BufferWriter {
 	 * The length of the writer is the sum of the length of all its segments.
 	 * Once closed, this length will not be modified.
 	 */
-    private long length;
+	private long length;
 
 	/**
 	 * The set of segments are maintained in an array.
@@ -115,14 +115,14 @@ public class SegmentedWriter extends BufferWriter {
 	private boolean isClosed;
 
 	public SegmentedWriter() {
-        this.length = 0;
+		this.length = 0;
 		this.segmentTypes = AoArrays.EMPTY_BYTE_ARRAY;
 		this.segmentValues = AoArrays.EMPTY_OBJECT_ARRAY;
 		this.segmentOffsets = AoArrays.EMPTY_INT_ARRAY;
 		this.segmentLengths = AoArrays.EMPTY_INT_ARRAY;
 		this.segmentCount = 0;
 		this.isClosed = false;
-    }
+	}
 
 	/**
 	 * Adds a new segment.
@@ -162,7 +162,7 @@ public class SegmentedWriter extends BufferWriter {
 	}
 
 	@Override
-    public void write(int c) throws ClosedChannelException {
+	public void write(int c) throws ClosedChannelException {
 		if(isClosed) throw new ClosedChannelException();
 		char ch = (char)c;
 		switch(ch) {
@@ -178,11 +178,11 @@ public class SegmentedWriter extends BufferWriter {
 			default :
 				addSegment(TYPE_CHAR_OTHER, Character.valueOf(ch), 0, 1);
 		}
-        length++;
-    }
+		length++;
+	}
 
-    @Override
-    public void write(char cbuf[]) throws ClosedChannelException {
+	@Override
+	public void write(char cbuf[]) throws ClosedChannelException {
 		if(isClosed) throw new ClosedChannelException();
 		final int len = cbuf.length;
 		if(len>0) {
@@ -198,10 +198,10 @@ public class SegmentedWriter extends BufferWriter {
 				length += len;
 			}
 		}
-    }
+	}
 
-    @Override
-    public void write(char cbuf[], int off, int len) throws ClosedChannelException {
+	@Override
+	public void write(char cbuf[], int off, int len) throws ClosedChannelException {
 		if(isClosed) throw new ClosedChannelException();
 		if(len>0) {
 			if(len==1) {
@@ -216,10 +216,10 @@ public class SegmentedWriter extends BufferWriter {
 				length += len;
 			}
 		}
-    }
+	}
 
-    @Override
-    public void write(String str) throws ClosedChannelException {
+	@Override
+	public void write(String str) throws ClosedChannelException {
 		if(isClosed) throw new ClosedChannelException();
 		final int len = str.length();
 		if(len>0) {
@@ -243,10 +243,10 @@ public class SegmentedWriter extends BufferWriter {
 			}
 			length += len;
 		}
-    }
+	}
 
-    @Override
-    public void write(String str, int off, int len) throws ClosedChannelException {
+	@Override
+	public void write(String str, int off, int len) throws ClosedChannelException {
 		if(isClosed) throw new ClosedChannelException();
 		if(len>0) {
 			if(len==1) {
@@ -269,10 +269,10 @@ public class SegmentedWriter extends BufferWriter {
 			}
 			length += len;
 		}
-    }
+	}
 
-    @Override
-    public SegmentedWriter append(CharSequence csq) throws ClosedChannelException {
+	@Override
+	public SegmentedWriter append(CharSequence csq) throws ClosedChannelException {
 		if(isClosed) throw new ClosedChannelException();
 		if(csq==null) {
 			write("null");
@@ -301,10 +301,10 @@ public class SegmentedWriter extends BufferWriter {
 			}
 		}
 		return this;
-    }
+	}
 
-    @Override
-    public SegmentedWriter append(CharSequence csq, int start, int end) throws ClosedChannelException {
+	@Override
+	public SegmentedWriter append(CharSequence csq, int start, int end) throws ClosedChannelException {
 		if(isClosed) throw new ClosedChannelException();
 		if(csq==null) {
 			write("null");
@@ -367,11 +367,11 @@ public class SegmentedWriter extends BufferWriter {
 				length += len;
 			}
 		}
-        return this;
-    }
+		return this;
+	}
 
-    @Override
-    public SegmentedWriter append(char c) throws ClosedChannelException {
+	@Override
+	public SegmentedWriter append(char c) throws ClosedChannelException {
 		if(isClosed) throw new ClosedChannelException();
 		switch(c) {
 			case '\n' :
@@ -386,18 +386,18 @@ public class SegmentedWriter extends BufferWriter {
 			default :
 				addSegment(TYPE_CHAR_OTHER, Character.valueOf(c), 0, 1);
 		}
-        length++;
-        return this;
-    }
+		length++;
+		return this;
+	}
 
-    @Override
-    public void flush() {
+	@Override
+	public void flush() {
 		// Nothing to do
-    }
+	}
 
 	//private static long biggest = 0;
-    @Override
-    public void close() {
+	@Override
+	public void close() {
 		isClosed = true;
 		/*
 		long heap =
@@ -410,17 +410,17 @@ public class SegmentedWriter extends BufferWriter {
 			biggest = heap;
 			System.err.println("SegmentedWriter: Biggest heap: " + biggest);
 		}*/
-    }
+	}
 
 	@Override
-    public long getLength() {
-        return length;
-    }
+	public long getLength() {
+		return length;
+	}
 
-    @Override
-    public String toString() {
+	@Override
+	public String toString() {
 		return "SegmentedWriter(length=" + length + ", count=" + segmentCount + ", capacity=" + segmentValues.length +")";
-    }
+	}
 
 	// The result is cached after first created
 	private BufferResult result;

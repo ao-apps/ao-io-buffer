@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2013, 2015  AO Industries, Inc.
+ * Copyright (C) 2013, 2015, 2016  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -49,7 +49,7 @@ public class LoggingResult implements BufferResult {
 	protected LoggingResult(BufferResult wrapped, Writer log) throws IOException {
 		this.wrapped = wrapped;
 		this.log = log;
-    }
+	}
 
 	public long getId() {
 		return id;
@@ -102,13 +102,13 @@ public class LoggingResult implements BufferResult {
 	}
 
 	@Override
-    public long getLength() throws IOException {
+	public long getLength() throws IOException {
 		log.write("result[");
 		log.write(Long.toString(id));
 		log.write("].getLength();\n");
 		log.flush();
 		return wrapped.getLength();
-    }
+	}
 
 	@Override
 	public boolean isFastToString() {
@@ -116,7 +116,7 @@ public class LoggingResult implements BufferResult {
 	}
 
 	@Override
-    public String toString() {
+	public String toString() {
 		try {
 			log.write("result[");
 			log.write(Long.toString(id));
@@ -126,10 +126,10 @@ public class LoggingResult implements BufferResult {
 			throw new WrappedException(e);
 		}
 		return wrapped.toString();
-    }
+	}
 
 	@Override
-    public void writeTo(Writer out) throws IOException {
+	public void writeTo(Writer out) throws IOException {
 		log.write("result[");
 		log.write(Long.toString(id));
 		log.write("].writeTo(");
@@ -137,10 +137,10 @@ public class LoggingResult implements BufferResult {
 		log.write(");\n");
 		log.flush();
 		wrapped.writeTo(out);
-    }
+	}
 
 	@Override
-    public void writeTo(Writer out, long off, long len) throws IOException {
+	public void writeTo(Writer out, long off, long len) throws IOException {
 		log.write("result[");
 		log.write(Long.toString(id));
 		log.write("].writeTo(");
@@ -152,10 +152,10 @@ public class LoggingResult implements BufferResult {
 		log.write(");\n");
 		log.flush();
 		wrapped.writeTo(out, off, len);
-    }
+	}
 
 	@Override
-    public void writeTo(Encoder encoder, Writer out) throws IOException {
+	public void writeTo(Encoder encoder, Writer out) throws IOException {
 		log.write("result[");
 		log.write(Long.toString(id));
 		log.write("].writeTo(");
@@ -168,7 +168,7 @@ public class LoggingResult implements BufferResult {
 	}
 
 	@Override
-    public void writeTo(Encoder encoder, Writer out, long off, long len) throws IOException {
+	public void writeTo(Encoder encoder, Writer out, long off, long len) throws IOException {
 		log.write("result[");
 		log.write(Long.toString(id));
 		log.write("].writeTo(");

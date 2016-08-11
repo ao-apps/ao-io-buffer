@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2013, 2015  AO Industries, Inc.
+ * Copyright (C) 2013, 2015, 2016  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -40,7 +40,7 @@ public class CharArrayBufferResult implements BufferResult {
 	/**
 	 * @see  CharArrayBufferWriter#buffer
 	 */
-    private final AoCharArrayWriter buffer;
+	private final AoCharArrayWriter buffer;
 
 	private final int start;
 	private final int end;
@@ -53,12 +53,12 @@ public class CharArrayBufferResult implements BufferResult {
 		this.buffer = buffer;
 		this.start = start;
 		this.end = end;
-    }
+	}
 
 	@Override
-    public long getLength() {
-        return end - start;
-    }
+	public long getLength() {
+		return end - start;
+	}
 
 	private String toStringCache;
 
@@ -67,29 +67,29 @@ public class CharArrayBufferResult implements BufferResult {
 		return toStringCache!=null;
 	}
 
-    @Override
-    public String toString() {
+	@Override
+	public String toString() {
 		if(toStringCache==null) toStringCache = buffer.toString(start, end - start);
 		return toStringCache;
-    }
+	}
 
 	@Override
-    public void writeTo(Writer out) throws IOException {
+	public void writeTo(Writer out) throws IOException {
 		buffer.writeTo(out, start, end - start);
-    }
+	}
 
 	@Override
-    public void writeTo(Writer out, long off, long len) throws IOException {
+	public void writeTo(Writer out, long off, long len) throws IOException {
 		if((start + off + len) > end) throw new IndexOutOfBoundsException();
 		buffer.writeTo(
 			out,
 			SafeMath.castInt(start + off),
 			SafeMath.castInt(len)
 		);
-    }
+	}
 
 	@Override
-    public void writeTo(Encoder encoder, Writer out) throws IOException {
+	public void writeTo(Encoder encoder, Writer out) throws IOException {
 		if(encoder==null) {
 			writeTo(out);
 		} else {
@@ -103,7 +103,7 @@ public class CharArrayBufferResult implements BufferResult {
 	}
 
 	@Override
-    public void writeTo(Encoder encoder, Writer out, long off, long len) throws IOException {
+	public void writeTo(Encoder encoder, Writer out, long off, long len) throws IOException {
 		if(encoder==null) {
 			writeTo(out, off, len);
 		} else {

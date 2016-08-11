@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2013, 2015  AO Industries, Inc.
+ * Copyright (C) 2013, 2015, 2016  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -34,21 +34,21 @@ import java.io.Writer;
 abstract public class BufferWriter extends Writer {
 
 	protected BufferWriter() {
-    }
+	}
 
-    /**
-     * Gets the number of characters in this buffer.
+	/**
+	 * Gets the number of characters in this buffer.
 	 * Once closed, this length will not be modified.
-     */
-    abstract public long getLength() throws IOException;
+	 */
+	abstract public long getLength() throws IOException;
 
-    /**
+	/**
 	 * Gets a short message (like type and length).
 	 *
 	 * @see  #getResult()  To get access to the buffered content.
-     */
-    @Override
-    abstract public String toString();
+	 */
+	@Override
+	abstract public String toString();
 
 	/**
 	 * Gets the result from this buffer.
@@ -56,5 +56,5 @@ abstract public class BufferWriter extends Writer {
 	 *
 	 * @exception  IllegalStateException if not closed
 	 */
-    abstract public BufferResult getResult() throws IllegalStateException, IOException;
+	abstract public BufferResult getResult() throws IllegalStateException, IOException;
 }

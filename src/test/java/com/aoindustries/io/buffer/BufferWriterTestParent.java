@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2013, 2015  AO Industries, Inc.
+ * Copyright (C) 2013, 2015, 2016  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -35,9 +35,9 @@ import junit.framework.TestCase;
  */
 abstract public class BufferWriterTestParent extends TestCase {
 
-    public BufferWriterTestParent(String testName) {
-        super(testName);
-    }
+	public BufferWriterTestParent(String testName) {
+		super(testName);
+	}
 
 	public static interface BufferWriterFactory {
 		String getName();

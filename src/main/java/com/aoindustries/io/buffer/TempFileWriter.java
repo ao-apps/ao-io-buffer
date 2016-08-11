@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2013, 2015  AO Industries, Inc.
+ * Copyright (C) 2013, 2015, 2016  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -44,7 +44,7 @@ public class TempFileWriter extends BufferWriter {
 	 * The length of the writer is the sum of the data written to the buffer.
 	 * Once closed, this length will not be modified.
 	 */
-    private long length;
+	private long length;
 
 	/**
 	 * Once closed, no further information may be written.
@@ -53,97 +53,97 @@ public class TempFileWriter extends BufferWriter {
 	private boolean isClosed = false;
 
 	// The temp file is in UTF16-BE encoding
-    private final TempFile tempFile;
-    private Writer fileWriter;
+	private final TempFile tempFile;
+	private Writer fileWriter;
 
 	public TempFileWriter(TempFile tempFile) throws IOException {
-        this.length = 0;
+		this.length = 0;
 		this.tempFile = tempFile;
 		this.fileWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tempFile.getFile()), Charsets.UTF_16BE));
-    }
-
-    @Override
-    public void write(int c) throws IOException {
-		if(isClosed) throw new ClosedChannelException();
-        fileWriter.write(c);
-        length++;
-    }
-
-    @Override
-    public void write(char cbuf[]) throws IOException {
-		if(isClosed) throw new ClosedChannelException();
-        fileWriter.write(cbuf);
-        length += cbuf.length;
-    }
-
-    @Override
-    public void write(char cbuf[], int off, int len) throws IOException {
-		if(isClosed) throw new ClosedChannelException();
-        fileWriter.write(cbuf, off, len);
-        length += len;
-    }
-
-    @Override
-    public void write(String str) throws IOException {
-		if(isClosed) throw new ClosedChannelException();
-        fileWriter.write(str);
-        length += str.length();
-    }
-
-    @Override
-    public void write(String str, int off, int len) throws IOException {
-		if(isClosed) throw new ClosedChannelException();
-        fileWriter.write(str, off, len);
-        length += len;
-    }
-
-    @Override
-    public TempFileWriter append(CharSequence csq) throws IOException {
-		if(isClosed) throw new ClosedChannelException();
-        fileWriter.append(csq);
-        length += csq.length();
-        return this;
-    }
-
-    @Override
-    public TempFileWriter append(CharSequence csq, int start, int end) throws IOException {
-		if(isClosed) throw new ClosedChannelException();
-        fileWriter.append(csq, start, end);
-        length += (end-start);
-        return this;
-    }
-
-    @Override
-    public TempFileWriter append(char c) throws IOException {
-		if(isClosed) throw new ClosedChannelException();
-        fileWriter.append(c);
-        length++;
-        return this;
-    }
-
-    @Override
-    public void flush() throws IOException {
-        if(fileWriter!=null) fileWriter.flush();
-    }
-
-    @Override
-    public void close() throws IOException {
-        if(fileWriter!=null) {
-            fileWriter.close();
-            fileWriter = null;
-		}
-		isClosed = true;
-    }
+	}
 
 	@Override
-    public long getLength() {
-        return length;
-    }
+	public void write(int c) throws IOException {
+		if(isClosed) throw new ClosedChannelException();
+		fileWriter.write(c);
+		length++;
+	}
 
-    @Override
-    public String toString() {
+	@Override
+	public void write(char cbuf[]) throws IOException {
+		if(isClosed) throw new ClosedChannelException();
+		fileWriter.write(cbuf);
+		length += cbuf.length;
+	}
+
+	@Override
+	public void write(char cbuf[], int off, int len) throws IOException {
+		if(isClosed) throw new ClosedChannelException();
+		fileWriter.write(cbuf, off, len);
+		length += len;
+	}
+
+	@Override
+	public void write(String str) throws IOException {
+		if(isClosed) throw new ClosedChannelException();
+		fileWriter.write(str);
+		length += str.length();
+	}
+
+	@Override
+	public void write(String str, int off, int len) throws IOException {
+		if(isClosed) throw new ClosedChannelException();
+		fileWriter.write(str, off, len);
+		length += len;
+	}
+
+	@Override
+	public TempFileWriter append(CharSequence csq) throws IOException {
+		if(isClosed) throw new ClosedChannelException();
+		fileWriter.append(csq);
+		length += csq.length();
+		return this;
+	}
+
+	@Override
+	public TempFileWriter append(CharSequence csq, int start, int end) throws IOException {
+		if(isClosed) throw new ClosedChannelException();
+		fileWriter.append(csq, start, end);
+		length += (end-start);
+		return this;
+	}
+
+	@Override
+	public TempFileWriter append(char c) throws IOException {
+		if(isClosed) throw new ClosedChannelException();
+		fileWriter.append(c);
+		length++;
+		return this;
+	}
+
+	@Override
+	public void flush() throws IOException {
+		if(fileWriter!=null) fileWriter.flush();
+	}
+
+	@Override
+	public void close() throws IOException {
+		if(fileWriter!=null) {
+			fileWriter.close();
+			fileWriter = null;
+		}
+		isClosed = true;
+	}
+
+	@Override
+	public long getLength() {
+		return length;
+	}
+
+	@Override
+	public String toString() {
 		return "TempFileWriter(tempFile=\"" + tempFile.toString() + "\", length=" + length + ")";
-    }
+	}
 
 	// The result is cached after first created
 	private BufferResult result;

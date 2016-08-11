@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2013, 2015  AO Industries, Inc.
+ * Copyright (C) 2013, 2015, 2016  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -37,14 +37,14 @@ import junit.framework.TestSuite;
  */
 public class SegmentedWriterTest extends BufferWriterTestParent {
 
-    public SegmentedWriterTest(String testName) {
-        super(testName);
-    }
+	public SegmentedWriterTest(String testName) {
+		super(testName);
+	}
 
-    public static Test suite() {
-        TestSuite suite = new TestSuite(SegmentedWriterTest.class);
-        return suite;
-    }
+	public static Test suite() {
+		TestSuite suite = new TestSuite(SegmentedWriterTest.class);
+		return suite;
+	}
 
 	public void testBenchmarkSimulate() throws IOException {
 		benchmarkSimulate(

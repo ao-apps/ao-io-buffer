@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2013, 2015  AO Industries, Inc.
+ * Copyright (C) 2013, 2015, 2016  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -38,10 +38,10 @@ import java.io.IOException;
  */
 public interface BufferResult extends Writable {
 
-    /**
-     * Gets the number of characters in this view of the buffer.
-     */
-    long getLength() throws IOException;
+	/**
+	 * Gets the number of characters in this view of the buffer.
+	 */
+	long getLength() throws IOException;
 
 	/**
 	 * Trims the contents of this result, returning the instance that represents this result trimmed.
