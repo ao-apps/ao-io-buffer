@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2012, 2013, 2015  AO Industries, Inc.
+ * Copyright (C) 2012, 2013, 2015, 2016  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -37,47 +37,47 @@ import junit.framework.TestSuite;
  */
 public class CharArrayBufferWriterTest extends BufferWriterTestParent {
 
-    public CharArrayBufferWriterTest(String testName) {
-        super(testName);
-    }
+	public CharArrayBufferWriterTest(String testName) {
+		super(testName);
+	}
 
-    public static Test suite() {
-        TestSuite suite = new TestSuite(CharArrayBufferWriterTest.class);
-        return suite;
-    }
+	public static Test suite() {
+		TestSuite suite = new TestSuite(CharArrayBufferWriterTest.class);
+		return suite;
+	}
 
 	/*
-    private static final char[][] strings = {
-        "Editeur : Mining Essential".toCharArray(),
-        "Langues : français, allemand, anglais, espagnol, portugais, italien, néerlandais, norvégien, suédois, arabe, hébreu, polonais, russe, turc, chinois, coréen, japonais, hindi, persan et grec.".toCharArray(),
-        "Formats de documents : txt (plein texte), html (hypertext markup language), doc (microsoft word), rtf (rich text format), pdf (portable document format), docx (microsoft word 2010).".toCharArray(),
-        "Version : 5.1".toCharArray(),
-        "Navigateurs web : Internet Explorer, Firefox, Chrome, Safari, Opéra".toCharArray(),
-        "Systèmes : Linux, Windows Server 2003, Windows Server 2008.".toCharArray(),
-        "".toCharArray(),
-        "L’API Java Essential Summarizer est destinée aux entreprises et aux développeurs. Elle peut être mise à disposition en vue de différentes intégrations de la fonctionnalité résumé automatique de texte.".toCharArray(),
-        "Il en est de même pour le Web Service Essential Summarizer.".toCharArray()
-    };
+	private static final char[][] strings = {
+		"Editeur : Mining Essential".toCharArray(),
+		"Langues : français, allemand, anglais, espagnol, portugais, italien, néerlandais, norvégien, suédois, arabe, hébreu, polonais, russe, turc, chinois, coréen, japonais, hindi, persan et grec.".toCharArray(),
+		"Formats de documents : txt (plein texte), html (hypertext markup language), doc (microsoft word), rtf (rich text format), pdf (portable document format), docx (microsoft word 2010).".toCharArray(),
+		"Version : 5.1".toCharArray(),
+		"Navigateurs web : Internet Explorer, Firefox, Chrome, Safari, Opéra".toCharArray(),
+		"Systèmes : Linux, Windows Server 2003, Windows Server 2008.".toCharArray(),
+		"".toCharArray(),
+		"L’API Java Essential Summarizer est destinée aux entreprises et aux développeurs. Elle peut être mise à disposition en vue de différentes intégrations de la fonctionnalité résumé automatique de texte.".toCharArray(),
+		"Il en est de même pour le Web Service Essential Summarizer.".toCharArray()
+	};
 
-    private void doBenchmark() throws IOException {
-        long startTime = System.nanoTime();
-        CharArrayBufferWriter writer = new CharArrayBufferWriter(32, 4 * 1024 * 1024);
-        try {
-            for(int i=0; i<10000; i++) {
-                for(char[] str : strings) writer.write(str);
-            }
-            long endTime = System.nanoTime();
-            System.out.println("Wrote " + writer.getLength()+" characters in " + BigDecimal.valueOf(endTime - startTime, 6)+" ms");
-        } finally {
-            writer.close();
-        }
-    }
+	private void doBenchmark() throws IOException {
+		long startTime = System.nanoTime();
+		CharArrayBufferWriter writer = new CharArrayBufferWriter(32, 4 * 1024 * 1024);
+		try {
+			for(int i=0; i<10000; i++) {
+				for(char[] str : strings) writer.write(str);
+			}
+			long endTime = System.nanoTime();
+			System.out.println("Wrote " + writer.getLength()+" characters in " + BigDecimal.valueOf(endTime - startTime, 6)+" ms");
+		} finally {
+			writer.close();
+		}
+	}
 
-    public void testBenchmark() throws IOException {
-        for(int i=0; i<10; i++) {
-            doBenchmark();
-        }
-    }
+	public void testBenchmark() throws IOException {
+		for(int i=0; i<10; i++) {
+			doBenchmark();
+		}
+	}
 	*/
 	public void testBenchmarkSimulate() throws IOException {
 		benchmarkSimulate(

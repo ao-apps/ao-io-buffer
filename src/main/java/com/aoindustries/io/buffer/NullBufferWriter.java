@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2013, 2015  AO Industries, Inc.
+ * Copyright (C) 2013, 2015, 2016  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -30,66 +30,66 @@ package com.aoindustries.io.buffer;
 final public class NullBufferWriter extends BufferWriter {
 
 	private static final NullBufferWriter instance = new NullBufferWriter();
-	
+
 	public static NullBufferWriter getInstance() {
 		return instance;
 	}
 
 	private NullBufferWriter() {
-    }
-
-    @Override
-    public void write(int c) {
-    }
-
-    @Override
-    public void write(char cbuf[]) {
-    }
-
-    @Override
-    public void write(char cbuf[], int off, int len) {
-    }
-
-    @Override
-    public void write(String str) {
-    }
-
-    @Override
-    public void write(String str, int off, int len) {
-    }
-
-    @Override
-    public NullBufferWriter append(CharSequence csq) {
-		return this;
-    }
-
-    @Override
-    public NullBufferWriter append(CharSequence csq, int start, int end) {
-        return this;
-    }
-
-    @Override
-    public NullBufferWriter append(char c) {
-        return this;
-    }
-
-    @Override
-    public void flush() {
-    }
-
-    @Override
-    public void close()  {
-    }
+	}
 
 	@Override
-    public long getLength() {
-        return 0;
-    }
+	public void write(int c) {
+	}
 
-    @Override
-    public String toString() {
+	@Override
+	public void write(char cbuf[]) {
+	}
+
+	@Override
+	public void write(char cbuf[], int off, int len) {
+	}
+
+	@Override
+	public void write(String str) {
+	}
+
+	@Override
+	public void write(String str, int off, int len) {
+	}
+
+	@Override
+	public NullBufferWriter append(CharSequence csq) {
+		return this;
+	}
+
+	@Override
+	public NullBufferWriter append(CharSequence csq, int start, int end) {
+		return this;
+	}
+
+	@Override
+	public NullBufferWriter append(char c) {
+		return this;
+	}
+
+	@Override
+	public void flush() {
+	}
+
+	@Override
+	public void close()  {
+	}
+
+	@Override
+	public long getLength() {
+		return 0;
+	}
+
+	@Override
+	public String toString() {
 		return "NullBufferWriter()";
-    }
+	}
 
 	@Override
 	public EmptyResult getResult() {

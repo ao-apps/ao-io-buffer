@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2013, 2015  AO Industries, Inc.
+ * Copyright (C) 2013, 2015, 2016  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -37,7 +37,7 @@ import java.util.logging.Logger;
  */
 public class SegmentedResult implements BufferResult {
 
-    private static final Logger logger = Logger.getLogger(SegmentedResult.class.getName());
+	private static final Logger logger = Logger.getLogger(SegmentedResult.class.getName());
 
 	/**
 	 * @see  SegmentedWriter#segmentTypes
@@ -117,12 +117,12 @@ public class SegmentedResult implements BufferResult {
 			)
 			: "When start and end segments are at the same index, they must have the same offsets and lengths."
 		;
-    }
+	}
 
 	@Override
-    public long getLength() {
-        return end - start;
-    }
+	public long getLength() {
+		return end - start;
+	}
 
 	/**
 	 * Appends the full segment (with original offset and length) to the buffer.
@@ -411,8 +411,8 @@ public class SegmentedResult implements BufferResult {
 		}
 	}
 
-    @Override
-    public String toString() {
+	@Override
+	public String toString() {
 		if(toStringCache==null) {
 			if(startSegmentIndex==endSegmentIndex) {
 				// Shortcut for one segment
@@ -461,10 +461,10 @@ public class SegmentedResult implements BufferResult {
 			}
 		}
 		return toStringCache;
-    }
+	}
 
 	@Override
-    public void writeTo(Writer out) throws IOException {
+	public void writeTo(Writer out) throws IOException {
 		// First segment
 		writeSegment(
 			startSegmentIndex,
@@ -489,16 +489,16 @@ public class SegmentedResult implements BufferResult {
 				out
 			);
 		}
-    }
+	}
 
 	@Override
-    public void writeTo(Writer out, long off, long len) throws IOException {
+	public void writeTo(Writer out, long off, long len) throws IOException {
 		// Implementation will need to start through beginning
 		throw new NotImplementedException("Implement when first needed.");
 	}
 
 	@Override
-    public void writeTo(Encoder encoder, Writer out) throws IOException {
+	public void writeTo(Encoder encoder, Writer out) throws IOException {
 		if(encoder==null) {
 			writeTo(out);
 		} else {
@@ -529,7 +529,7 @@ public class SegmentedResult implements BufferResult {
 	}
 
 	@Override
-    public void writeTo(Encoder encoder, Writer out, long off, long len) throws IOException {
+	public void writeTo(Encoder encoder, Writer out, long off, long len) throws IOException {
 		// Implementation will need to start through beginning
 		throw new NotImplementedException("Implement when first needed.");
 	}
