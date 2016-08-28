@@ -39,11 +39,6 @@ import java.io.IOException;
 public interface BufferResult extends Writable {
 
 	/**
-	 * Gets the number of characters in this view of the buffer.
-	 */
-	long getLength() throws IOException;
-
-	/**
 	 * Trims the contents of this result, returning the instance that represents this result trimmed.
 	 */
 	BufferResult trim() throws IOException;
