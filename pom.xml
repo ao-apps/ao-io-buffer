@@ -36,6 +36,7 @@ along with ao-io-buffer.  If not, see <http://www.gnu.org/licenses />.
 	<name>AO IO Buffer</name>
 	<url>https://www.aoindustries.com/docs/ao-io-buffer/</url>
 	<description>Output buffering library.</description>
+	<inceptionYear>2010</inceptionYear>
 
 	<licenses>
 		<license>
@@ -43,6 +44,11 @@ along with ao-io-buffer.  If not, see <http://www.gnu.org/licenses />.
 			<url>https://www.gnu.org/licenses/lgpl-3.0.txt</url>
 		</license>
 	</licenses>
+
+	<organization>
+		<name>AO Industries, Inc.</name>
+		<url>https://www.aoindustries.com/</url>
+	</organization>
 
 	<developers>
 		<developer>
