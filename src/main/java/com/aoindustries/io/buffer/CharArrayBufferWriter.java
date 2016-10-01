@@ -22,15 +22,22 @@
  */
 package com.aoindustries.io.buffer;
 
-import com.aoindustries.io.AoCharArrayWriter;
+import com.aoindustries.util.AoArrays;
+import com.aoindustries.util.BufferManager;
 import java.io.IOException;
 import java.nio.channels.ClosedChannelException;
-import java.util.logging.Logger;
+import java.util.Arrays;
 
 /**
- * Writes to a CharArrayBuffer.
- *
+ * Writes to a set of internally managed buffers.  When possible, the buffers are reused.
+ * <p>
+ * Maximum length is 2 ^ 30 characters (about 1 billion).
+ * When this limit is insufficient, consider using along with
+ * {@link AutoTempFileWriter}.
+ * </p>
+ * <p>
  * This class is not thread safe.
+ * </p>
  *
  * @see  SegmentedBufferedWriter  for a possibly more efficient implementation.
  *
@@ -38,19 +45,31 @@ import java.util.logging.Logger;
  */
 public class CharArrayBufferWriter extends BufferWriter {
 
-	private static final Logger logger = Logger.getLogger(CharArrayBufferWriter.class.getName());
+	/**
+	 * The maximum buffer length is 2^30 due to array length limitations.
+	 */
+	private static final int MAX_LENGTH = 1 << 30;
+
+	/**
+	 * Any buffer under this size will be copied into a new array on close in
+	 * order to be able recycle the initial buffer.
+	 */
+	private static final int COPY_THEN_RECYCLE_LIMIT = BufferManager.BUFFER_SIZE / 8;
 
 	/**
 	 * The length of the writer is the sum of the data written to the buffer.
 	 * Once closed, this length will not be modified.
 	 */
-	private long length;
+	private int length = 0;
 
 	/**
-	 * The buffer used to capture data before switching to file-backed storage.
+	 * The buffer used to capture data.
 	 * Once closed, this buffer will not be modified.
+	 *
+	 * TODO: Consider a set of buffers to avoid copying on resize.
+	 *       This would also allow beyond 32-bit limit.
 	 */
-	final private AoCharArrayWriter buffer;
+	private char[] buffer = AoArrays.EMPTY_CHAR_ARRAY;
 
 	/**
 	 * Once closed, no further information may be written.
@@ -58,86 +77,113 @@ public class CharArrayBufferWriter extends BufferWriter {
 	 */
 	private boolean isClosed = false;
 
-	public CharArrayBufferWriter(int initialSize) {
-		this.length = 0;
-		this.buffer = new AoCharArrayWriter(initialSize);
+	public CharArrayBufferWriter() {
+	}
+
+	/**
+	 * Grows as-needed to fit the provided new capacity.
+	 *
+	 * @returns the possibly new buffer.
+	 */
+	private char[] getBuffer(int additional) throws IOException {
+		long newLen = (long)length + additional;
+		if(newLen > MAX_LENGTH) throw new IOException("Maximum buffer length is " + MAX_LENGTH + ", " + newLen + " requested");
+		char[] buf = this.buffer;
+		int bufLen = buf.length;
+		if(newLen > bufLen) {
+			// Find the next power of two that will hold all of the contents
+			int newBufLen = bufLen==0 ? BufferManager.BUFFER_SIZE : (bufLen << 1);
+			while(newBufLen < newLen) {
+				newBufLen <<= 1;
+			}
+			char[] newBuf =
+				(newBufLen == BufferManager.BUFFER_SIZE)
+				? BufferManager.getChars()
+				: new char[newBufLen];
+			System.arraycopy(buf, 0, newBuf, 0, length);
+			// Recycle buffer
+			if(bufLen == BufferManager.BUFFER_SIZE) {
+				//System.out.println("Recycling buffer during wite: length = " + newLen);
+				//BufferManager.release(buf, false);
+			}
+			buf = newBuf;
+			this.buffer = buf;
+		}
+		return buf;
 	}
 
 	@Override
 	public void write(int c) throws IOException {
 		if(isClosed) throw new ClosedChannelException();
-		buffer.write(c);
-		length += 1;
-	}
-
-	@Override
-	public void write(char cbuf[]) throws IOException {
-		if(isClosed) throw new ClosedChannelException();
-		buffer.write(cbuf);
-		length += cbuf.length;
+		getBuffer(1)[length++] = (char)c;
 	}
 
 	@Override
 	public void write(char cbuf[], int off, int len) throws IOException {
 		if(isClosed) throw new ClosedChannelException();
-		buffer.write(cbuf, off, len);
-		length += len;
-	}
-
-	@Override
-	public void write(String str) throws IOException {
-		if(isClosed) throw new ClosedChannelException();
-		buffer.write(str);
-		length += str.length();
+		if(len > 0) {
+			char[] buf = getBuffer(len);
+			System.arraycopy(cbuf, off, buf, length, len);
+			length += len;
+		}
 	}
 
 	@Override
 	public void write(String str, int off, int len) throws IOException {
 		if(isClosed) throw new ClosedChannelException();
-		buffer.write(str, off, len);
-		length += len;
+		if(len > 0) {
+			char[] buf = getBuffer(len);
+			str.getChars(off, off + len, buf, length);
+			length += len;
+		}
 	}
 
 	@Override
 	public CharArrayBufferWriter append(CharSequence csq) throws IOException {
-		if(isClosed) throw new ClosedChannelException();
-		buffer.append(csq);
-		length += csq.length();
+		super.append(csq);
 		return this;
 	}
 
 	@Override
 	public CharArrayBufferWriter append(CharSequence csq, int start, int end) throws IOException {
-		if(isClosed) throw new ClosedChannelException();
-		buffer.append(csq, start, end);
-		length += (end-start);
+		if(csq == null) {
+			write("null");
+		} else {
+			if(csq instanceof String) {
+				// Avoid subSequence which copies characters in Java 1.8+
+				write((String)csq, start, end - start);
+			} else {
+		        write(csq.subSequence(start, end).toString());
+			}
+		}
 		return this;
 	}
 
 	@Override
 	public CharArrayBufferWriter append(char c) throws IOException {
-		if(isClosed) throw new ClosedChannelException();
-		buffer.append(c);
-		length++;
+		super.append(c);
 		return this;
 	}
 
 	@Override
-	public void flush() {
-		buffer.flush();
+	public void flush() throws IOException {
+		if(isClosed) throw new ClosedChannelException();
+		// Nothing to do
 	}
 
-	//private static long biggest = 0;
 	@Override
 	public void close() throws IOException {
-		buffer.close();
 		isClosed = true;
-		/*
-		long heap = buffer.getInternalCharArray().length * Character.SIZE;
-		if(heap>biggest) {
-			biggest = heap;
-			System.err.println("CharArrayBufferWriter: Biggest heap: " + biggest);
-		}*/
+		int len = this.length;
+		if(len > 0) {
+			if(len <= COPY_THEN_RECYCLE_LIMIT) {
+				System.out.println("Recycling buffer on close: length = " + len);
+				char[] oldBuf = buffer;
+				this.buffer = Arrays.copyOf(oldBuf, len);
+				assert oldBuf.length == BufferManager.BUFFER_SIZE;
+				BufferManager.release(oldBuf, false);
+			}
+		}
 	}
 
 	@Override
@@ -157,11 +203,10 @@ public class CharArrayBufferWriter extends BufferWriter {
 	public BufferResult getResult() throws IllegalStateException {
 		if(!isClosed) throw new IllegalStateException();
 		if(result==null) {
-			assert length == buffer.size();
-			if(length==0) {
+			if(length == 0) {
 				result = EmptyResult.getInstance();
 			} else {
-				result = new CharArrayBufferResult(buffer, 0, buffer.size());
+				result = new CharArrayBufferResult(buffer, 0, length);
 			}
 		}
 		return result;

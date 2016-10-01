@@ -22,7 +22,6 @@
  */
 package com.aoindustries.io.buffer;
 
-import com.aoindustries.io.AoCharArrayWriter;
 import com.aoindustries.io.Encoder;
 import com.aoindustries.math.SafeMath;
 import java.io.IOException;
@@ -40,13 +39,13 @@ public class CharArrayBufferResult implements BufferResult {
 	/**
 	 * @see  CharArrayBufferWriter#buffer
 	 */
-	private final AoCharArrayWriter buffer;
+	private final char[] buffer;
 
 	private final int start;
 	private final int end;
 
 	protected CharArrayBufferResult(
-		AoCharArrayWriter buffer,
+		char[] buffer,
 		int start,
 		int end
 	) {
@@ -69,20 +68,20 @@ public class CharArrayBufferResult implements BufferResult {
 
 	@Override
 	public String toString() {
-		if(toStringCache==null) toStringCache = buffer.toString(start, end - start);
+		if(toStringCache==null) toStringCache = new String(buffer, start, end - start);
 		return toStringCache;
 	}
 
 	@Override
 	public void writeTo(Writer out) throws IOException {
-		buffer.writeTo(out, start, end - start);
+		out.write(buffer, start, end - start);
 	}
 
 	@Override
 	public void writeTo(Writer out, long off, long len) throws IOException {
 		if((start + off + len) > end) throw new IndexOutOfBoundsException();
-		buffer.writeTo(
-			out,
+		out.write(
+			buffer,
 			SafeMath.castInt(start + off),
 			SafeMath.castInt(len)
 		);
@@ -94,7 +93,7 @@ public class CharArrayBufferResult implements BufferResult {
 			writeTo(out);
 		} else {
 			encoder.write(
-				buffer.getInternalCharArray(),
+				buffer,
 				start,
 				end - start,
 				out
@@ -109,7 +108,7 @@ public class CharArrayBufferResult implements BufferResult {
 		} else {
 			if((start + off + len) > end) throw new IndexOutOfBoundsException();
 			encoder.write(
-				buffer.getInternalCharArray(),
+				buffer,
 				SafeMath.castInt(start + off),
 				SafeMath.castInt(len),
 				out
@@ -120,29 +119,29 @@ public class CharArrayBufferResult implements BufferResult {
 	@Override
 	public BufferResult trim() throws IOException {
 		int newStart = this.start;
-		final char[] buf = buffer.getInternalCharArray();
+		final char[] buf = buffer;
 		// Skip past the beginning whitespace characters
-		while(newStart<end) {
+		while(newStart < end) {
 			char ch = buf[newStart];
 			if(!Character.isWhitespace(ch)) break;
 			newStart++;
 		}
 		// Skip past the ending whitespace characters
 		int newEnd = end;
-		while(newEnd>newStart) {
+		while(newEnd > newStart) {
 			char ch = buf[newEnd-1];
 			if(!Character.isWhitespace(ch)) break;
 			newEnd--;
 		}
 		// Keep this object if already trimmed
 		if(
-			start==newStart
-			&& end==newEnd
+			start == newStart
+			&& end == newEnd
 		) {
 			return this;
 		} else {
 			// Check if empty
-			if(newStart==newEnd) {
+			if(newStart == newEnd) {
 				return EmptyResult.getInstance();
 			} else {
 				// Otherwise, return new substring
