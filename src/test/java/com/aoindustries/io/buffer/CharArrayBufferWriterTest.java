@@ -91,7 +91,7 @@ public class CharArrayBufferWriterTest extends BufferWriterTestParent {
 				public BufferWriter newBufferWriter() {
 					// To test call overhead:
 					// return NullBufferWriter.getInstance();
-					return new CharArrayBufferWriter(32);
+					return new CharArrayBufferWriter();
 				}
 			}
 		);
