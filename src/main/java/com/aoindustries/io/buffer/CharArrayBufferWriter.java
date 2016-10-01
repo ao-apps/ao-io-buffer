@@ -103,7 +103,6 @@ public class CharArrayBufferWriter extends BufferWriter {
 			System.arraycopy(buf, 0, newBuf, 0, length);
 			// Recycle buffer
 			if(bufLen == BufferManager.BUFFER_SIZE) {
-				//System.out.println("Recycling buffer during wite: length = " + newLen);
 				//BufferManager.release(buf, false);
 			}
 			buf = newBuf;
@@ -177,7 +176,6 @@ public class CharArrayBufferWriter extends BufferWriter {
 		int len = this.length;
 		if(len > 0) {
 			if(len <= COPY_THEN_RECYCLE_LIMIT) {
-				System.out.println("Recycling buffer on close: length = " + len);
 				char[] oldBuf = buffer;
 				this.buffer = Arrays.copyOf(oldBuf, len);
 				assert oldBuf.length == BufferManager.BUFFER_SIZE;
