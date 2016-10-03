@@ -178,8 +178,9 @@ public class CharArrayBufferWriter extends BufferWriter {
 			if(len <= COPY_THEN_RECYCLE_LIMIT) {
 				char[] oldBuf = buffer;
 				this.buffer = Arrays.copyOf(oldBuf, len);
-				assert oldBuf.length == BufferManager.BUFFER_SIZE;
-				BufferManager.release(oldBuf, false);
+				if(oldBuf.length == BufferManager.BUFFER_SIZE) {
+					BufferManager.release(oldBuf, false);
+				}
 			}
 		}
 	}
