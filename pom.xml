@@ -249,11 +249,6 @@ along with ao-io-buffer.  If not, see <http://www.gnu.org/licenses />.
 
 	<dependencies>
 		<dependency>
-			<groupId>com.aoindustries</groupId>
-			<artifactId>aocode-public</artifactId>
-			<version>1.7.0</version>
-		</dependency>
-		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.12</version>
@@ -261,8 +256,13 @@ along with ao-io-buffer.  If not, see <http://www.gnu.org/licenses />.
 		</dependency>
 		<dependency>
 			<groupId>com.aoindustries</groupId>
+			<artifactId>aocode-public</artifactId>
+			<version>1.8.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.aoindustries</groupId>
 			<artifactId>ao-encoding</artifactId>
-			<version>1.4.0</version>
+			<version>1.4.2-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
