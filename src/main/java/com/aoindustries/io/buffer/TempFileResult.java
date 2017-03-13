@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2013, 2015, 2016  AO Industries, Inc.
+ * Copyright (C) 2013, 2015, 2016, 2017  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -24,10 +24,10 @@ package com.aoindustries.io.buffer;
 
 import com.aoindustries.io.Encoder;
 import com.aoindustries.io.EncoderWriter;
+import com.aoindustries.io.IoUtils;
 import com.aoindustries.io.TempFile;
 import com.aoindustries.util.BufferManager;
 import com.aoindustries.util.WrappedException;
-import com.aoindustries.util.persistent.PersistentCollections;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.io.Writer;
@@ -102,7 +102,7 @@ public class TempFileResult implements BufferResult {
 							raf.readFully(bytes, 0, blockSize);
 							// Convert to characters in sb
 							for(int bpos=0; bpos<blockSize; bpos+=2) {
-								sb.append(PersistentCollections.bufferToChar(bytes, bpos));
+								sb.append(IoUtils.bufferToChar(bytes, bpos));
 							}
 							// Update location
 							index += blockSize>>1;
@@ -183,7 +183,7 @@ public class TempFileResult implements BufferResult {
 							bpos<blockSize;
 							bpos+=2, cpos++
 						) {
-							chars[cpos] = PersistentCollections.bufferToChar(bytes, bpos);
+							chars[cpos] = IoUtils.bufferToChar(bytes, bpos);
 						}
 						// Write to output
 						out.write(chars, 0, blockSize>>1);
