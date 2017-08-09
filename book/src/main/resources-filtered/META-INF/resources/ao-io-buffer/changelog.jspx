@@ -37,7 +37,7 @@ along with ao-io-buffer.  If not, see <http://www.gnu.org/licenses />.
 		shortTitle="Changelog"
 		tocLevels="1"
 		datePublished="2016-10-29T20:20:34-0500"
-		dateModified="2017-07-19T20:16:59-0500"
+		dateModified="2017-08-09T01:45:32-0500"
 	>
 		<!-- The current snapshot, unreleased version -->
 		<c:set var="version" value="@{com.aoindustries:ao-io-buffer:pom.version}" />
@@ -52,7 +52,19 @@ along with ao-io-buffer.  If not, see <http://www.gnu.org/licenses />.
 				groupId="@{documented.groupId}"
 				artifactId="@{documented.artifactId}"
 				scmUrl="@{documented.scm.url}"
-			/>
+			>
+				<ul>
+					<li>
+						Using new <core:link book="/ao-tempfiles" page="/index.jspx" /> project for temporary file management.
+						Affects the public API of:
+						<ol>
+							<li><ao:a href="apidocs/com/aoindustries/io/buffer/AutoTempFileWriter.html">AutoTempFileWriter</ao:a></li>
+							<li><ao:a href="apidocs/com/aoindustries/io/buffer/TempFileWriter.html">TempFileWriter</ao:a></li>
+							<li><ao:a href="apidocs/com/aoindustries/io/buffer/TempFileResult.html">TempFileResult</ao:a></li>
+						</ol>
+					</li>
+				</ul>
+			</changelog:release>
 		</c:if>
 
 		<changelog:release
