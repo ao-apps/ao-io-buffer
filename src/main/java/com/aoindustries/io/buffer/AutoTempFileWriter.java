@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2010, 2011, 2012, 2013, 2015, 2016  AO Industries, Inc.
+ * Copyright (C) 2010, 2011, 2012, 2013, 2015, 2016, 2017  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -22,8 +22,8 @@
  */
 package com.aoindustries.io.buffer;
 
-import com.aoindustries.io.TempFile;
-import com.aoindustries.io.TempFileList;
+import com.aoindustries.tempfiles.TempFile;
+import com.aoindustries.tempfiles.TempFileContext;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,7 +44,7 @@ public class AutoTempFileWriter extends BufferWriter {
 	 */
 	public static final long DEFAULT_TEMP_FILE_THRESHOLD = 4L * 1024L * 1024L;
 
-	private final TempFileList tempFileList;
+	private final TempFileContext tempFileContext;
 	private final long tempFileThreshold;
 
 	private BufferWriter buffer;
@@ -56,10 +56,10 @@ public class AutoTempFileWriter extends BufferWriter {
 
 	public AutoTempFileWriter(
 		BufferWriter initialBuffer,
-		TempFileList tempFileList,
+		TempFileContext tempFileContext,
 		long tempFileThreshold
 	) {
-		this.tempFileList = tempFileList;
+		this.tempFileContext = tempFileContext;
 		this.tempFileThreshold = tempFileThreshold;
 		this.buffer = initialBuffer;
 		this.isInitialBuffer = !(initialBuffer instanceof TempFileWriter); // If already a temp file, no need to ever switch
@@ -68,17 +68,17 @@ public class AutoTempFileWriter extends BufferWriter {
 	/**
 	 * Uses the default temp file threshold.
 	 */
-	public AutoTempFileWriter(BufferWriter initialBuffer, TempFileList tempFileList) {
+	public AutoTempFileWriter(BufferWriter initialBuffer, TempFileContext tempFileContext) {
 		this(
 			initialBuffer,
-			tempFileList,
+			tempFileContext,
 			DEFAULT_TEMP_FILE_THRESHOLD
 		);
 	}
 
 	private void switchIfNeeded(long newLength) throws IOException {
 		if(isInitialBuffer && newLength>=tempFileThreshold) {
-			TempFile tempFile = tempFileList.createTempFile();
+			TempFile tempFile = tempFileContext.createTempFile();
 			if(logger.isLoggable(Level.FINE)) logger.log(Level.FINE, "Switching to temp file: {0}", tempFile);
 			buffer.close();
 			TempFileWriter tempFileWriter = new TempFileWriter(tempFile);

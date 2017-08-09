@@ -25,7 +25,7 @@ package com.aoindustries.io.buffer;
 import com.aoindustries.io.Encoder;
 import com.aoindustries.io.EncoderWriter;
 import com.aoindustries.io.IoUtils;
-import com.aoindustries.io.TempFile;
+import com.aoindustries.tempfiles.TempFile;
 import com.aoindustries.util.BufferManager;
 import com.aoindustries.util.WrappedException;
 import java.io.IOException;

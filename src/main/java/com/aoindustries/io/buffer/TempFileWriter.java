@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2013, 2015, 2016  AO Industries, Inc.
+ * Copyright (C) 2013, 2015, 2016, 2017  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -22,8 +22,8 @@
  */
 package com.aoindustries.io.buffer;
 
-import com.aoindustries.io.TempFile;
 import com.aoindustries.nio.charset.Charsets;
+import com.aoindustries.tempfiles.TempFile;
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
