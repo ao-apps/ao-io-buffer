@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2010, 2011, 2012, 2013, 2015, 2016  AO Industries, Inc.
+ * Copyright (C) 2010, 2011, 2012, 2013, 2015, 2016, 2017  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -52,7 +52,7 @@ public class CharArrayBufferWriter extends BufferWriter {
 
 	/**
 	 * Any buffer under this size will be copied into a new array on close in
-	 * order to be able recycle the initial buffer.
+	 * order to reduce memory consumption and recycle the initial buffer.
 	 */
 	private static final int COPY_THEN_RECYCLE_LIMIT = BufferManager.BUFFER_SIZE / 8;
 
@@ -103,7 +103,7 @@ public class CharArrayBufferWriter extends BufferWriter {
 			System.arraycopy(buf, 0, newBuf, 0, length);
 			// Recycle buffer
 			if(bufLen == BufferManager.BUFFER_SIZE) {
-				//BufferManager.release(buf, false);
+				BufferManager.release(buf, false);
 			}
 			buf = newBuf;
 			this.buffer = buf;
