@@ -55,7 +55,7 @@ along with ao-io-buffer.  If not, see <http://www.gnu.org/licenses />.
 			>
 				<ul>
 					<li>
-						Using new <core:link book="/ao-tempfiles" page="/index.jspx" /> project for temporary file management.
+						Using new <core:link book="/ao-tempfiles" page="/" /> project for temporary file management.
 						Affects the public API of:
 						<ol>
 							<li><ao:a href="apidocs/com/aoindustries/io/buffer/AutoTempFileWriter.html">AutoTempFileWriter</ao:a></li>
@@ -89,7 +89,7 @@ along with ao-io-buffer.  If not, see <http://www.gnu.org/licenses />.
 			scmUrl="@{documented.scm.url}"
 		>
 			<ul>
-				<li>New <core:link book="/ao-oss-parent" page="/index.jspx" /> POM to simplify <code>pom.xml</code> files.</li>
+				<li>New <core:link book="/ao-oss-parent" page="/" /> POM to simplify <code>pom.xml</code> files.</li>
 				<li>Project documentation moved to per-project book in <ao:a href="https://semanticcms.com/">SemanticCMS</ao:a> format.</li>
 				<li>Added changelog as top-level project link.</li>
 			</ul>
