@@ -77,7 +77,7 @@ along with ao-io-buffer.  If not, see <http://www.gnu.org/licenses />.
 			<groupId>com.aoindustries</groupId><artifactId>ao-tempfiles</artifactId><version>1.0.1-validation-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>com.aoindustries</groupId><artifactId>ao-encoding</artifactId><version>1.7.0-SNAPSHOT</version>
+			<groupId>com.aoindustries</groupId><artifactId>ao-encoding</artifactId><version>1.7.1-validation-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
