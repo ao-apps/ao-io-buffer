@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2013, 2015, 2016, 2017  AO Industries, Inc.
+ * Copyright (C) 2013, 2015, 2016, 2017, 2019  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -22,7 +22,6 @@
  */
 package com.aoindustries.io.buffer;
 
-import com.aoindustries.nio.charset.Charsets;
 import com.aoindustries.tempfiles.TempFile;
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
@@ -30,6 +29,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.channels.ClosedChannelException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Writes to a temp file buffer.
@@ -59,7 +59,7 @@ public class TempFileWriter extends BufferWriter {
 	public TempFileWriter(TempFile tempFile) throws IOException {
 		this.length = 0;
 		this.tempFile = tempFile;
-		this.fileWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tempFile.getFile()), Charsets.UTF_16BE));
+		this.fileWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tempFile.getFile()), StandardCharsets.UTF_16BE));
 	}
 
 	@Override
