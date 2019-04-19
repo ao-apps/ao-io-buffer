@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2013, 2015, 2016  AO Industries, Inc.
+ * Copyright (C) 2013, 2015, 2016, 2019  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -45,8 +45,7 @@ abstract public class BufferWriterTestParent extends TestCase {
 	}
 
 	public void benchmarkSimulate(BufferWriterFactory factory) throws IOException {
-		Writer out = new BufferedWriter(new FileWriter(new File("/dev/null")));
-		try {
+		try (Writer out = new BufferedWriter(new FileWriter(new File("/dev/null")))) {
 			final int loops = 1000;
 			for(int i=1; i<=10; i++) {
 				long startTime = System.nanoTime();
@@ -54,8 +53,6 @@ abstract public class BufferWriterTestParent extends TestCase {
 				long endTime = System.nanoTime();
 				System.out.println(factory.getName() + ": " + i + ": Simulated " + loops + " calls in " + BigDecimal.valueOf(endTime - startTime, 6)+" ms");
 			}
-		} finally {
-			out.close();
 		}
 	}
 

@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2013, 2015, 2016  AO Industries, Inc.
+ * Copyright (C) 2013, 2015, 2016, 2019  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -23,7 +23,6 @@
 package com.aoindustries.io.buffer;
 
 import com.aoindustries.io.Encoder;
-import com.aoindustries.lang.NotImplementedException;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.logging.Logger;
@@ -230,7 +229,7 @@ public class SegmentedResult implements BufferResult {
 			case SegmentedWriter.TYPE_CHAR_OTHER :
 				assert segmentOffsets[segmentIndex]==0;
 				assert segmentLengths[segmentIndex]==1;
-				encoder.write(((Character)segmentValues[segmentIndex]).charValue(), out);
+				encoder.write((Character)segmentValues[segmentIndex], out);
 				break;
 			default :
 				throw new AssertionError();
@@ -268,7 +267,7 @@ public class SegmentedResult implements BufferResult {
 			case SegmentedWriter.TYPE_CHAR_OTHER :
 				assert off==0;
 				assert len==1;
-				encoder.write(((Character)segmentValues[segmentIndex]).charValue(), out);
+				encoder.write((Character)segmentValues[segmentIndex], out);
 				break;
 			default :
 				throw new AssertionError();
@@ -305,7 +304,7 @@ public class SegmentedResult implements BufferResult {
 			case SegmentedWriter.TYPE_CHAR_OTHER :
 				assert segmentOffsets[segmentIndex]==0;
 				assert segmentLengths[segmentIndex]==1;
-				out.write(((Character)segmentValues[segmentIndex]).charValue());
+				out.write((Character)segmentValues[segmentIndex]);
 				break;
 			default :
 				throw new AssertionError();
@@ -342,7 +341,7 @@ public class SegmentedResult implements BufferResult {
 			case SegmentedWriter.TYPE_CHAR_OTHER :
 				assert off==0;
 				assert len==1;
-				out.write(((Character)segmentValues[segmentIndex]).charValue());
+				out.write((Character)segmentValues[segmentIndex]);
 				break;
 			default :
 				throw new AssertionError();
@@ -368,7 +367,7 @@ public class SegmentedResult implements BufferResult {
 				return '\'';
 			case SegmentedWriter.TYPE_CHAR_OTHER :
 				assert charIndex==0;
-				return ((Character)value).charValue();
+				return (Character)value;
 			default :
 				throw new AssertionError();
 		}
@@ -492,9 +491,10 @@ public class SegmentedResult implements BufferResult {
 	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	public void writeTo(Writer out, long off, long len) throws IOException {
 		// Implementation will need to start through beginning
-		throw new NotImplementedException("Implement when first needed.");
+		throw new com.aoindustries.lang.NotImplementedException("Implement when first needed.");
 	}
 
 	@Override
@@ -529,9 +529,10 @@ public class SegmentedResult implements BufferResult {
 	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	public void writeTo(Encoder encoder, Writer out, long off, long len) throws IOException {
 		// Implementation will need to start through beginning
-		throw new NotImplementedException("Implement when first needed.");
+		throw new com.aoindustries.lang.NotImplementedException("Implement when first needed.");
 	}
 
 	@Override

@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2013, 2014, 2015, 2016  AO Industries, Inc.
+ * Copyright (C) 2013, 2014, 2015, 2016, 2019  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -85,7 +85,7 @@ public class SegmentedWriter extends BufferWriter {
 			case TYPE_CHAR_OTHER :
 				assert segmentOffsets[segmentIndex]==0;
 				assert segmentLengths[segmentIndex]==1;
-				out.write(((Character)segmentValues[segmentIndex]).charValue());
+				out.write((Character)segmentValues[segmentIndex]);
 				break;
 			default :
 				throw new AssertionError();
@@ -176,7 +176,7 @@ public class SegmentedWriter extends BufferWriter {
 				addSegment(TYPE_CHAR_QUOTE, null, 0, 1);
 				break;
 			default :
-				addSegment(TYPE_CHAR_OTHER, Character.valueOf(ch), 0, 1);
+				addSegment(TYPE_CHAR_OTHER, (Character)ch, 0, 1);
 		}
 		length++;
 	}
@@ -331,7 +331,7 @@ public class SegmentedWriter extends BufferWriter {
 							) {
 								addSegment(
 									TYPE_CHAR_OTHER,
-									Character.valueOf(ch),
+									(Character)ch,
 									0,
 									1
 								);
@@ -384,7 +384,7 @@ public class SegmentedWriter extends BufferWriter {
 				addSegment(TYPE_CHAR_QUOTE, null, 0, 1);
 				break;
 			default :
-				addSegment(TYPE_CHAR_OTHER, Character.valueOf(c), 0, 1);
+				addSegment(TYPE_CHAR_OTHER, (Character)c, 0, 1);
 		}
 		length++;
 		return this;

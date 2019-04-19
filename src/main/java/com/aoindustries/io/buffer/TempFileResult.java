@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2013, 2015, 2016, 2017  AO Industries, Inc.
+ * Copyright (C) 2013, 2015, 2016, 2017, 2019  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -88,8 +88,7 @@ public class TempFileResult implements BufferResult {
 				final long length = end - start;
 				if(length>Integer.MAX_VALUE) throw new RuntimeException("Buffer too large to convert to String: length="+length);
 				StringBuilder sb = new StringBuilder((int)length);
-				RandomAccessFile raf = new RandomAccessFile(tempFile.getFile(), "r");
-				try {
+				try (RandomAccessFile raf = new RandomAccessFile(tempFile.getFile(), "r")) {
 					byte[] bytes = BufferManager.getBytes();
 					try {
 						long index = this.start;
@@ -110,8 +109,6 @@ public class TempFileResult implements BufferResult {
 					} finally {
 						BufferManager.release(bytes, false);
 					}
-				} finally {
-					raf.close();
 				}
 				assert sb.length()==length : "sb.length()!=length: "+sb.length()+"!="+length;
 				toStringCache = sb.toString();
@@ -162,9 +159,8 @@ public class TempFileResult implements BufferResult {
 	 * @throws IOException 
 	 */
 	private void writeToImpl(Writer out, long writeStart, long writeEnd) throws IOException {
-		// TODO: If copying to another SegmentedBufferedWriter or AutoTempFileWriter, we have a chance here for disk-to-disk block level copying instead of going through all the conversions.
-		RandomAccessFile raf = new RandomAccessFile(tempFile.getFile(), "r");
-		try {
+		try ( // TODO: If copying to another SegmentedBufferedWriter or AutoTempFileWriter, we have a chance here for disk-to-disk block level copying instead of going through all the conversions.
+			RandomAccessFile raf = new RandomAccessFile(tempFile.getFile(), "r")) {
 			byte[] bytes = BufferManager.getBytes();
 			try {
 				char[] chars = BufferManager.getChars();
@@ -196,8 +192,6 @@ public class TempFileResult implements BufferResult {
 			} finally {
 				BufferManager.release(bytes, false);
 			}
-		} finally {
-			raf.close();
 		}
 	}
 
@@ -206,8 +200,7 @@ public class TempFileResult implements BufferResult {
 		// Trim from temp file
 		long newStart;
 		long newEnd;
-		RandomAccessFile raf = new RandomAccessFile(tempFile.getFile(), "r");
-		try {
+		try (RandomAccessFile raf = new RandomAccessFile(tempFile.getFile(), "r")) {
 			newStart = this.start;
 			// Skip past the beginning whitespace characters
 			raf.seek(newStart<<1);
@@ -224,8 +217,6 @@ public class TempFileResult implements BufferResult {
 				if(!Character.isWhitespace(ch)) break;
 				newEnd--;
 			}
-		} finally {
-			raf.close();
 		}
 		// Keep this object if already trimmed
 		if(
