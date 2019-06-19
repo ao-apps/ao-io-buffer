@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2010, 2011, 2012, 2013, 2015, 2016, 2017  AO Industries, Inc.
+ * Copyright (C) 2010, 2011, 2012, 2013, 2015, 2016, 2017, 2019  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -39,7 +39,7 @@ import java.util.Arrays;
  * This class is not thread safe.
  * </p>
  *
- * @see  SegmentedBufferedWriter  for a possibly more efficient implementation.
+ * @see  SegmentedWriter  for a possibly more efficient implementation.
  *
  * @author  AO Industries, Inc.
  */
