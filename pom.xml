@@ -70,7 +70,7 @@ along with ao-io-buffer.  If not, see <http://www.gnu.org/licenses />.
 		<dependencies>
 			<!-- Test -->
 			<dependency>
-				<groupId>com.aoindustries</groupId><artifactId>ao-encoding</artifactId><version>1.7.1-SNAPSHOT</version>
+				<groupId>com.aoindustries</groupId><artifactId>ao-encoding</artifactId><version>1.7.1-validation-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>junit</groupId><artifactId>junit</artifactId><version>4.12</version>
