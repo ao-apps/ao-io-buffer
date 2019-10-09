@@ -31,6 +31,7 @@ import com.aoindustries.util.WrappedException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.io.Writer;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -51,6 +52,8 @@ public class TempFileResult implements BufferResult {
 
 	private final long start;
 	private final long end;
+
+	private final AtomicReference<BufferResult> trimmed = new AtomicReference<>();
 
 	protected TempFileResult(
 		TempFile tempFile,
@@ -197,6 +200,8 @@ public class TempFileResult implements BufferResult {
 
 	@Override
 	public BufferResult trim() throws IOException {
+		BufferResult _trimmed = this.trimmed.get();
+		if(trimmed != null) return _trimmed;
 		// Trim from temp file
 		long newStart;
 		long newEnd;
@@ -223,19 +228,26 @@ public class TempFileResult implements BufferResult {
 			start==newStart
 			&& end==newEnd
 		) {
-			return this;
+			_trimmed = this;
 		} else {
 			// Check if empty
 			if(newStart==newEnd) {
-				return EmptyResult.getInstance();
+				_trimmed = EmptyResult.getInstance();
 			} else {
 				// Otherwise, return new substring
-				return new TempFileResult(
+				TempFileResult newTrimmed = new TempFileResult(
 					tempFile,
 					newStart,
 					newEnd
 				);
+				newTrimmed.trimmed.set(newTrimmed);
+				_trimmed = newTrimmed;
 			}
+		}
+		if(this.trimmed.compareAndSet(null, _trimmed)) {
+			return _trimmed;
+		} else {
+			return this.trimmed.get();
 		}
 	}
 }
