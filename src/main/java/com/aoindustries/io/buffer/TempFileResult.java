@@ -201,7 +201,7 @@ public class TempFileResult implements BufferResult {
 	@Override
 	public BufferResult trim() throws IOException {
 		BufferResult _trimmed = this.trimmed.get();
-		if(trimmed != null) return _trimmed;
+		if(_trimmed != null) return _trimmed;
 		// Trim from temp file
 		long newStart;
 		long newEnd;
