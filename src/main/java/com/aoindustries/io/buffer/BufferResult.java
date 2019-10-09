@@ -41,5 +41,6 @@ public interface BufferResult extends Writable {
 	/**
 	 * Trims the contents of this result, returning the instance that represents this result trimmed.
 	 */
+	@Override
 	BufferResult trim() throws IOException;
 }
