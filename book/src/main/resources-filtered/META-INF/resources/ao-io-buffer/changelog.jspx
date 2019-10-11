@@ -36,7 +36,7 @@ along with ao-io-buffer.  If not, see <http://www.gnu.org/licenses />.
 		shortTitle="Changelog"
 		tocLevels="1"
 		datePublished="2016-10-29T20:20:34-0500"
-		dateModified="2019-10-09T05:04:42-0500"
+		dateModified="2019-10-11T16:01:08-0500"
 	>
 		<!-- The current snapshot, unreleased version -->
 		<c:set var="version" value="@{com.aoindustries:ao-io-buffer:pom.version}" />
@@ -51,13 +51,22 @@ along with ao-io-buffer.  If not, see <http://www.gnu.org/licenses />.
 				groupId="@{documented.groupId}"
 				artifactId="@{documented.artifactId}"
 				scmUrl="@{documented.scm.url}"
-			>
-				<ul>
-					<li><code>BufferResult</code> implements the new <code>Writable.trim()</code> method.</li>
-					<li><code>TempFileResult</code> caches result of <code>trim()</code> to avoid repeated I/O on repeated trims.</li>
-				</ul>
-			</changelog:release>
+			/>
 		</c:if>
+
+		<changelog:release
+			projectName="@{documented.name}"
+			version="3.1.0"
+			datePublished="2019-10-11T16:01:08-0500"
+			groupId="@{documented.groupId}"
+			artifactId="@{documented.artifactId}"
+			scmUrl="@{documented.scm.url}"
+		>
+			<ul>
+				<li><code>BufferResult</code> implements the new <code>Writable.trim()</code> method.</li>
+				<li><code>TempFileResult</code> caches result of <code>trim()</code> to avoid repeated I/O on repeated trims.</li>
+			</ul>
+		</changelog:release>
 
 		<changelog:release
 			projectName="@{documented.name}"
