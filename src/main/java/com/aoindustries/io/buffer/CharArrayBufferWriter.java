@@ -43,6 +43,9 @@ import java.util.Arrays;
  *
  * @author  AO Industries, Inc.
  */
+// TODO: Remember the first string written, and use it for toString in order to maintain string identity for single-string writes from a resource bundle source
+// TODO: for in-context translator support (and perhaps a tiny performance boost)
+// TODO: This might be used with a StringResult (shared by single-segment SegmentedWriter, too)
 public class CharArrayBufferWriter extends BufferWriter {
 
 	/**
