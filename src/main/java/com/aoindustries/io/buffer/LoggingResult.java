@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2013, 2015, 2016  AO Industries, Inc.
+ * Copyright (C) 2013, 2015, 2016, 2020  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -101,6 +101,20 @@ public class LoggingResult implements BufferResult {
 		}
 	}
 
+	/**
+	 * Provides detailed logging for an appendable.
+	 */
+	private void log(Appendable appendable) throws IOException {
+		if(appendable==null) {
+			log.write("null");
+		} else if(appendable instanceof Writer) {
+			log((Writer)appendable);
+		} else {
+			String classname = appendable.getClass().getName();
+			log.write(classname);
+		}
+	}
+
 	@Override
 	public long getLength() throws IOException {
 		log.write("result[");
@@ -182,6 +196,62 @@ public class LoggingResult implements BufferResult {
 		log.write(");\n");
 		log.flush();
 		wrapped.writeTo(encoder, out, off, len);
+	}
+
+	@Override
+	public void appendTo(Appendable out) throws IOException {
+		log.write("result[");
+		log.write(Long.toString(id));
+		log.write("].appendTo(");
+		log(out);
+		log.write(");\n");
+		log.flush();
+		wrapped.appendTo(out);
+	}
+
+	@Override
+	public void appendTo(Appendable out, long start, long end) throws IOException {
+		log.write("result[");
+		log.write(Long.toString(id));
+		log.write("].appendTo(");
+		log(out);
+		log.write(", ");
+		log.write(Long.toString(start));
+		log.write(", ");
+		log.write(Long.toString(end));
+		log.write(");\n");
+		log.flush();
+		wrapped.appendTo(out, start, end);
+	}
+
+	@Override
+	public void appendTo(Encoder encoder, Appendable out) throws IOException {
+		log.write("result[");
+		log.write(Long.toString(id));
+		log.write("].appendTo(");
+		log(encoder);
+		log.write(", ");
+		log(out);
+		log.write(");\n");
+		log.flush();
+		wrapped.appendTo(encoder, out);
+	}
+
+	@Override
+	public void appendTo(Encoder encoder, Appendable out, long start, long end) throws IOException {
+		log.write("result[");
+		log.write(Long.toString(id));
+		log.write("].appendTo(");
+		log(encoder);
+		log.write(", ");
+		log(out);
+		log.write(", ");
+		log.write(Long.toString(start));
+		log.write(", ");
+		log.write(Long.toString(end));
+		log.write(");\n");
+		log.flush();
+		wrapped.appendTo(encoder, out, start, end);
 	}
 
 	@Override

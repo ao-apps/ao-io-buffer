@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2013, 2015  AO Industries, Inc.
+ * Copyright (C) 2013, 2015, 2020  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -72,6 +72,26 @@ final public class EmptyResult implements BufferResult {
 	@Override
 	public void writeTo(Encoder encoder, Writer out, long off, long len) {
 		// Nothing to write
+	}
+
+	@Override
+	public void appendTo(Appendable out) {
+		// Nothing to append
+	}
+
+	@Override
+	public void appendTo(Appendable out, long start, long end) {
+		// Nothing to append
+	}
+
+	@Override
+	public void appendTo(Encoder encoder, Appendable out) {
+		// Nothing to append
+	}
+
+	@Override
+	public void appendTo(Encoder encoder, Appendable out, long start, long end) {
+		// Nothing to append
 	}
 
 	@Override
