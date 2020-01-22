@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2013, 2015, 2016, 2019  AO Industries, Inc.
+ * Copyright (C) 2013, 2015, 2016, 2019, 2020  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -555,6 +555,7 @@ public class SegmentedResult implements BufferResult {
 			final Object value = segmentValues[newStartSegmentIndex];
 			// do...while because segments are never empty
 			do {
+				// TODO: Support surrogates
 				char ch = charAt(type, value, newStartSegmentOffset);
 				if(!Character.isWhitespace(ch)) break TRIM_LEFT;
 				newStart++;
@@ -591,6 +592,7 @@ public class SegmentedResult implements BufferResult {
 			do {
 				// do...while because segments are never empty
 				do {
+					// TODO: Support surrogates
 					char ch = charAt(type, value, newEndSegmentOffset + newEndSegmentLength - 1);
 					if(!Character.isWhitespace(ch)) break TRIM_RIGHT;
 					newEnd--;

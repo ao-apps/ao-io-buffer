@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2013, 2015, 2016, 2017, 2019  AO Industries, Inc.
+ * Copyright (C) 2013, 2015, 2016, 2017, 2019, 2020  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -211,6 +211,7 @@ public class TempFileResult implements BufferResult {
 			raf.seek(newStart<<1);
 			while(newStart<end) {
 				char ch = raf.readChar();
+				// TODO: Support surrogates
 				if(!Character.isWhitespace(ch)) break;
 				newStart++;
 			}
@@ -219,6 +220,7 @@ public class TempFileResult implements BufferResult {
 			while(newEnd>newStart) {
 				raf.seek((newEnd-1)<<1);
 				char ch = raf.readChar();
+				// TODO: Support surrogates
 				if(!Character.isWhitespace(ch)) break;
 				newEnd--;
 			}
