@@ -36,7 +36,7 @@ along with ao-io-buffer.  If not, see <http://www.gnu.org/licenses />.
 		shortTitle="Changelog"
 		tocLevels="1"
 		datePublished="2016-10-29T20:20:34-0500"
-		dateModified="2020-01-19T22:13:28-0600"
+		dateModified="2020-01-22T07:25:38-0600"
 	>
 		<!-- The current snapshot, unreleased version -->
 		<c:set var="version" value="@{com.aoindustries:ao-io-buffer:pom.version}" />
@@ -57,6 +57,12 @@ along with ao-io-buffer.  If not, see <http://www.gnu.org/licenses />.
 					<li>
 						Implemented new <code>appendTo(…)</code> methods of <ao:a href="https://aoindustries.com/ao-lang/apidocs/com/aoindustries/io/Writable.html">Writable</ao:a>,
 						where default interface implementations are suboptimal.
+					</li>
+					<li>
+						<code>BufferResult</code> now trims based on
+						code points, with a value considered whitespace when it is either
+						<code>&lt;= ' '</code> (for compatibility with <code>String.trim()</code>)
+						or <code>Character.isWhitespace(int)</code>.
 					</li>
 				</ul>
 			</changelog:release>
