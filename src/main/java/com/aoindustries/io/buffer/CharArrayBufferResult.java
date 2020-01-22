@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2013, 2015, 2016  AO Industries, Inc.
+ * Copyright (C) 2013, 2015, 2016, 2020  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -122,6 +122,7 @@ public class CharArrayBufferResult implements BufferResult {
 		final char[] buf = buffer;
 		// Skip past the beginning whitespace characters
 		while(newStart < end) {
+			// TODO: Support surrogates
 			char ch = buf[newStart];
 			if(!Character.isWhitespace(ch)) break;
 			newStart++;
@@ -129,6 +130,7 @@ public class CharArrayBufferResult implements BufferResult {
 		// Skip past the ending whitespace characters
 		int newEnd = end;
 		while(newEnd > newStart) {
+			// TODO: Support surrogates
 			char ch = buf[newEnd-1];
 			if(!Character.isWhitespace(ch)) break;
 			newEnd--;
