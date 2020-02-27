@@ -23,6 +23,7 @@
 package com.aoindustries.io.buffer;
 
 import com.aoindustries.io.Writable;
+import com.aoindustries.util.StringUtility;
 import java.io.IOException;
 
 /**
