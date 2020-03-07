@@ -35,8 +35,6 @@ along with ao-io-buffer.  If not, see <http://www.gnu.org/licenses />.
 	<properties>
 		<!-- These values are copied from the project being documented -->
 		<documented.artifactId>ao-io-buffer</documented.artifactId>
-		<documented.javaVersion>1.8</documented.javaVersion>
-		<documented.javac.link.javaApi>${javac.link.javaApi.jdk8}</documented.javac.link.javaApi>
 		<documented.name>AO IO Buffer</documented.name>
 		<documented.description>Output buffering library.</documented.description>
 
