@@ -27,7 +27,7 @@ import com.aoindustries.io.EncoderWriter;
 import com.aoindustries.io.IoUtils;
 import com.aoindustries.tempfiles.TempFile;
 import com.aoindustries.util.BufferManager;
-import com.aoindustries.util.StringUtility;
+import com.aoindustries.lang.Strings;
 import com.aoindustries.util.WrappedException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -213,7 +213,7 @@ public class TempFileResult implements BufferResult {
 			while(newStart<end) {
 				char ch = raf.readChar();
 				// TODO: Support surrogates: there are no whitespace characters outside the BMP as of Unicode 12.1, so this is not a high priority
-				if(!StringUtility.isWhitespace(ch)) break;
+				if(!Strings.isWhitespace(ch)) break;
 				newStart++;
 			}
 			// Skip past the ending whitespace characters
@@ -222,7 +222,7 @@ public class TempFileResult implements BufferResult {
 				raf.seek((newEnd-1)<<1);
 				char ch = raf.readChar();
 				// TODO: Support surrogates: there are no whitespace characters outside the BMP as of Unicode 12.1, so this is not a high priority
-				if(!StringUtility.isWhitespace(ch)) break;
+				if(!Strings.isWhitespace(ch)) break;
 				newEnd--;
 			}
 		}

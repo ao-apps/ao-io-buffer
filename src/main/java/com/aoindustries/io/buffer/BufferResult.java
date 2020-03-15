@@ -23,7 +23,7 @@
 package com.aoindustries.io.buffer;
 
 import com.aoindustries.io.Writable;
-import com.aoindustries.util.StringUtility;
+import com.aoindustries.lang.Strings;
 import java.io.IOException;
 
 /**
@@ -40,7 +40,7 @@ import java.io.IOException;
 public interface BufferResult extends Writable {
 
 	/**
-	 * Trims the contents of this result, as per rules of {@link StringUtility#isWhitespace(int)},
+	 * Trims the contents of this result, as per rules of {@link Strings#isWhitespace(int)},
 	 * returning the instance that represents this result trimmed.
 	 */
 	@Override

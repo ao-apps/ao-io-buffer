@@ -24,7 +24,7 @@ package com.aoindustries.io.buffer;
 
 import com.aoindustries.io.Encoder;
 import com.aoindustries.math.SafeMath;
-import com.aoindustries.util.StringUtility;
+import com.aoindustries.lang.Strings;
 import java.io.IOException;
 import java.io.Writer;
 
@@ -125,7 +125,7 @@ public class CharArrayBufferResult implements BufferResult {
 		while(newStart < end) {
 			// TODO: Support surrogates: there are no whitespace characters outside the BMP as of Unicode 12.1, so this is not a high priority
 			char ch = buf[newStart];
-			if(!StringUtility.isWhitespace(ch)) break;
+			if(!Strings.isWhitespace(ch)) break;
 			newStart++;
 		}
 		// Skip past the ending whitespace characters
@@ -133,7 +133,7 @@ public class CharArrayBufferResult implements BufferResult {
 		while(newEnd > newStart) {
 			// TODO: Support surrogates: there are no whitespace characters outside the BMP as of Unicode 12.1, so this is not a high priority
 			char ch = buf[newEnd-1];
-			if(!StringUtility.isWhitespace(ch)) break;
+			if(!Strings.isWhitespace(ch)) break;
 			newEnd--;
 		}
 		// Keep this object if already trimmed
