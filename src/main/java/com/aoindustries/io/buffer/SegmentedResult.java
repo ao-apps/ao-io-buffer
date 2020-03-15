@@ -23,7 +23,7 @@
 package com.aoindustries.io.buffer;
 
 import com.aoindustries.io.Encoder;
-import com.aoindustries.util.StringUtility;
+import com.aoindustries.lang.Strings;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.logging.Logger;
@@ -558,7 +558,7 @@ public class SegmentedResult implements BufferResult {
 			do {
 				// TODO: Support surrogates: there are no whitespace characters outside the BMP as of Unicode 12.1, so this is not a high priority
 				char ch = charAt(type, value, newStartSegmentOffset);
-				if(!StringUtility.isWhitespace(ch)) break TRIM_LEFT;
+				if(!Strings.isWhitespace(ch)) break TRIM_LEFT;
 				newStart++;
 				newStartSegmentOffset++;
 				newStartSegmentLength--;
@@ -595,7 +595,7 @@ public class SegmentedResult implements BufferResult {
 				do {
 					// TODO: Support surrogates: there are no whitespace characters outside the BMP as of Unicode 12.1, so this is not a high priority
 					char ch = charAt(type, value, newEndSegmentOffset + newEndSegmentLength - 1);
-					if(!StringUtility.isWhitespace(ch)) break TRIM_RIGHT;
+					if(!Strings.isWhitespace(ch)) break TRIM_RIGHT;
 					newEnd--;
 					newEndSegmentLength--;
 					// Also trim start segment numbers of equal to end segment index
