@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2013, 2014, 2015, 2016, 2019  AO Industries, Inc.
+ * Copyright (C) 2013, 2014, 2015, 2016, 2019, 2020  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -22,7 +22,7 @@
  */
 package com.aoindustries.io.buffer;
 
-import com.aoindustries.util.AoArrays;
+import com.aoindustries.lang.EmptyArrays;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.channels.ClosedChannelException;
@@ -116,10 +116,10 @@ public class SegmentedWriter extends BufferWriter {
 
 	public SegmentedWriter() {
 		this.length = 0;
-		this.segmentTypes = AoArrays.EMPTY_BYTE_ARRAY;
-		this.segmentValues = AoArrays.EMPTY_OBJECT_ARRAY;
-		this.segmentOffsets = AoArrays.EMPTY_INT_ARRAY;
-		this.segmentLengths = AoArrays.EMPTY_INT_ARRAY;
+		this.segmentTypes = EmptyArrays.EMPTY_BYTE_ARRAY;
+		this.segmentValues = EmptyArrays.EMPTY_OBJECT_ARRAY;
+		this.segmentOffsets = EmptyArrays.EMPTY_INT_ARRAY;
+		this.segmentLengths = EmptyArrays.EMPTY_INT_ARRAY;
 		this.segmentCount = 0;
 		this.isClosed = false;
 	}

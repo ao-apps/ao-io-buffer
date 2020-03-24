@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2010, 2011, 2012, 2013, 2015, 2016, 2017, 2019  AO Industries, Inc.
+ * Copyright (C) 2010, 2011, 2012, 2013, 2015, 2016, 2017, 2019, 2020  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -22,7 +22,7 @@
  */
 package com.aoindustries.io.buffer;
 
-import com.aoindustries.util.AoArrays;
+import com.aoindustries.lang.EmptyArrays;
 import com.aoindustries.util.BufferManager;
 import java.io.IOException;
 import java.nio.channels.ClosedChannelException;
@@ -72,7 +72,7 @@ public class CharArrayBufferWriter extends BufferWriter {
 	 * TODO: Consider a set of buffers to avoid copying on resize.
 	 *       This would also allow beyond 32-bit limit.
 	 */
-	private char[] buffer = AoArrays.EMPTY_CHAR_ARRAY;
+	private char[] buffer = EmptyArrays.EMPTY_CHAR_ARRAY;
 
 	/**
 	 * Once closed, no further information may be written.
