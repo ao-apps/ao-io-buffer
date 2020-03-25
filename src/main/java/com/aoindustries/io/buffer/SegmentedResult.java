@@ -27,6 +27,7 @@ import com.aoindustries.lang.Strings;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.logging.Logger;
+import org.apache.commons.lang3.NotImplementedException;
 
 /**
  * {@inheritDoc}
@@ -492,10 +493,9 @@ public class SegmentedResult implements BufferResult {
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public void writeTo(Writer out, long off, long len) throws IOException {
 		// Implementation will need to start through beginning
-		throw new com.aoindustries.exception.NotImplementedException("Implement when first needed.");
+		throw new NotImplementedException("Implement when first needed.");
 	}
 
 	@Override
@@ -530,10 +530,9 @@ public class SegmentedResult implements BufferResult {
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public void writeTo(Encoder encoder, Writer out, long off, long len) throws IOException {
 		// Implementation will need to start through beginning
-		throw new com.aoindustries.exception.NotImplementedException("Implement when first needed.");
+		throw new NotImplementedException("Implement when first needed.");
 	}
 
 	@Override

@@ -32,6 +32,11 @@ along with ao-io-buffer.  If not, see <http://www.gnu.org/licenses />.
 	<groupId>com.aoindustries</groupId><artifactId>ao-io-buffer</artifactId><version>3.2.0-SNAPSHOT</version>
 	<packaging>bundle</packaging>
 
+	<properties>
+		<!-- Dependencies -->
+		<org.apache.commons:commons-lang3:version>3.9</org.apache.commons:commons-lang3:version>
+	</properties>
+
 	<name>AO IO Buffer</name>
 	<url>https://aoindustries.com/ao-io-buffer/</url>
 	<description>Output buffering library.</description>
@@ -58,6 +63,7 @@ along with ao-io-buffer.  If not, see <http://www.gnu.org/licenses />.
 								<!-- Direct -->
 								<link>https://aoindustries.com/ao-lang/apidocs/</link>
 								<link>https://aoindustries.com/ao-tempfiles/apidocs/</link>
+								<link>https://commons.apache.org/proper/commons-lang/javadocs/api-${org.apache.commons:commons-lang3:version}/</link>
 							</links>
 						</configuration>
 					</plugin>
@@ -82,6 +88,9 @@ along with ao-io-buffer.  If not, see <http://www.gnu.org/licenses />.
 			<dependency>
 				<groupId>com.aoindustries</groupId><artifactId>ao-tempfiles</artifactId><version>1.0.2${POST-SNAPSHOT}</version>
 			</dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId><artifactId>commons-lang3</artifactId><version>${org.apache.commons:commons-lang3:version}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -101,6 +110,9 @@ along with ao-io-buffer.  If not, see <http://www.gnu.org/licenses />.
 		</dependency>
 		<dependency>
 			<groupId>com.aoindustries</groupId><artifactId>ao-tempfiles</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId><artifactId>commons-lang3</artifactId>
 		</dependency>
 	</dependencies>
 </project>
