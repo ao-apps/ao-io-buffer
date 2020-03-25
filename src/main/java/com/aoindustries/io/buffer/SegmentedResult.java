@@ -495,7 +495,7 @@ public class SegmentedResult implements BufferResult {
 	@SuppressWarnings("deprecation")
 	public void writeTo(Writer out, long off, long len) throws IOException {
 		// Implementation will need to start through beginning
-		throw new com.aoindustries.lang.NotImplementedException("Implement when first needed.");
+		throw new com.aoindustries.exception.NotImplementedException("Implement when first needed.");
 	}
 
 	@Override
@@ -533,7 +533,7 @@ public class SegmentedResult implements BufferResult {
 	@SuppressWarnings("deprecation")
 	public void writeTo(Encoder encoder, Writer out, long off, long len) throws IOException {
 		// Implementation will need to start through beginning
-		throw new com.aoindustries.lang.NotImplementedException("Implement when first needed.");
+		throw new com.aoindustries.exception.NotImplementedException("Implement when first needed.");
 	}
 
 	@Override

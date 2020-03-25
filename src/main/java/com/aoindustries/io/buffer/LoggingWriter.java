@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2013, 2015, 2016  AO Industries, Inc.
+ * Copyright (C) 2013, 2015, 2016, 2020  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -22,9 +22,9 @@
  */
 package com.aoindustries.io.buffer;
 
+import com.aoindustries.exception.WrappedException;
 import com.aoindustries.util.AtomicSequence;
 import com.aoindustries.util.Sequence;
-import com.aoindustries.util.WrappedException;
 import java.io.IOException;
 import java.io.Writer;
 

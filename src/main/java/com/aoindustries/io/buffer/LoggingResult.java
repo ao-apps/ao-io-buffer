@@ -22,11 +22,11 @@
  */
 package com.aoindustries.io.buffer;
 
+import com.aoindustries.exception.WrappedException;
 import com.aoindustries.io.Encoder;
 import com.aoindustries.io.EncoderWriter;
 import com.aoindustries.util.AtomicSequence;
 import com.aoindustries.util.Sequence;
-import com.aoindustries.util.WrappedException;
 import java.io.IOException;
 import java.io.Writer;
 
