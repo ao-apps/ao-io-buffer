@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2012, 2013, 2015, 2016  AO Industries, Inc.
+ * Copyright (C) 2012, 2013, 2015, 2016, 2020  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -4687,7 +4687,7 @@ public class CharArrayBufferWriterTest extends BufferWriterTestParent {
 		writer[201].flush();
 		writer[201].close();
 		result[269] = writer[201].getResult();
-		result[269].writeTo(new MediaWriter(javaScriptInXhtmlEncoder, bodyContent));
+		result[269].writeTo(new MediaWriter(null, javaScriptInXhtmlEncoder, bodyContent));
 		writer[202] = factory.newBufferWriter();
 		writer[202].close();
 		result[270] = writer[202].getResult();
@@ -5122,7 +5122,7 @@ public class CharArrayBufferWriterTest extends BufferWriterTestParent {
 		writer[249].flush();
 		writer[249].close();
 		result[340] = writer[249].getResult();
-		result[340].writeTo(new MediaWriter(javaScriptInXhtmlEncoder, bodyContent));
+		result[340].writeTo(new MediaWriter(null, javaScriptInXhtmlEncoder, bodyContent));
 		result[271].toString();
 		result[273].toString();
 	}
