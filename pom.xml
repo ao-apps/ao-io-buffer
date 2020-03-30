@@ -43,7 +43,6 @@ along with ao-io-buffer.  If not, see <http://www.gnu.org/licenses />.
 	<inceptionYear>2010</inceptionYear>
 
 	<scm>
-		<!-- Can't inherit due to multi-module -->
 		<connection>scm:git:git://github.com/aoindustries/ao-io-buffer.git</connection>
 		<developerConnection>scm:git:git@github.com:aoindustries/ao-io-buffer.git</developerConnection>
 		<url>https://github.com/aoindustries/ao-io-buffer</url>
