@@ -59,7 +59,7 @@ abstract public class BufferWriterTestParent extends TestCase {
 	/**
 	 * Performs the same set of calls that were performed in JSP request for:
 	 *
-	 * http://localhost:11156/essential-mining.com/purchase/domains.jsp?cartIndex=2&ui.lang=en&cookie%3AshoppingCart=jPAbu2Xc1JKVicbIGilVSW
+	 * <a href="http://localhost:11156/essential-mining.com/purchase/domains.jsp?cartIndex=2&amp;ui.lang=en&amp;cookie%3AshoppingCart=jPAbu2Xc1JKVicbIGilVSW">http://localhost:11156/essential-mining.com/purchase/domains.jsp?cartIndex=2&amp;ui.lang=en&amp;cookie%3AshoppingCart=jPAbu2Xc1JKVicbIGilVSW</a>
 	 */
 	protected abstract void simulateCalls(BufferWriterFactory factory, Writer out) throws IOException;
 }
