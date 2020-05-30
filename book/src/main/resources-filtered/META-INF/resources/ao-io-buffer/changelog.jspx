@@ -37,7 +37,7 @@ along with ao-io-buffer.  If not, see <http://www.gnu.org/licenses />.
 		shortTitle="Changelog"
 		tocLevels="1"
 		datePublished="2016-10-29T20:20:34-0500"
-		dateModified="2020-03-26T19:46:23-05:00"
+		dateModified="2020-05-30T01:03:45-05:00"
 	>
 		<!-- The current snapshot, unreleased version -->
 		<c:set var="version" value="@{com.aoindustries:ao-io-buffer:pom.version}" />
@@ -76,7 +76,7 @@ along with ao-io-buffer.  If not, see <http://www.gnu.org/licenses />.
 				<li>
 					<code>BufferResult</code> now trims based on
 					code points, with a value considered whitespace when it is either
-					<code>&lt;= '\u0020'</code> (for compatibility with <code>String.trim()</code>)
+					<code><![CDATA[&lt;= '\u0020']]></code> (for compatibility with <code>String.trim()</code>)
 					or <code>Character.isWhitespace(int)</code>.
 				</li>
 				<li>Updated dependencies.</li>
