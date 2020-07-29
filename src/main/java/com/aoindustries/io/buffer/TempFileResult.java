@@ -80,43 +80,47 @@ public class TempFileResult implements BufferResult {
 	@Override
 	public String toString() {
 		if(toStringCache == null) {
-			try {
-				if(logger.isLoggable(Level.INFO)) {
-					logger.log(
-						Level.INFO,
-						"Creating String from temp file - benefits of buffering negated.",
-						new Throwable("Stack Trace")
-					);
-				}
-				final long length = end - start;
-				if(length > Integer.MAX_VALUE) throw new RuntimeException("Buffer too large to convert to String: length = " + length);
-				StringBuilder sb = new StringBuilder((int)length);
-				try (RandomAccessFile raf = new RandomAccessFile(tempFile.getFile(), "r")) {
-					byte[] bytes = BufferManager.getBytes();
-					try {
-						long index = this.start;
-						raf.seek(index << 1);
-						while(index < end) {
-							// Read a block
-							long blockSizeLong = (end - index) << 1;
-							int blockSize = blockSizeLong > BufferManager.BUFFER_SIZE ? BufferManager.BUFFER_SIZE : (int)blockSizeLong;
-							assert (blockSize & 1) == 0 : "Must be an even number for UTF-16 conversion";
-							raf.readFully(bytes, 0, blockSize);
-							// Convert to characters in sb
-							for(int bpos = 0; bpos < blockSize; bpos += 2) {
-								sb.append(IoUtils.bufferToChar(bytes, bpos));
-							}
-							// Update location
-							index += blockSize >> 1;
-						}
-					} finally {
-						BufferManager.release(bytes, false);
+			if(start == end) {
+				toStringCache = "";
+			} else {
+				try {
+					if(logger.isLoggable(Level.INFO)) {
+						logger.log(
+							Level.INFO,
+							"Creating String from temp file - benefits of buffering negated.",
+							new Throwable("Stack Trace")
+						);
 					}
+					final long length = end - start;
+					if(length > Integer.MAX_VALUE) throw new RuntimeException("Buffer too large to convert to String: length = " + length);
+					StringBuilder sb = new StringBuilder((int)length);
+					try (RandomAccessFile raf = new RandomAccessFile(tempFile.getFile(), "r")) {
+						byte[] bytes = BufferManager.getBytes();
+						try {
+							long index = this.start;
+							raf.seek(index << 1);
+							while(index < end) {
+								// Read a block
+								long blockSizeLong = (end - index) << 1;
+								int blockSize = blockSizeLong > BufferManager.BUFFER_SIZE ? BufferManager.BUFFER_SIZE : (int)blockSizeLong;
+								assert (blockSize & 1) == 0 : "Must be an even number for UTF-16 conversion";
+								raf.readFully(bytes, 0, blockSize);
+								// Convert to characters in sb
+								for(int bpos = 0; bpos < blockSize; bpos += 2) {
+									sb.append(IoUtils.bufferToChar(bytes, bpos));
+								}
+								// Update location
+								index += blockSize >> 1;
+							}
+						} finally {
+							BufferManager.release(bytes, false);
+						}
+					}
+					assert sb.length() == length : "sb.length() != length: " + sb.length() + " != " + length;
+					toStringCache = sb.toString();
+				} catch(IOException err) {
+					throw new WrappedException(err);
 				}
-				assert sb.length() == length : "sb.length() != length: " + sb.length() + " != " + length;
-				toStringCache = sb.toString();
-			} catch(IOException err) {
-				throw new WrappedException(err);
 			}
 		}
 		return toStringCache;
