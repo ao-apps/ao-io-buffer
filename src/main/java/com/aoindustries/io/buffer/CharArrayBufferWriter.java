@@ -95,7 +95,7 @@ public class CharArrayBufferWriter extends BufferWriter {
 		int bufLen = buf.length;
 		if(newLen > bufLen) {
 			// Find the next power of two that will hold all of the contents
-			int newBufLen = bufLen==0 ? BufferManager.BUFFER_SIZE : (bufLen << 1);
+			int newBufLen = (bufLen == 0) ? BufferManager.BUFFER_SIZE : (bufLen << 1);
 			while(newBufLen < newLen) {
 				newBufLen <<= 1;
 			}
@@ -204,7 +204,7 @@ public class CharArrayBufferWriter extends BufferWriter {
 	@Override
 	public BufferResult getResult() throws IllegalStateException {
 		if(!isClosed) throw new IllegalStateException();
-		if(result==null) {
+		if(result == null) {
 			if(length == 0) {
 				result = EmptyResult.getInstance();
 			} else {

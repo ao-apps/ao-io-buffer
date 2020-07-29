@@ -128,7 +128,7 @@ public class TempFileWriter extends BufferWriter {
 
 	@Override
 	public void close() throws IOException {
-		if(fileWriter!=null) {
+		if(fileWriter != null) {
 			fileWriter.close();
 			fileWriter = null;
 		}
@@ -151,8 +151,8 @@ public class TempFileWriter extends BufferWriter {
 	@Override
 	public BufferResult getResult() throws IllegalStateException {
 		if(!isClosed) throw new IllegalStateException();
-		if(result==null) {
-			if(length==0) {
+		if(result == null) {
+			if(length == 0) {
 				result = EmptyResult.getInstance();
 			} else {
 				result = new TempFileResult(tempFile, 0, length);

@@ -94,18 +94,18 @@ public class SegmentedWriter extends BufferWriter {
 	 */
 	private void addSegment(byte type, Object value, int off, int len) {
 		assert !isClosed;
-		assert len>0 : "Empty segments should never be added";
+		assert len > 0 : "Empty segments should never be added";
 		final int arraylen = segmentValues.length;
-		if(segmentCount==arraylen) {
+		if(segmentCount == arraylen) {
 			// Need to grow
-			if(arraylen==0) {
+			if(arraylen == 0) {
 				this.segmentTypes = new byte[START_LEN];
 				this.segmentValues = new Object[START_LEN];
 				this.segmentOffsets = new int[START_LEN];
 				this.segmentLengths = new int[START_LEN];
 			} else {
 				// Double capacity and copy
-				int newLen = arraylen<<1;
+				int newLen = arraylen << 1;
 				byte[] newTypes = new byte[newLen];
 				System.arraycopy(segmentTypes, 0, newTypes, 0, arraylen);
 				this.segmentTypes = newTypes;
@@ -150,8 +150,8 @@ public class SegmentedWriter extends BufferWriter {
 	public void write(char cbuf[]) throws ClosedChannelException {
 		if(isClosed) throw new ClosedChannelException();
 		final int len = cbuf.length;
-		if(len>0) {
-			if(len==1) {
+		if(len > 0) {
+			if(len == 1) {
 				write(cbuf[0]);
 			} else {
 				addSegment(
@@ -168,8 +168,8 @@ public class SegmentedWriter extends BufferWriter {
 	@Override
 	public void write(char cbuf[], int off, int len) throws ClosedChannelException {
 		if(isClosed) throw new ClosedChannelException();
-		if(len>0) {
-			if(len==1) {
+		if(len > 0) {
+			if(len == 1) {
 				write(cbuf[off]);
 			} else {
 				addSegment(
@@ -187,8 +187,8 @@ public class SegmentedWriter extends BufferWriter {
 	public void write(String str) throws ClosedChannelException {
 		if(isClosed) throw new ClosedChannelException();
 		final int len = str.length();
-		if(len>0) {
-			if(len==1) {
+		if(len > 0) {
+			if(len == 1) {
 				// Prefer character shortcuts
 				switch(str.charAt(0)) {
 					case '\n' :
@@ -213,8 +213,8 @@ public class SegmentedWriter extends BufferWriter {
 	@Override
 	public void write(String str, int off, int len) throws ClosedChannelException {
 		if(isClosed) throw new ClosedChannelException();
-		if(len>0) {
-			if(len==1) {
+		if(len > 0) {
+			if(len == 1) {
 				// Prefer character shortcuts
 				switch(str.charAt(off)) {
 					case '\n' :
@@ -239,12 +239,12 @@ public class SegmentedWriter extends BufferWriter {
 	@Override
 	public SegmentedWriter append(CharSequence csq) throws ClosedChannelException {
 		if(isClosed) throw new ClosedChannelException();
-		if(csq==null) {
+		if(csq == null) {
 			write("null");
 		} else {
 			final int len = csq.length();
-			if(len>0) {
-				if(len==1) {
+			if(len > 0) {
+				if(len == 1) {
 					// Prefer character shortcuts
 					switch(csq.charAt(0)) {
 						case '\n' :
@@ -271,12 +271,12 @@ public class SegmentedWriter extends BufferWriter {
 	@Override
 	public SegmentedWriter append(CharSequence csq, int start, int end) throws ClosedChannelException {
 		if(isClosed) throw new ClosedChannelException();
-		if(csq==null) {
+		if(csq == null) {
 			write("null");
 		} else {
 			final int len = end-start;
-			if(len>0) {
-				if(len==1) {
+			if(len > 0) {
+				if(len == 1) {
 					// Prefer character shortcuts
 					char ch = csq.charAt(start);
 					switch(ch) {
@@ -371,7 +371,7 @@ public class SegmentedWriter extends BufferWriter {
 			+ segmentOffsets.length * Integer.SIZE
 			+ segmentLengths.length * Integer.SIZE
 		;
-		if(heap>biggest) {
+		if(heap > biggest) {
 			biggest = heap;
 			System.err.println("SegmentedWriter: Biggest heap: " + biggest);
 		}*/
@@ -393,11 +393,11 @@ public class SegmentedWriter extends BufferWriter {
 	@Override
 	public BufferResult getResult() throws IllegalStateException {
 		if(!isClosed) throw new IllegalStateException();
-		if(result==null) {
-			if(length==0) {
+		if(result == null) {
+			if(length == 0) {
 				result = EmptyResult.getInstance();
 			} else {
-				assert segmentCount>0 : "When not empty and using segments, must have at least one segment";
+				assert segmentCount > 0 : "When not empty and using segments, must have at least one segment";
 				int endSegmentIndex = segmentCount - 1;
 				result = new SegmentedResult(
 					segmentTypes,

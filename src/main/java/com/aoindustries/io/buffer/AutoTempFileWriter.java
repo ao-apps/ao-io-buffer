@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2010, 2011, 2012, 2013, 2015, 2016, 2017  AO Industries, Inc.
+ * Copyright (C) 2010, 2011, 2012, 2013, 2015, 2016, 2017, 2020  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -77,7 +77,7 @@ public class AutoTempFileWriter extends BufferWriter {
 	}
 
 	private void switchIfNeeded(long newLength) throws IOException {
-		if(isInitialBuffer && newLength>=tempFileThreshold) {
+		if(isInitialBuffer && newLength >= tempFileThreshold) {
 			TempFile tempFile = tempFileContext.createTempFile();
 			if(logger.isLoggable(Level.FINE)) logger.log(Level.FINE, "Switching to temp file: {0}", tempFile);
 			buffer.close();

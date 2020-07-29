@@ -61,18 +61,18 @@ public class LoggingWriter extends BufferWriter {
 	 * Writes a character, unicode escaping as needed.
 	 */
 	private void log(char ch) throws IOException {
-		if(ch=='\t') log.write("'\\t'");
-		else if(ch=='\b') log.write("'\\b'");
-		else if(ch=='\n') log.write("'\\n'");
-		else if(ch=='\r') log.write("'\\r'");
-		else if(ch=='\f') log.write("'\\f'");
-		else if(ch=='\'') log.write("'\\'");
-		else if(ch=='\\') log.write("'\\\\'");
-		else if(ch=='"') log.write("'\\\"'");
-		else if(ch<' ') {
+		if(ch == '\t') log.write("'\\t'");
+		else if(ch == '\b') log.write("'\\b'");
+		else if(ch == '\n') log.write("'\\n'");
+		else if(ch == '\r') log.write("'\\r'");
+		else if(ch == '\f') log.write("'\\f'");
+		else if(ch == '\'') log.write("'\\'");
+		else if(ch == '\\') log.write("'\\\\'");
+		else if(ch == '"') log.write("'\\\"'");
+		else if(ch < ' ') {
 			log.write("'\\u");
 			String hex = Integer.toHexString(ch);
-			for(int l=hex.length(); l<4; l++) log.write('0');
+			for(int l = hex.length(); l < 4; l++) log.write('0');
 			log.write(hex);
 			log.write('\'');
 		} else {
@@ -86,23 +86,23 @@ public class LoggingWriter extends BufferWriter {
 	 * Writes a String, unicode escaping as needed.
 	 */
 	private void log(String value) throws IOException {
-		if(value==null) {
+		if(value == null) {
 			log.write("(String)null");
 		} else {
 			log.write('"');
-			for(int i=0, len=value.length(); i<len; i++) {
+			for(int i = 0, len = value.length(); i < len; i++) {
 				char ch = value.charAt(i);
-				if(ch=='\t') log.write("\\t");
-				else if(ch=='\b') log.write("\\b");
-				else if(ch=='\n') log.write("\\n");
-				else if(ch=='\r') log.write("\\r");
-				else if(ch=='\f') log.write("\\f");
-				else if(ch=='\\') log.write("\\\\");
-				else if(ch=='"') log.write("\\\"");
-				else if(ch<' ') {
+				if(ch == '\t') log.write("\\t");
+				else if(ch == '\b') log.write("\\b");
+				else if(ch == '\n') log.write("\\n");
+				else if(ch == '\r') log.write("\\r");
+				else if(ch == '\f') log.write("\\f");
+				else if(ch == '\\') log.write("\\\\");
+				else if(ch == '"') log.write("\\\"");
+				else if(ch < ' ') {
 					log.write("\\u");
 					String hex = Integer.toHexString(ch);
-					for(int l=hex.length(); l<4; l++) log.write('0');
+					for(int l = hex.length(); l < 4; l++) log.write('0');
 					log.write(hex);
 				} else {
 					log.write(ch);
@@ -134,9 +134,9 @@ public class LoggingWriter extends BufferWriter {
 		log.write("writer[");
 		log.write(Long.toString(id));
 		log.write("].write(new char[] {");
-		for(int i=0, end=cbuf.length; i<end; i++) {
-			if((i%50)==0) log.write("\n    ");
-			if(i>0) log.write(',');
+		for(int i = 0, end = cbuf.length; i < end; i++) {
+			if((i % 50) == 0) log.write("\n    ");
+			if(i > 0) log.write(',');
 			log(cbuf[i]);
 		}
 		log.write("\n});\n");
@@ -160,9 +160,9 @@ public class LoggingWriter extends BufferWriter {
 		log.write("writer[");
 		log.write(Long.toString(id));
 		log.write("].write(new char[] {");
-		for(int i=0, end=off+len; i<end; i++) {
-			if((i%50)==0) log.write("\n    ");
-			if(i>0) log.write(',');
+		for(int i = 0, end = off + len; i < end; i++) {
+			if((i % 50) == 0) log.write("\n    ");
+			if(i > 0) log.write(',');
 			log(cbuf[i]);
 		}
 		log.write("\n}, ");
@@ -206,7 +206,7 @@ public class LoggingWriter extends BufferWriter {
 		log.write("writer[");
 		log.write(Long.toString(id));
 		log.write("].append(");
-		log(csq==null ? null : csq.toString());
+		log(csq == null ? null : csq.toString());
 		log.write(");\n");
 		log.flush();
 		wrapped.append(csq);
@@ -218,7 +218,7 @@ public class LoggingWriter extends BufferWriter {
 		log.write("writer[");
 		log.write(Long.toString(id));
 		log.write("].append(");
-		log(csq==null ? null : csq.toString());
+		log(csq == null ? null : csq.toString());
 		log.write(", ");
 		log.write(Integer.toString(start));
 		log.write(", ");
@@ -286,7 +286,7 @@ public class LoggingWriter extends BufferWriter {
 
 	@Override
 	public LoggingResult getResult() throws IllegalStateException, IOException {
-		if(result==null) {
+		if(result == null) {
 			result = new LoggingResult(wrapped.getResult(), log);
 			log.write("result[");
 			log.write(Long.toString(result.id));

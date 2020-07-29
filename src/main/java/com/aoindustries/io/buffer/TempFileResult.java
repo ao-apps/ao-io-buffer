@@ -98,7 +98,7 @@ public class TempFileResult implements BufferResult {
 						raf.seek(index << 1);
 						while(index < end) {
 							// Read a block
-							long blockSizeLong = (end - index)<<1;
+							long blockSizeLong = (end - index) << 1;
 							int blockSize = blockSizeLong > BufferManager.BUFFER_SIZE ? BufferManager.BUFFER_SIZE : (int)blockSizeLong;
 							assert (blockSize & 1) == 0 : "Must be an even number for UTF-16 conversion";
 							raf.readFully(bytes, 0, blockSize);
@@ -170,7 +170,7 @@ public class TempFileResult implements BufferResult {
 					raf.seek(index << 1);
 					while(index < writeEnd) {
 						// Read a block
-						long blockSizeLong = (writeEnd - index)<<1;
+						long blockSizeLong = (writeEnd - index) << 1;
 						int blockSize = blockSizeLong > BufferManager.BUFFER_SIZE ? BufferManager.BUFFER_SIZE : (int)blockSizeLong;
 						assert (blockSize & 1) == 0 : "Must be an even number for UTF-16 conversion";
 						raf.readFully(bytes, 0, blockSize);
