@@ -289,14 +289,14 @@ public class LoggingResult implements BufferResult {
 			if(!this.trimmed.compareAndSet(null, _trimmed)) {
 				_trimmed = this.trimmed.get();
 			}
-		}
-		synchronized(this) {
-			log.write("result[");
-			log.write(Long.toString(_trimmed.id));
-			log.write("] = result[");
-			log.write(Long.toString(id));
-			log.write("].trim();\n");
-			log.flush();
+			synchronized(this) {
+				log.write("result[");
+				log.write(Long.toString(_trimmed.id));
+				log.write("] = result[");
+				log.write(Long.toString(id));
+				log.write("].trim();\n");
+				log.flush();
+			}
 		}
 		return _trimmed;
 	}
