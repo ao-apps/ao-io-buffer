@@ -26,6 +26,7 @@ import com.aoindustries.io.Encoder;
 import com.aoindustries.lang.Strings;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Logger;
 import org.apache.commons.lang3.NotImplementedException;
 
@@ -530,123 +531,134 @@ public class SegmentedResult implements BufferResult {
 	@Override
 	public void writeTo(Encoder encoder, Writer out, long off, long len) throws IOException {
 		// Implementation will need to start through beginning
-		throw new NotImplementedException("Implement when first needed.");
+		throw new NotImplementedException("TODO: Implement when first needed.");
 	}
+
+	private final AtomicReference<BufferResult> trimmed = new AtomicReference<>();
 
 	@Override
 	public BufferResult trim() throws IOException {
-		// Trim from the left
-		long newStart = start;
-		int newStartSegmentIndex = startSegmentIndex;
-		int newStartSegmentOffset = startSegmentOffset;
-		int newStartSegmentLength = startSegmentLength;
-		long newEnd = end;
-		int newEndSegmentIndex = endSegmentIndex;
-		int newEndSegmentOffset = endSegmentOffset;
-		int newEndSegmentLength = endSegmentLength;
-		assertThingsMakeSense(newStart, newStartSegmentIndex, newStartSegmentOffset, newStartSegmentLength, newEnd, newEndSegmentIndex, newEndSegmentOffset, newEndSegmentLength);
-		// Skip past the beginning whitespace characters
-		TRIM_LEFT :
-		while(newStart < newEnd) {
-			// Work on one segment
-			final byte type = segmentTypes[newStartSegmentIndex];
-			final Object value = segmentValues[newStartSegmentIndex];
-			// do...while because segments are never empty
-			do {
-				// TODO: Support surrogates: there are no whitespace characters outside the BMP as of Unicode 12.1, so this is not a high priority
-				char ch = charAt(type, value, newStartSegmentOffset);
-				if(!Strings.isWhitespace(ch)) break TRIM_LEFT;
-				newStart++;
-				newStartSegmentOffset++;
-				newStartSegmentLength--;
-				// Also trim end segment numbers if equal to begin segment index
-				if(newStartSegmentIndex == newEndSegmentIndex) {
-					newEndSegmentOffset++;
-					newEndSegmentLength--;
-				}
-				assertThingsMakeSense(newStart, newStartSegmentIndex, newStartSegmentOffset, newStartSegmentLength, newEnd, newEndSegmentIndex, newEndSegmentOffset, newEndSegmentLength);
-				if(newEnd == newStart) break TRIM_LEFT;
-			} while(newStartSegmentLength > 0);
-			// Move to next segment
-			newStartSegmentIndex++;
-			if(newStartSegmentIndex == newEndSegmentIndex) {
-				// Now reached end segment
-				newStartSegmentOffset = newEndSegmentOffset;
-				newStartSegmentLength = newEndSegmentLength;
-			} else {
-				// Middle segment
-				newStartSegmentOffset = segmentOffsets[newStartSegmentIndex];
-				newStartSegmentLength = segmentLengths[newStartSegmentIndex];
-			}
+		BufferResult _trimmed = this.trimmed.get();
+		if(_trimmed == null) {
+			// Trim from the left
+			long newStart = start;
+			int newStartSegmentIndex = startSegmentIndex;
+			int newStartSegmentOffset = startSegmentOffset;
+			int newStartSegmentLength = startSegmentLength;
+			long newEnd = end;
+			int newEndSegmentIndex = endSegmentIndex;
+			int newEndSegmentOffset = endSegmentOffset;
+			int newEndSegmentLength = endSegmentLength;
 			assertThingsMakeSense(newStart, newStartSegmentIndex, newStartSegmentOffset, newStartSegmentLength, newEnd, newEndSegmentIndex, newEndSegmentOffset, newEndSegmentLength);
-		}
-		// Trim from the right
-		if(newEnd > newStart) {
-			assert newEndSegmentIndex >= 0;
-			// Work on one segment
-			byte type = segmentTypes[newEndSegmentIndex];
-			Object value = segmentValues[newEndSegmentIndex];
-			TRIM_RIGHT :
-			do {
+			// Skip past the beginning whitespace characters
+			TRIM_LEFT :
+			while(newStart < newEnd) {
+				// Work on one segment
+				final byte type = segmentTypes[newStartSegmentIndex];
+				final Object value = segmentValues[newStartSegmentIndex];
 				// do...while because segments are never empty
 				do {
 					// TODO: Support surrogates: there are no whitespace characters outside the BMP as of Unicode 12.1, so this is not a high priority
-					char ch = charAt(type, value, newEndSegmentOffset + newEndSegmentLength - 1);
-					if(!Strings.isWhitespace(ch)) break TRIM_RIGHT;
-					newEnd--;
-					newEndSegmentLength--;
-					// Also trim start segment numbers of equal to end segment index
-					if(newStartSegmentIndex == newEndSegmentIndex)  {
-						newStartSegmentLength--;
+					char ch = charAt(type, value, newStartSegmentOffset);
+					if(!Strings.isWhitespace(ch)) break TRIM_LEFT;
+					newStart++;
+					newStartSegmentOffset++;
+					newStartSegmentLength--;
+					// Also trim end segment numbers if equal to begin segment index
+					if(newStartSegmentIndex == newEndSegmentIndex) {
+						newEndSegmentOffset++;
+						newEndSegmentLength--;
 					}
 					assertThingsMakeSense(newStart, newStartSegmentIndex, newStartSegmentOffset, newStartSegmentLength, newEnd, newEndSegmentIndex, newEndSegmentOffset, newEndSegmentLength);
-					if(newEnd == newStart) break TRIM_RIGHT;
-				} while(newEndSegmentLength > 0);
-				// Move to previous segment
-				newEndSegmentIndex--;
-				assert newEndSegmentIndex >= 0 : "Must be non-negative because we have not made it back to newStart yet";
-				type = segmentTypes[newEndSegmentIndex];
-				value = segmentValues[newEndSegmentIndex];
-				if(newEndSegmentIndex == newStartSegmentIndex) {
-					// Now reached start segment
-					newEndSegmentOffset = newStartSegmentOffset;
-					newEndSegmentLength = newStartSegmentLength;
+					if(newEnd == newStart) break TRIM_LEFT;
+				} while(newStartSegmentLength > 0);
+				// Move to next segment
+				newStartSegmentIndex++;
+				if(newStartSegmentIndex == newEndSegmentIndex) {
+					// Now reached end segment
+					newStartSegmentOffset = newEndSegmentOffset;
+					newStartSegmentLength = newEndSegmentLength;
 				} else {
 					// Middle segment
-					newEndSegmentOffset = segmentOffsets[newEndSegmentIndex];
-					newEndSegmentLength = segmentLengths[newEndSegmentIndex];
+					newStartSegmentOffset = segmentOffsets[newStartSegmentIndex];
+					newStartSegmentLength = segmentLengths[newStartSegmentIndex];
 				}
 				assertThingsMakeSense(newStart, newStartSegmentIndex, newStartSegmentOffset, newStartSegmentLength, newEnd, newEndSegmentIndex, newEndSegmentOffset, newEndSegmentLength);
-			} while(true);
-		}
+			}
+			// Trim from the right
+			if(newEnd > newStart) {
+				assert newEndSegmentIndex >= 0;
+				// Work on one segment
+				byte type = segmentTypes[newEndSegmentIndex];
+				Object value = segmentValues[newEndSegmentIndex];
+				TRIM_RIGHT :
+				do {
+					// do...while because segments are never empty
+					do {
+						// TODO: Support surrogates: there are no whitespace characters outside the BMP as of Unicode 12.1, so this is not a high priority
+						char ch = charAt(type, value, newEndSegmentOffset + newEndSegmentLength - 1);
+						if(!Strings.isWhitespace(ch)) break TRIM_RIGHT;
+						newEnd--;
+						newEndSegmentLength--;
+						// Also trim start segment numbers of equal to end segment index
+						if(newStartSegmentIndex == newEndSegmentIndex)  {
+							newStartSegmentLength--;
+						}
+						assertThingsMakeSense(newStart, newStartSegmentIndex, newStartSegmentOffset, newStartSegmentLength, newEnd, newEndSegmentIndex, newEndSegmentOffset, newEndSegmentLength);
+						if(newEnd == newStart) break TRIM_RIGHT;
+					} while(newEndSegmentLength > 0);
+					// Move to previous segment
+					newEndSegmentIndex--;
+					assert newEndSegmentIndex >= 0 : "Must be non-negative because we have not made it back to newStart yet";
+					type = segmentTypes[newEndSegmentIndex];
+					value = segmentValues[newEndSegmentIndex];
+					if(newEndSegmentIndex == newStartSegmentIndex) {
+						// Now reached start segment
+						newEndSegmentOffset = newStartSegmentOffset;
+						newEndSegmentLength = newStartSegmentLength;
+					} else {
+						// Middle segment
+						newEndSegmentOffset = segmentOffsets[newEndSegmentIndex];
+						newEndSegmentLength = segmentLengths[newEndSegmentIndex];
+					}
+					assertThingsMakeSense(newStart, newStartSegmentIndex, newStartSegmentOffset, newStartSegmentLength, newEnd, newEndSegmentIndex, newEndSegmentOffset, newEndSegmentLength);
+				} while(true);
+			}
 
-		// Check if empty
-		if(newStart == newEnd) {
-			return EmptyResult.getInstance();
+			// Check if empty
+			if(newStart == newEnd) {
+				_trimmed = EmptyResult.getInstance();
+			}
+			// Keep this object if already trimmed
+			else if(
+				start == newStart
+				&& end == newEnd
+			) {
+				_trimmed = this;
+			}
+			// Otherwise, return new substring
+			else {
+				SegmentedResult newTrimmed = new SegmentedResult(
+					segmentTypes,
+					segmentValues,
+					segmentOffsets,
+					segmentLengths,
+					newStart,
+					newStartSegmentIndex,
+					newStartSegmentOffset,
+					newStartSegmentLength,
+					newEnd,
+					newEndSegmentIndex,
+					newEndSegmentOffset,
+					newEndSegmentLength
+				);
+				newTrimmed.trimmed.set(newTrimmed);
+				_trimmed = newTrimmed;
+			}
+			if(!this.trimmed.compareAndSet(null, _trimmed)) {
+				_trimmed = this.trimmed.get();
+			}
 		}
-		// Keep this object if already trimmed
-		else if(
-			start == newStart
-			&& end == newEnd
-		) {
-			return this;
-		}
-		// Otherwise, return new substring
-		else {
-			return new SegmentedResult(
-				segmentTypes,
-				segmentValues,
-				segmentOffsets,
-				segmentLengths,
-				newStart,
-				newStartSegmentIndex,
-				newStartSegmentOffset,
-				newStartSegmentLength,
-				newEnd,
-				newEndSegmentIndex,
-				newEndSegmentOffset,
-				newEndSegmentLength
-			);
-		}
+		return _trimmed;
 	}
 }

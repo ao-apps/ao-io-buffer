@@ -201,55 +201,55 @@ public class TempFileResult implements BufferResult {
 	@Override
 	public BufferResult trim() throws IOException {
 		BufferResult _trimmed = this.trimmed.get();
-		if(_trimmed != null) return _trimmed;
-		// Trim from temp file
-		long newStart;
-		long newEnd;
-		try (RandomAccessFile raf = new RandomAccessFile(tempFile.getFile(), "r")) {
-			newStart = this.start;
-			// Skip past the beginning whitespace characters
-			raf.seek(newStart << 1);
-			while(newStart < end) {
-				char ch = raf.readChar();
-				// TODO: Support surrogates: there are no whitespace characters outside the BMP as of Unicode 12.1, so this is not a high priority
-				if(!Strings.isWhitespace(ch)) break;
-				newStart++;
+		if(_trimmed == null) {
+			// Trim from temp file
+			long newStart;
+			long newEnd;
+			try (RandomAccessFile raf = new RandomAccessFile(tempFile.getFile(), "r")) {
+				newStart = this.start;
+				// Skip past the beginning whitespace characters
+				raf.seek(newStart << 1);
+				while(newStart < end) {
+					char ch = raf.readChar();
+					// TODO: Support surrogates: there are no whitespace characters outside the BMP as of Unicode 12.1, so this is not a high priority
+					if(!Strings.isWhitespace(ch)) break;
+					newStart++;
+				}
+				// Skip past the ending whitespace characters
+				newEnd = end;
+				while(newEnd > newStart) {
+					raf.seek((newEnd-1) << 1);
+					char ch = raf.readChar();
+					// TODO: Support surrogates: there are no whitespace characters outside the BMP as of Unicode 12.1, so this is not a high priority
+					if(!Strings.isWhitespace(ch)) break;
+					newEnd--;
+				}
 			}
-			// Skip past the ending whitespace characters
-			newEnd = end;
-			while(newEnd > newStart) {
-				raf.seek((newEnd-1) << 1);
-				char ch = raf.readChar();
-				// TODO: Support surrogates: there are no whitespace characters outside the BMP as of Unicode 12.1, so this is not a high priority
-				if(!Strings.isWhitespace(ch)) break;
-				newEnd--;
+			// Check if empty
+			if(newStart == newEnd) {
+				_trimmed = EmptyResult.getInstance();
+			}
+			// Keep this object if already trimmed
+			else if(
+				start == newStart
+				&& end == newEnd
+			) {
+				_trimmed = this;
+			}
+			// Otherwise, return new substring
+			else {
+				TempFileResult newTrimmed = new TempFileResult(
+					tempFile,
+					newStart,
+					newEnd
+				);
+				newTrimmed.trimmed.set(newTrimmed);
+				_trimmed = newTrimmed;
+			}
+			if(!this.trimmed.compareAndSet(null, _trimmed)) {
+				_trimmed = this.trimmed.get();
 			}
 		}
-		// Check if empty
-		if(newStart == newEnd) {
-			_trimmed = EmptyResult.getInstance();
-		}
-		// Keep this object if already trimmed
-		else if(
-			start == newStart
-			&& end == newEnd
-		) {
-			_trimmed = this;
-		}
-		// Otherwise, return new substring
-		else {
-			TempFileResult newTrimmed = new TempFileResult(
-				tempFile,
-				newStart,
-				newEnd
-			);
-			newTrimmed.trimmed.set(newTrimmed);
-			_trimmed = newTrimmed;
-		}
-		if(this.trimmed.compareAndSet(null, _trimmed)) {
-			return _trimmed;
-		} else {
-			return this.trimmed.get();
-		}
+		return _trimmed;
 	}
 }

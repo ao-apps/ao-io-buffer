@@ -27,6 +27,7 @@ import com.aoindustries.lang.Strings;
 import com.aoindustries.math.SafeMath;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * A result contained in a single {@code char[]}.
@@ -133,43 +134,54 @@ public class CharArrayBufferResult implements BufferResult {
 		}
 	}
 
+	private final AtomicReference<BufferResult> trimmed = new AtomicReference<>();
+
 	@Override
 	public BufferResult trim() throws IOException {
-		int newStart = this.start;
-		final char[] buf = buffer;
-		// Skip past the beginning whitespace characters
-		while(newStart < end) {
-			// TODO: Support surrogates: there are no whitespace characters outside the BMP as of Unicode 12.1, so this is not a high priority
-			char ch = buf[newStart];
-			if(!Strings.isWhitespace(ch)) break;
-			newStart++;
+		BufferResult _trimmed = this.trimmed.get();
+		if(_trimmed == null) {
+			int newStart = this.start;
+			final char[] buf = buffer;
+			// Skip past the beginning whitespace characters
+			while(newStart < end) {
+				// TODO: Support surrogates: there are no whitespace characters outside the BMP as of Unicode 12.1, so this is not a high priority
+				char ch = buf[newStart];
+				if(!Strings.isWhitespace(ch)) break;
+				newStart++;
+			}
+			// Skip past the ending whitespace characters
+			int newEnd = end;
+			while(newEnd > newStart) {
+				// TODO: Support surrogates: there are no whitespace characters outside the BMP as of Unicode 12.1, so this is not a high priority
+				char ch = buf[newEnd - 1];
+				if(!Strings.isWhitespace(ch)) break;
+				newEnd--;
+			}
+			// Check if empty
+			if(newStart == newEnd) {
+				_trimmed = EmptyResult.getInstance();
+			}
+			// Keep this object if already trimmed
+			else if(
+				start == newStart
+				&& end == newEnd
+			) {
+				_trimmed = this;
+			}
+			// Otherwise, return new substring
+			else {
+				CharArrayBufferResult newTrimmed = new CharArrayBufferResult(
+					buffer,
+					newStart,
+					newEnd
+				);
+				newTrimmed.trimmed.set(newTrimmed);
+				_trimmed = newTrimmed;
+			}
+			if(!this.trimmed.compareAndSet(null, _trimmed)) {
+				_trimmed = this.trimmed.get();
+			}
 		}
-		// Skip past the ending whitespace characters
-		int newEnd = end;
-		while(newEnd > newStart) {
-			// TODO: Support surrogates: there are no whitespace characters outside the BMP as of Unicode 12.1, so this is not a high priority
-			char ch = buf[newEnd - 1];
-			if(!Strings.isWhitespace(ch)) break;
-			newEnd--;
-		}
-		// Check if empty
-		if(newStart == newEnd) {
-			return EmptyResult.getInstance();
-		}
-		// Keep this object if already trimmed
-		else if(
-			start == newStart
-			&& end == newEnd
-		) {
-			return this;
-		}
-		// Otherwise, return new substring
-		else {
-			return new CharArrayBufferResult(
-				buffer,
-				newStart,
-				newEnd
-			);
-		}
+		return _trimmed;
 	}
 }

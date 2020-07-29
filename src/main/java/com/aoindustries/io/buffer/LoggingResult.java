@@ -29,6 +29,7 @@ import com.aoindustries.util.AtomicSequence;
 import com.aoindustries.util.Sequence;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Logs all write calls in a way that can be put into Java source code.
@@ -272,17 +273,31 @@ public class LoggingResult implements BufferResult {
 		wrapped.appendTo(encoder, out, start, end);
 	}
 
+	private final AtomicReference<LoggingResult> trimmed = new AtomicReference<>();
+
 	@Override
 	public LoggingResult trim() throws IOException {
-		LoggingResult result = new LoggingResult(wrapped.trim(), log);
+		LoggingResult _trimmed = this.trimmed.get();
+		if(_trimmed == null) {
+			BufferResult wrappedTrimmed = wrapped.trim();
+			if(wrappedTrimmed == wrapped) {
+				_trimmed = this;
+			} else {
+				_trimmed = new LoggingResult(wrappedTrimmed, log);
+				_trimmed.trimmed.set(_trimmed);
+			}
+			if(!this.trimmed.compareAndSet(null, _trimmed)) {
+				_trimmed = this.trimmed.get();
+			}
+		}
 		synchronized(this) {
 			log.write("result[");
-			log.write(Long.toString(result.id));
+			log.write(Long.toString(_trimmed.id));
 			log.write("] = result[");
 			log.write(Long.toString(id));
 			log.write("].trim();\n");
 			log.flush();
 		}
-		return result;
+		return _trimmed;
 	}
 }
