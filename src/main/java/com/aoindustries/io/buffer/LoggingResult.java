@@ -34,8 +34,6 @@ import java.io.Writer;
  * Logs all write calls in a way that can be put into Java source code.
  * This is used to capture real-world scenarios for unit testing.
  *
- * This class is not thread safe.
- *
  * @author  AO Industries, Inc.
  */
 public class LoggingResult implements BufferResult {
@@ -58,8 +56,8 @@ public class LoggingResult implements BufferResult {
 	/**
 	 * Provides detailed logging for a media encoder.
 	 */
-	private void log(Encoder encoder) throws IOException {
-		if(encoder==null) log.write("null");
+	synchronized private void log(Encoder encoder) throws IOException {
+		if(encoder == null) log.write("null");
 		else {
 			String className = encoder.getClass().getName();
 			// Some shortcuts from the ao-encoding project, classnames used here to avoid hard dependency
@@ -78,8 +76,8 @@ public class LoggingResult implements BufferResult {
 	/**
 	 * Provides detailed logging for a writer.
 	 */
-	private void log(Writer writer) throws IOException {
-		if(writer==null) {
+	synchronized private void log(Writer writer) throws IOException {
+		if(writer == null) {
 			log.write("null");
 		} else if(writer instanceof LoggingWriter) {
 			LoggingWriter loggingWriter = (LoggingWriter)writer;
@@ -104,8 +102,8 @@ public class LoggingResult implements BufferResult {
 	/**
 	 * Provides detailed logging for an appendable.
 	 */
-	private void log(Appendable appendable) throws IOException {
-		if(appendable==null) {
+	synchronized private void log(Appendable appendable) throws IOException {
+		if(appendable == null) {
 			log.write("null");
 		} else if(appendable instanceof Writer) {
 			log((Writer)appendable);
@@ -117,10 +115,12 @@ public class LoggingResult implements BufferResult {
 
 	@Override
 	public long getLength() throws IOException {
-		log.write("result[");
-		log.write(Long.toString(id));
-		log.write("].getLength();\n");
-		log.flush();
+		synchronized(this) {
+			log.write("result[");
+			log.write(Long.toString(id));
+			log.write("].getLength();\n");
+			log.flush();
+		}
 		return wrapped.getLength();
 	}
 
@@ -132,10 +132,12 @@ public class LoggingResult implements BufferResult {
 	@Override
 	public String toString() {
 		try {
-			log.write("result[");
-			log.write(Long.toString(id));
-			log.write("].toString();\n");
-			log.flush();
+			synchronized(this) {
+				log.write("result[");
+				log.write(Long.toString(id));
+				log.write("].toString();\n");
+				log.flush();
+			}
 		} catch(IOException e) {
 			throw new WrappedException(e);
 		}
@@ -144,125 +146,143 @@ public class LoggingResult implements BufferResult {
 
 	@Override
 	public void writeTo(Writer out) throws IOException {
-		log.write("result[");
-		log.write(Long.toString(id));
-		log.write("].writeTo(");
-		log(out);
-		log.write(");\n");
-		log.flush();
+		synchronized(this) {
+			log.write("result[");
+			log.write(Long.toString(id));
+			log.write("].writeTo(");
+			log(out);
+			log.write(");\n");
+			log.flush();
+		}
 		wrapped.writeTo(out);
 	}
 
 	@Override
 	public void writeTo(Writer out, long off, long len) throws IOException {
-		log.write("result[");
-		log.write(Long.toString(id));
-		log.write("].writeTo(");
-		log(out);
-		log.write(", ");
-		log.write(Long.toString(off));
-		log.write(", ");
-		log.write(Long.toString(len));
-		log.write(");\n");
-		log.flush();
+		synchronized(this) {
+			log.write("result[");
+			log.write(Long.toString(id));
+			log.write("].writeTo(");
+			log(out);
+			log.write(", ");
+			log.write(Long.toString(off));
+			log.write(", ");
+			log.write(Long.toString(len));
+			log.write(");\n");
+			log.flush();
+		}
 		wrapped.writeTo(out, off, len);
 	}
 
 	@Override
 	public void writeTo(Encoder encoder, Writer out) throws IOException {
-		log.write("result[");
-		log.write(Long.toString(id));
-		log.write("].writeTo(");
-		log(encoder);
-		log.write(", ");
-		log(out);
-		log.write(");\n");
-		log.flush();
+		synchronized(this) {
+			log.write("result[");
+			log.write(Long.toString(id));
+			log.write("].writeTo(");
+			log(encoder);
+			log.write(", ");
+			log(out);
+			log.write(");\n");
+			log.flush();
+		}
 		wrapped.writeTo(encoder, out);
 	}
 
 	@Override
 	public void writeTo(Encoder encoder, Writer out, long off, long len) throws IOException {
-		log.write("result[");
-		log.write(Long.toString(id));
-		log.write("].writeTo(");
-		log(encoder);
-		log.write(", ");
-		log(out);
-		log.write(", ");
-		log.write(Long.toString(off));
-		log.write(", ");
-		log.write(Long.toString(len));
-		log.write(");\n");
-		log.flush();
+		synchronized(this) {
+			log.write("result[");
+			log.write(Long.toString(id));
+			log.write("].writeTo(");
+			log(encoder);
+			log.write(", ");
+			log(out);
+			log.write(", ");
+			log.write(Long.toString(off));
+			log.write(", ");
+			log.write(Long.toString(len));
+			log.write(");\n");
+			log.flush();
+		}
 		wrapped.writeTo(encoder, out, off, len);
 	}
 
 	@Override
 	public void appendTo(Appendable out) throws IOException {
-		log.write("result[");
-		log.write(Long.toString(id));
-		log.write("].appendTo(");
-		log(out);
-		log.write(");\n");
-		log.flush();
+		synchronized(this) {
+			log.write("result[");
+			log.write(Long.toString(id));
+			log.write("].appendTo(");
+			log(out);
+			log.write(");\n");
+			log.flush();
+		}
 		wrapped.appendTo(out);
 	}
 
 	@Override
 	public void appendTo(Appendable out, long start, long end) throws IOException {
-		log.write("result[");
-		log.write(Long.toString(id));
-		log.write("].appendTo(");
-		log(out);
-		log.write(", ");
-		log.write(Long.toString(start));
-		log.write(", ");
-		log.write(Long.toString(end));
-		log.write(");\n");
-		log.flush();
+		synchronized(this) {
+			log.write("result[");
+			log.write(Long.toString(id));
+			log.write("].appendTo(");
+			log(out);
+			log.write(", ");
+			log.write(Long.toString(start));
+			log.write(", ");
+			log.write(Long.toString(end));
+			log.write(");\n");
+			log.flush();
+		}
 		wrapped.appendTo(out, start, end);
 	}
 
 	@Override
 	public void appendTo(Encoder encoder, Appendable out) throws IOException {
-		log.write("result[");
-		log.write(Long.toString(id));
-		log.write("].appendTo(");
-		log(encoder);
-		log.write(", ");
-		log(out);
-		log.write(");\n");
-		log.flush();
+		synchronized(this) {
+			log.write("result[");
+			log.write(Long.toString(id));
+			log.write("].appendTo(");
+			log(encoder);
+			log.write(", ");
+			log(out);
+			log.write(");\n");
+			log.flush();
+		}
 		wrapped.appendTo(encoder, out);
 	}
 
 	@Override
 	public void appendTo(Encoder encoder, Appendable out, long start, long end) throws IOException {
-		log.write("result[");
-		log.write(Long.toString(id));
-		log.write("].appendTo(");
-		log(encoder);
-		log.write(", ");
-		log(out);
-		log.write(", ");
-		log.write(Long.toString(start));
-		log.write(", ");
-		log.write(Long.toString(end));
-		log.write(");\n");
-		log.flush();
+		synchronized(this) {
+			log.write("result[");
+			log.write(Long.toString(id));
+			log.write("].appendTo(");
+			log(encoder);
+			log.write(", ");
+			log(out);
+			log.write(", ");
+			log.write(Long.toString(start));
+			log.write(", ");
+			log.write(Long.toString(end));
+			log.write(");\n");
+			log.flush();
+		}
 		wrapped.appendTo(encoder, out, start, end);
 	}
 
 	@Override
 	public LoggingResult trim() throws IOException {
 		LoggingResult result = new LoggingResult(wrapped.trim(), log);
-		log.write("result[");
-		log.write(Long.toString(result.id));
-		log.write("] = result[");
-		log.write(Long.toString(id));
-		log.write("].trim();\n");
-		log.flush();
+		synchronized(this) {
+			log.write("result[");
+			log.write(Long.toString(result.id));
+			log.write("] = result[");
+			log.write(Long.toString(id));
+			log.write("].trim();\n");
+			log.flush();
+		}
 		return result;
 	}
 }

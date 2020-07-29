@@ -37,7 +37,7 @@ along with ao-io-buffer.  If not, see <http://www.gnu.org/licenses />.
 		shortTitle="Changelog"
 		tocLevels="1"
 		datePublished="2016-10-29T20:20:34-0500"
-		dateModified="2020-07-29T14:03:16-05:00"
+		dateModified="2020-07-29T14:18:43-05:00"
 	>
 		<!-- The current snapshot, unreleased version -->
 		<c:set var="version" value="@{com.aoindustries:ao-io-buffer:pom.version}" />
@@ -56,6 +56,7 @@ along with ao-io-buffer.  If not, see <http://www.gnu.org/licenses />.
 				<ul>
 					<li>New buffer result type <code>StringResult</code>.</li>
 					<li><code>BufferResult.isFastToString()</code> now true for all empty buffers of all types.</li>
+					<li>All <code>BufferResult</code> implementations are now thread-safe.</li>
 				</ul>
 			</changelog:release>
 		</c:if>

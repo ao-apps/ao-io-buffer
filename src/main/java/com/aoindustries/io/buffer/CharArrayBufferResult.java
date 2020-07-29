@@ -29,12 +29,7 @@ import java.io.IOException;
 import java.io.Writer;
 
 /**
- * <p>
  * A result contained in a single {@code char[]}.
- * </p>
- * <p>
- * This class is not thread safe.
- * </p>
  *
  * @author  AO Industries, Inc.
  */
@@ -48,6 +43,9 @@ public class CharArrayBufferResult implements BufferResult {
 	private final int start;
 	private final int end;
 
+	/**
+	 * @param buffer  No defensive copy is made and assumes the array will not change
+	 */
 	public CharArrayBufferResult(
 		char[] buffer,
 		int start,
@@ -58,6 +56,9 @@ public class CharArrayBufferResult implements BufferResult {
 		this.end = end;
 	}
 
+	/**
+	 * @param buffer  No defensive copy is made and assumes the array will not change
+	 */
 	public CharArrayBufferResult(char[] buffer) {
 		this(buffer, 0, buffer.length);
 	}
@@ -67,13 +68,13 @@ public class CharArrayBufferResult implements BufferResult {
 		return end - start;
 	}
 
-	private String toStringCache;
+	private volatile String toStringCache;
 
 	@Override
 	public boolean isFastToString() {
 		return
-			toStringCache != null
-			|| start == end;
+			start == end
+			|| toStringCache != null;
 	}
 
 	@Override

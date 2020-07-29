@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2013, 2015, 2016  AO Industries, Inc.
+ * Copyright (C) 2013, 2015, 2016, 2020  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -53,6 +53,11 @@ abstract public class BufferWriter extends Writer {
 	/**
 	 * Gets the result from this buffer.
 	 * The buffer must be closed.
+	 * <p>
+	 * Note: Although the {@link BufferWriter} are generally not thread-safe, the {@link BufferResult} is thread-safe.
+	 * It is expected to commonly create a buffer on one thread, but the be able to safely share the result among many
+	 * threads.
+	 * </p>
 	 *
 	 * @exception  IllegalStateException if not closed
 	 */

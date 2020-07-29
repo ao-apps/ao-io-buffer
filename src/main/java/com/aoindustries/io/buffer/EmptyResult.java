@@ -27,6 +27,8 @@ import java.io.Writer;
 
 /**
  * A completely empty result.
+ *
+ * @author  AO Industries, Inc.
  */
 final public class EmptyResult implements BufferResult {
 

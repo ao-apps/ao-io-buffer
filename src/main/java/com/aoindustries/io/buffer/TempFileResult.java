@@ -39,9 +39,6 @@ import java.util.logging.Logger;
 /**
  * {@inheritDoc}
  * <p>
- * This class is not thread safe.
- * </p>
- * <p>
  * TODO: Performance: When reading blocks, align to block boundary instead of remaining offset by start / writeStart.
  * </p>
  *
@@ -55,9 +52,6 @@ public class TempFileResult implements BufferResult {
 
 	private final long start;
 	private final long end;
-
-	// TODO: Why AtomicReference since documented as not thread-safe?
-	private final AtomicReference<BufferResult> trimmed = new AtomicReference<>();
 
 	public TempFileResult(
 		TempFile tempFile,
@@ -74,13 +68,13 @@ public class TempFileResult implements BufferResult {
 		return end - start;
 	}
 
-	private String toStringCache;
+	private volatile String toStringCache;
 
 	@Override
 	public boolean isFastToString() {
 		return
-			toStringCache != null
-			|| start == end;
+			start == end
+			|| toStringCache != null;
 	}
 
 	@Override
@@ -201,6 +195,8 @@ public class TempFileResult implements BufferResult {
 			}
 		}
 	}
+
+	private final AtomicReference<BufferResult> trimmed = new AtomicReference<>();
 
 	@Override
 	public BufferResult trim() throws IOException {

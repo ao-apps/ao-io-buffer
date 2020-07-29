@@ -30,6 +30,9 @@ import java.io.IOException;
  * The result from completion of a buffered writer.  Only available after a
  * buffered writer has been closed.
  * <p>
+ * All implementations are thread safe.
+ * </p>
+ * <p>
  * Idea: Add contentEquals(String) method to avoid some uses of toString?
  * </p>
  *

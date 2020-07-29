@@ -31,9 +31,6 @@ import org.apache.commons.lang3.NotImplementedException;
 
 /**
  * {@inheritDoc}
- * <p>
- * This class is not thread safe.
- * </p>
  *
  * @author  AO Industries, Inc.
  */
@@ -376,15 +373,15 @@ public class SegmentedResult implements BufferResult {
 		}
 	}
 
-	private String toStringCache;
+	private volatile String toStringCache;
 
 	@Override
 	public boolean isFastToString() {
 		if(
-			// Already converted, fast now
-			toStringCache != null
 			// Is empty
-			|| start == end
+			start == end
+			// Already converted, fast now
+			|| toStringCache != null
 		) {
 			return true;
 		}

@@ -29,12 +29,7 @@ import java.io.IOException;
 import java.io.Writer;
 
 /**
- * <p>
  * A result contained in a single {@link String}.
- * </p>
- * <p>
- * This class is not thread safe.
- * </p>
  *
  * @author  AO Industries, Inc.
  */
@@ -64,14 +59,14 @@ public class StringResult implements BufferResult {
 		return end - start;
 	}
 
-	private String toStringCache;
+	private volatile String toStringCache;
 
 	@Override
 	public boolean isFastToString() {
 		return
-			toStringCache != null
-			|| start == end
-			|| (start == 0 && end == buffer.length());
+			start == end
+			|| (start == 0 && end == buffer.length())
+			|| toStringCache != null;
 	}
 
 	@Override
