@@ -23,8 +23,6 @@
 package com.aoindustries.io.buffer;
 
 import com.aoindustries.lang.EmptyArrays;
-import java.io.IOException;
-import java.io.Writer;
 import java.nio.channels.ClosedChannelException;
 import java.util.logging.Logger;
 
@@ -58,39 +56,6 @@ public class SegmentedWriter extends BufferWriter {
 		TYPE_CHAR_APOS = 4,
 		TYPE_CHAR_OTHER = 5
 	;
-
-	/**
-	 * Appends the segment with the given offset and length to the given writer.
-	 */
-	private void writeSegment(int segmentIndex, Writer out) throws IOException {
-		switch(segmentTypes[segmentIndex]) {
-			case TYPE_STRING :
-				out.write((String)segmentValues[segmentIndex], segmentOffsets[segmentIndex], segmentLengths[segmentIndex]);
-				break;
-			case TYPE_CHAR_NEWLINE :
-				assert segmentOffsets[segmentIndex]==0;
-				assert segmentLengths[segmentIndex]==1;
-				out.write('\n');
-				break;
-			case TYPE_CHAR_QUOTE :
-				assert segmentOffsets[segmentIndex]==0;
-				assert segmentLengths[segmentIndex]==1;
-				out.write('"');
-				break;
-			case TYPE_CHAR_APOS :
-				assert segmentOffsets[segmentIndex]==0;
-				assert segmentLengths[segmentIndex]==1;
-				out.write('\'');
-				break;
-			case TYPE_CHAR_OTHER :
-				assert segmentOffsets[segmentIndex]==0;
-				assert segmentLengths[segmentIndex]==1;
-				out.write((Character)segmentValues[segmentIndex]);
-				break;
-			default :
-				throw new AssertionError();
-		}
-	}
 
 	/**
 	 * The length of the writer is the sum of the length of all its segments.

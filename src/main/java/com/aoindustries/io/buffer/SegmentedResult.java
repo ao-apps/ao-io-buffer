@@ -537,7 +537,7 @@ public class SegmentedResult implements BufferResult {
 	private final AtomicReference<BufferResult> trimmed = new AtomicReference<>();
 
 	@Override
-	public BufferResult trim() throws IOException {
+	public BufferResult trim() {
 		BufferResult _trimmed = this.trimmed.get();
 		if(_trimmed == null) {
 			// Trim from the left

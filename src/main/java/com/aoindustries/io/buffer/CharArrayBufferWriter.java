@@ -174,7 +174,7 @@ public class CharArrayBufferWriter extends BufferWriter {
 	}
 
 	@Override
-	public void close() throws IOException {
+	public void close() {
 		isClosed = true;
 		int len = this.length;
 		if(len > 0) {

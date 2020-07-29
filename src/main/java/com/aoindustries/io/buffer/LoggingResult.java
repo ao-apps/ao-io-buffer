@@ -45,7 +45,7 @@ public class LoggingResult implements BufferResult {
 	private final BufferResult wrapped;
 	private final Writer log;
 
-	protected LoggingResult(BufferResult wrapped, Writer log) throws IOException {
+	protected LoggingResult(BufferResult wrapped, Writer log) {
 		this.wrapped = wrapped;
 		this.log = log;
 	}

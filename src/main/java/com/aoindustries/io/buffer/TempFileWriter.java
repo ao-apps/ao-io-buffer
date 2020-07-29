@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2013, 2015, 2016, 2017, 2019  AO Industries, Inc.
+ * Copyright (C) 2013, 2015, 2016, 2017, 2019, 2020  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -123,7 +123,7 @@ public class TempFileWriter extends BufferWriter {
 
 	@Override
 	public void flush() throws IOException {
-		if(fileWriter!=null) fileWriter.flush();
+		if(fileWriter != null) fileWriter.flush();
 	}
 
 	@Override
