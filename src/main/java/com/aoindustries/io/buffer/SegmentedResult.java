@@ -394,7 +394,7 @@ public class SegmentedResult implements BufferResult {
 				// If offset into string, is not fast (would incur substring)
 				if(startSegmentOffset != 0) return false;
 				String str = (String)segmentValues[startSegmentIndex];
-				// If fast when covers entire string in this segment
+				// Is fast when covers entire string in this segment
 				return startSegmentLength == str.length();
 			case SegmentedWriter.TYPE_CHAR_NEWLINE :
 			case SegmentedWriter.TYPE_CHAR_QUOTE :
@@ -638,22 +638,32 @@ public class SegmentedResult implements BufferResult {
 			}
 			// Otherwise, return new substring
 			else {
-				SegmentedResult newTrimmed = new SegmentedResult(
-					segmentTypes,
-					segmentValues,
-					segmentOffsets,
-					segmentLengths,
-					newStart,
-					newStartSegmentIndex,
-					newStartSegmentOffset,
-					newStartSegmentLength,
-					newEnd,
-					newEndSegmentIndex,
-					newEndSegmentOffset,
-					newEndSegmentLength
-				);
-				newTrimmed.trimmed.set(newTrimmed);
-				_trimmed = newTrimmed;
+				if(newStartSegmentIndex == newEndSegmentIndex && segmentTypes[newStartSegmentIndex] == SegmentedWriter.TYPE_STRING) {
+					// StringResult for single String segment
+					_trimmed = new StringResult(
+						(String)segmentValues[newStartSegmentIndex],
+						newStartSegmentOffset,
+						newStartSegmentOffset + newStartSegmentLength,
+						true
+					);
+				} else {
+					SegmentedResult newTrimmed = new SegmentedResult(
+						segmentTypes,
+						segmentValues,
+						segmentOffsets,
+						segmentLengths,
+						newStart,
+						newStartSegmentIndex,
+						newStartSegmentOffset,
+						newStartSegmentLength,
+						newEnd,
+						newEndSegmentIndex,
+						newEndSegmentOffset,
+						newEndSegmentLength
+					);
+					newTrimmed.trimmed.set(newTrimmed);
+					_trimmed = newTrimmed;
+				}
 			}
 			if(!this.trimmed.compareAndSet(null, _trimmed)) {
 				_trimmed = this.trimmed.get();

@@ -24,7 +24,6 @@ package com.aoindustries.io.buffer;
 
 import com.aoindustries.lang.EmptyArrays;
 import java.nio.channels.ClosedChannelException;
-import java.util.logging.Logger;
 
 /**
  * Buffers all writes in segments.  This is to hold references to strings instead
@@ -38,8 +37,6 @@ import java.util.logging.Logger;
  * @author  AO Industries, Inc.
  */
 public class SegmentedWriter extends BufferWriter {
-
-	private static final Logger logger = Logger.getLogger(SegmentedWriter.class.getName());
 
 	/**
 	 * The number of starting elements in segment arrays.
@@ -149,7 +146,7 @@ public class SegmentedWriter extends BufferWriter {
 	@Override
 	public void write(char cbuf[]) throws ClosedChannelException {
 		if(isClosed) throw new ClosedChannelException();
-		final int len = cbuf.length;
+		int len = cbuf.length;
 		if(len > 0) {
 			if(len == 1) {
 				write(cbuf[0]);
@@ -398,21 +395,30 @@ public class SegmentedWriter extends BufferWriter {
 				result = EmptyResult.getInstance();
 			} else {
 				assert segmentCount > 0 : "When not empty and using segments, must have at least one segment";
-				int endSegmentIndex = segmentCount - 1;
-				result = new SegmentedResult(
-					segmentTypes,
-					segmentValues,
-					segmentOffsets,
-					segmentLengths,
-					0, // start
-					0, // startSegmentIndex
-					segmentOffsets[0],
-					segmentLengths[0],
-					length, // end
-					endSegmentIndex,
-					segmentOffsets[endSegmentIndex],
-					segmentLengths[endSegmentIndex]
-				);
+				if(segmentCount == 1 && segmentTypes[0] == TYPE_STRING) {
+					// StringResult for single String segment
+					String str = (String)segmentValues[0];
+					int off = segmentOffsets[0];
+					int len = segmentLengths[0];
+					assert len == length;
+					result = new StringResult(str, off, off + len);
+				} else {
+					int endSegmentIndex = segmentCount - 1;
+					result = new SegmentedResult(
+						segmentTypes,
+						segmentValues,
+						segmentOffsets,
+						segmentLengths,
+						0, // start
+						0, // startSegmentIndex
+						segmentOffsets[0],
+						segmentLengths[0],
+						length, // end
+						endSegmentIndex,
+						segmentOffsets[endSegmentIndex],
+						segmentLengths[endSegmentIndex]
+					);
+				}
 			}
 		}
 		return result;

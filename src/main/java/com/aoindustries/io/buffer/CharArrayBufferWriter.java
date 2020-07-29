@@ -43,9 +43,6 @@ import java.util.Arrays;
  *
  * @author  AO Industries, Inc.
  */
-// TODO: Remember the first string written, and use it for toString in order to maintain string identity for single-string writes from a resource bundle source
-// TODO: for in-context translator support (and perhaps a tiny performance boost)
-// TODO: This might be used with a StringResult (shared by single-segment SegmentedWriter, too)
 public class CharArrayBufferWriter extends BufferWriter {
 
 	/**
@@ -79,6 +76,12 @@ public class CharArrayBufferWriter extends BufferWriter {
 	 * Manipulations are only active once closed.
 	 */
 	private boolean isClosed = false;
+
+	/**
+	 * Keep the first string that was written, using it as the result when possible in order to maintain string identity
+	 * for in-context translation tools.
+	 */
+	private String firstString;
 
 	public CharArrayBufferWriter() {
 	}
@@ -117,6 +120,7 @@ public class CharArrayBufferWriter extends BufferWriter {
 	@Override
 	public void write(int c) throws IOException {
 		if(isClosed) throw new ClosedChannelException();
+		firstString = null;
 		getBuffer(1)[length++] = (char)c;
 	}
 
@@ -124,6 +128,7 @@ public class CharArrayBufferWriter extends BufferWriter {
 	public void write(char cbuf[], int off, int len) throws IOException {
 		if(isClosed) throw new ClosedChannelException();
 		if(len > 0) {
+			firstString = null;
 			char[] buf = getBuffer(len);
 			System.arraycopy(cbuf, off, buf, length, len);
 			length += len;
@@ -134,6 +139,11 @@ public class CharArrayBufferWriter extends BufferWriter {
 	public void write(String str, int off, int len) throws IOException {
 		if(isClosed) throw new ClosedChannelException();
 		if(len > 0) {
+			if(length == 0 && off == 0 && len == str.length()) {
+				firstString = str;
+			} else {
+				firstString = null;
+			}
 			char[] buf = getBuffer(len);
 			str.getChars(off, off + len, buf, length);
 			length += len;
@@ -142,21 +152,19 @@ public class CharArrayBufferWriter extends BufferWriter {
 
 	@Override
 	public CharArrayBufferWriter append(CharSequence csq) throws IOException {
-		super.append(csq);
-		return this;
+		if(csq == null) csq = "null";
+		return append(csq, 0, csq.length());
 	}
 
 	@Override
 	public CharArrayBufferWriter append(CharSequence csq, int start, int end) throws IOException {
 		if(csq == null) {
-			write("null");
+			write("null", start, end - start);
+		} else if(csq instanceof String) {
+			// Avoid subSequence which copies characters in Java 1.8+
+			write((String)csq, start, end - start);
 		} else {
-			if(csq instanceof String) {
-				// Avoid subSequence which copies characters in Java 1.8+
-				write((String)csq, start, end - start);
-			} else {
-		        write(csq.subSequence(start, end).toString());
-			}
+			write(csq.subSequence(start, end).toString());
 		}
 		return this;
 	}
@@ -207,6 +215,9 @@ public class CharArrayBufferWriter extends BufferWriter {
 		if(result == null) {
 			if(length == 0) {
 				result = EmptyResult.getInstance();
+			} else if(firstString != null) {
+				assert firstString.length() == length;
+				result = new StringResult(firstString);
 			} else {
 				result = new CharArrayBufferResult(buffer, 0, length);
 			}

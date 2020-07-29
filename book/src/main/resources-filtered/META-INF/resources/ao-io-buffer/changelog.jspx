@@ -37,7 +37,7 @@ along with ao-io-buffer.  If not, see <http://www.gnu.org/licenses />.
 		shortTitle="Changelog"
 		tocLevels="1"
 		datePublished="2016-10-29T20:20:34-0500"
-		dateModified="2020-07-29T14:53:08-05:00"
+		dateModified="2020-07-29T16:28:38-05:00"
 	>
 		<!-- The current snapshot, unreleased version -->
 		<c:set var="version" value="@{com.aoindustries:ao-io-buffer:pom.version}" />
@@ -60,6 +60,17 @@ along with ao-io-buffer.  If not, see <http://www.gnu.org/licenses />.
 					<li>
 						All <code>BufferResult.trim()</code> implementations now cache the result for constant-time
 						secondary access to <code>trim()</code>.
+					</li>
+					<li>
+						<p>
+							Improved support for maintaining String identity for in-context translation tools.
+							The implementations of <code>BufferWriter</code> now track the first string written, and use
+							that string in place of the result where appropriate.
+						</p>
+						<p>
+							This may also provide tiny performance boost, since more places in the code convert results
+							to the new <code>StringResult</code>.
+						</p>
 					</li>
 				</ul>
 			</changelog:release>

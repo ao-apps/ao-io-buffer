@@ -41,18 +41,28 @@ public class StringResult implements BufferResult {
 	private final int start;
 	private final int end;
 
+	StringResult(
+		String buffer,
+		int start,
+		int end,
+		boolean trimmed
+	) {
+		this.buffer = buffer;
+		this.start = start;
+		this.end = end;
+		if(trimmed) this.trimmed.set(this);
+	}
+
 	public StringResult(
 		String buffer,
 		int start,
 		int end
 	) {
-		this.buffer = buffer;
-		this.start = start;
-		this.end = end;
+		this(buffer, start, end, false);
 	}
 
 	public StringResult(String buffer) {
-		this(buffer, 0, buffer.length());
+		this(buffer, 0, buffer.length(), false);
 	}
 
 	@Override
@@ -164,13 +174,12 @@ public class StringResult implements BufferResult {
 			}
 			// Otherwise, return new substring
 			else {
-				StringResult newTrimmed = new StringResult(
+				_trimmed = new StringResult(
 					buffer,
 					newStart,
-					newEnd
+					newEnd,
+					true
 				);
-				newTrimmed.trimmed.set(newTrimmed);
-				_trimmed = newTrimmed;
 			}
 			if(!this.trimmed.compareAndSet(null, _trimmed)) {
 				_trimmed = this.trimmed.get();

@@ -56,6 +56,12 @@ public class TempFileWriter extends BufferWriter {
 	private final TempFile tempFile;
 	private Writer fileWriter;
 
+	/**
+	 * Keep the first string that was written, using it as the result when possible in order to maintain string identity
+	 * for in-context translation tools.
+	 */
+	private String firstString;
+
 	public TempFileWriter(TempFile tempFile) throws IOException {
 		this.length = 0;
 		this.tempFile = tempFile;
@@ -66,50 +72,91 @@ public class TempFileWriter extends BufferWriter {
 	public void write(int c) throws IOException {
 		if(isClosed) throw new ClosedChannelException();
 		fileWriter.write(c);
+		firstString = null;
 		length++;
 	}
 
 	@Override
 	public void write(char cbuf[]) throws IOException {
 		if(isClosed) throw new ClosedChannelException();
-		fileWriter.write(cbuf);
-		length += cbuf.length;
+		int len = cbuf.length;
+		if(len > 0) {
+			fileWriter.write(cbuf);
+			firstString = null;
+			length += len;
+		}
 	}
 
 	@Override
 	public void write(char cbuf[], int off, int len) throws IOException {
 		if(isClosed) throw new ClosedChannelException();
-		fileWriter.write(cbuf, off, len);
-		length += len;
+		if(len > 0) {
+			fileWriter.write(cbuf, off, len);
+			firstString = null;
+			length += len;
+		}
 	}
 
 	@Override
 	public void write(String str) throws IOException {
 		if(isClosed) throw new ClosedChannelException();
-		fileWriter.write(str);
-		length += str.length();
+		int len = str.length();
+		if(len > 0) {
+			if(length == 0) {
+				firstString = str;
+			} else {
+				firstString = null;
+			}
+			fileWriter.write(str);
+			length += len;
+		}
 	}
 
 	@Override
 	public void write(String str, int off, int len) throws IOException {
 		if(isClosed) throw new ClosedChannelException();
-		fileWriter.write(str, off, len);
-		length += len;
+		if(len > 0) {
+			fileWriter.write(str, off, len);
+			if(length == 0 && off == 0 && len == str.length()) {
+				firstString = str;
+			} else {
+				firstString = null;
+			}
+			length += len;
+		}
 	}
 
 	@Override
 	public TempFileWriter append(CharSequence csq) throws IOException {
 		if(isClosed) throw new ClosedChannelException();
-		fileWriter.append(csq);
-		length += csq.length();
+		if(csq == null) csq = "null";
+		int len = csq.length();
+		if(len > 0) {
+			fileWriter.append(csq);
+			if(length == 0 && csq instanceof String) {
+				firstString = (String)csq;
+			} else {
+				firstString = null;
+			}
+			length += len;
+		}
 		return this;
 	}
 
 	@Override
 	public TempFileWriter append(CharSequence csq, int start, int end) throws IOException {
 		if(isClosed) throw new ClosedChannelException();
-		fileWriter.append(csq, start, end);
-		length += (end-start);
+		if(csq == null) csq = "null";
+		int len = end - start;
+		if(len > 0) {
+			fileWriter.append(csq, start, end);
+			if(length == 0 && start == 0 && end == csq.length() && csq instanceof String) {
+				firstString = (String)csq;
+			} else {
+				firstString = null;
+			}
+			length += len;
+		}
 		return this;
 	}
 
@@ -117,6 +164,7 @@ public class TempFileWriter extends BufferWriter {
 	public TempFileWriter append(char c) throws IOException {
 		if(isClosed) throw new ClosedChannelException();
 		fileWriter.append(c);
+		firstString = null;
 		length++;
 		return this;
 	}
@@ -154,6 +202,9 @@ public class TempFileWriter extends BufferWriter {
 		if(result == null) {
 			if(length == 0) {
 				result = EmptyResult.getInstance();
+			} else if(firstString != null) {
+				assert firstString.length() == length;
+				result = new StringResult(firstString);
 			} else {
 				result = new TempFileResult(tempFile, 0, length);
 			}
