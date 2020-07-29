@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2013, 2015, 2016, 2020  AO Industries, Inc.
+ * Copyright (C) 2020  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -30,7 +30,7 @@ import java.io.Writer;
 
 /**
  * <p>
- * A result contained in a single {@code char[]}.
+ * A result contained in a single {@link String}.
  * </p>
  * <p>
  * This class is not thread safe.
@@ -38,18 +38,15 @@ import java.io.Writer;
  *
  * @author  AO Industries, Inc.
  */
-public class CharArrayBufferResult implements BufferResult {
+public class StringResult implements BufferResult {
 
-	/**
-	 * @see  CharArrayBufferWriter#buffer
-	 */
-	private final char[] buffer;
+	private final String buffer;
 
 	private final int start;
 	private final int end;
 
-	public CharArrayBufferResult(
-		char[] buffer,
+	public StringResult(
+		String buffer,
 		int start,
 		int end
 	) {
@@ -58,8 +55,8 @@ public class CharArrayBufferResult implements BufferResult {
 		this.end = end;
 	}
 
-	public CharArrayBufferResult(char[] buffer) {
-		this(buffer, 0, buffer.length);
+	public StringResult(String buffer) {
+		this(buffer, 0, buffer.length());
 	}
 
 	@Override
@@ -73,7 +70,8 @@ public class CharArrayBufferResult implements BufferResult {
 	public boolean isFastToString() {
 		return
 			toStringCache != null
-			|| start == end;
+			|| start == end
+			|| (start == 0 && end == buffer.length());
 	}
 
 	@Override
@@ -81,8 +79,10 @@ public class CharArrayBufferResult implements BufferResult {
 		if(toStringCache == null) {
 			if(start == end) {
 				toStringCache = "";
+			} else if(start == 0 && end == buffer.length()) {
+				toStringCache = buffer;
 			} else {
-				toStringCache = new String(buffer, start, end - start);
+				toStringCache = buffer.substring(start, end);
 			}
 		}
 		return toStringCache;
@@ -135,11 +135,11 @@ public class CharArrayBufferResult implements BufferResult {
 	@Override
 	public BufferResult trim() throws IOException {
 		int newStart = this.start;
-		final char[] buf = buffer;
+		final String buf = buffer;
 		// Skip past the beginning whitespace characters
 		while(newStart < end) {
 			// TODO: Support surrogates: there are no whitespace characters outside the BMP as of Unicode 12.1, so this is not a high priority
-			char ch = buf[newStart];
+			char ch = buf.charAt(newStart);
 			if(!Strings.isWhitespace(ch)) break;
 			newStart++;
 		}
@@ -147,7 +147,7 @@ public class CharArrayBufferResult implements BufferResult {
 		int newEnd = end;
 		while(newEnd > newStart) {
 			// TODO: Support surrogates: there are no whitespace characters outside the BMP as of Unicode 12.1, so this is not a high priority
-			char ch = buf[newEnd - 1];
+			char ch = buf.charAt(newEnd - 1);
 			if(!Strings.isWhitespace(ch)) break;
 			newEnd--;
 		}
@@ -164,7 +164,7 @@ public class CharArrayBufferResult implements BufferResult {
 		}
 		// Otherwise, return new substring
 		else {
-			return new CharArrayBufferResult(
+			return new StringResult(
 				buffer,
 				newStart,
 				newEnd

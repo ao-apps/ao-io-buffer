@@ -38,10 +38,12 @@ import java.util.logging.Logger;
 
 /**
  * {@inheritDoc}
- *
+ * <p>
  * This class is not thread safe.
- *
+ * </p>
+ * <p>
  * TODO: Performance: When reading blocks, align to block boundary instead of remaining offset by start / writeStart.
+ * </p>
  *
  * @author  AO Industries, Inc.
  */
@@ -54,9 +56,10 @@ public class TempFileResult implements BufferResult {
 	private final long start;
 	private final long end;
 
+	// TODO: Why AtomicReference since documented as not thread-safe?
 	private final AtomicReference<BufferResult> trimmed = new AtomicReference<>();
 
-	protected TempFileResult(
+	public TempFileResult(
 		TempFile tempFile,
 		long start,
 		long end
@@ -75,12 +78,14 @@ public class TempFileResult implements BufferResult {
 
 	@Override
 	public boolean isFastToString() {
-		return toStringCache!=null;
+		return
+			toStringCache != null
+			|| start == end;
 	}
 
 	@Override
 	public String toString() {
-		if(toStringCache==null) {
+		if(toStringCache == null) {
 			try {
 				if(logger.isLoggable(Level.INFO)) {
 					logger.log(
@@ -90,31 +95,31 @@ public class TempFileResult implements BufferResult {
 					);
 				}
 				final long length = end - start;
-				if(length>Integer.MAX_VALUE) throw new RuntimeException("Buffer too large to convert to String: length="+length);
+				if(length > Integer.MAX_VALUE) throw new RuntimeException("Buffer too large to convert to String: length = " + length);
 				StringBuilder sb = new StringBuilder((int)length);
 				try (RandomAccessFile raf = new RandomAccessFile(tempFile.getFile(), "r")) {
 					byte[] bytes = BufferManager.getBytes();
 					try {
 						long index = this.start;
-						raf.seek(index<<1);
-						while(index<end) {
+						raf.seek(index << 1);
+						while(index < end) {
 							// Read a block
 							long blockSizeLong = (end - index)<<1;
 							int blockSize = blockSizeLong > BufferManager.BUFFER_SIZE ? BufferManager.BUFFER_SIZE : (int)blockSizeLong;
-							assert (blockSize&1) == 0 : "Must be an even number for UTF-16 conversion";
+							assert (blockSize & 1) == 0 : "Must be an even number for UTF-16 conversion";
 							raf.readFully(bytes, 0, blockSize);
 							// Convert to characters in sb
-							for(int bpos=0; bpos<blockSize; bpos+=2) {
+							for(int bpos = 0; bpos < blockSize; bpos += 2) {
 								sb.append(IoUtils.bufferToChar(bytes, bpos));
 							}
 							// Update location
-							index += blockSize>>1;
+							index += blockSize >> 1;
 						}
 					} finally {
 						BufferManager.release(bytes, false);
 					}
 				}
-				assert sb.length()==length : "sb.length()!=length: "+sb.length()+"!="+length;
+				assert sb.length() == length : "sb.length() != length: " + sb.length() + " != " + length;
 				toStringCache = sb.toString();
 			} catch(IOException err) {
 				throw new WrappedException(err);
@@ -137,7 +142,7 @@ public class TempFileResult implements BufferResult {
 	@Override
 	public void writeTo(Encoder encoder, Writer out) throws IOException {
 		writeTo(
-			encoder!=null
+			encoder != null
 				? new EncoderWriter(encoder, out)
 				: out
 		);
@@ -146,7 +151,7 @@ public class TempFileResult implements BufferResult {
 	@Override
 	public void writeTo(Encoder encoder, Writer out, long off, long len) throws IOException {
 		writeTo(
-			encoder!=null
+			encoder != null
 				? new EncoderWriter(encoder, out)
 				: out,
 			off,
@@ -157,38 +162,36 @@ public class TempFileResult implements BufferResult {
 	/**
 	 * Implementation of writeTo
 	 *
-	 * @param out
 	 * @param writeStart  The absolute index to write from
 	 * @param writeEnd    The absolute index one past last character to write
-	 * @throws IOException 
 	 */
 	private void writeToImpl(Writer out, long writeStart, long writeEnd) throws IOException {
-		try ( // TODO: If copying to another SegmentedBufferedWriter or AutoTempFileWriter, we have a chance here for disk-to-disk block level copying instead of going through all the conversions.
-			RandomAccessFile raf = new RandomAccessFile(tempFile.getFile(), "r")) {
+		// TODO: If copying to another SegmentedBufferedWriter or AutoTempFileWriter, we have a chance here for disk-to-disk block level copying instead of going through all the conversions.
+		try (RandomAccessFile raf = new RandomAccessFile(tempFile.getFile(), "r")) {
 			byte[] bytes = BufferManager.getBytes();
 			try {
 				char[] chars = BufferManager.getChars();
 				try {
 					long index = writeStart;
-					raf.seek(index<<1);
-					while(index<writeEnd) {
+					raf.seek(index << 1);
+					while(index < writeEnd) {
 						// Read a block
 						long blockSizeLong = (writeEnd - index)<<1;
 						int blockSize = blockSizeLong > BufferManager.BUFFER_SIZE ? BufferManager.BUFFER_SIZE : (int)blockSizeLong;
-						assert (blockSize&1) == 0 : "Must be an even number for UTF-16 conversion";
+						assert (blockSize & 1) == 0 : "Must be an even number for UTF-16 conversion";
 						raf.readFully(bytes, 0, blockSize);
 						// Convert to characters
 						for(
-							int bpos=0, cpos=0;
-							bpos<blockSize;
-							bpos+=2, cpos++
+							int bpos = 0, cpos = 0;
+							bpos < blockSize;
+							bpos += 2, cpos++
 						) {
 							chars[cpos] = IoUtils.bufferToChar(bytes, bpos);
 						}
 						// Write to output
-						out.write(chars, 0, blockSize>>1);
+						out.write(chars, 0, blockSize >> 1);
 						// Update location
-						index += blockSize>>1;
+						index += blockSize >> 1;
 					}
 				} finally {
 					BufferManager.release(chars, false);
@@ -209,8 +212,8 @@ public class TempFileResult implements BufferResult {
 		try (RandomAccessFile raf = new RandomAccessFile(tempFile.getFile(), "r")) {
 			newStart = this.start;
 			// Skip past the beginning whitespace characters
-			raf.seek(newStart<<1);
-			while(newStart<end) {
+			raf.seek(newStart << 1);
+			while(newStart < end) {
 				char ch = raf.readChar();
 				// TODO: Support surrogates: there are no whitespace characters outside the BMP as of Unicode 12.1, so this is not a high priority
 				if(!Strings.isWhitespace(ch)) break;
@@ -218,34 +221,34 @@ public class TempFileResult implements BufferResult {
 			}
 			// Skip past the ending whitespace characters
 			newEnd = end;
-			while(newEnd>newStart) {
-				raf.seek((newEnd-1)<<1);
+			while(newEnd > newStart) {
+				raf.seek((newEnd-1) << 1);
 				char ch = raf.readChar();
 				// TODO: Support surrogates: there are no whitespace characters outside the BMP as of Unicode 12.1, so this is not a high priority
 				if(!Strings.isWhitespace(ch)) break;
 				newEnd--;
 			}
 		}
+		// Check if empty
+		if(newStart == newEnd) {
+			_trimmed = EmptyResult.getInstance();
+		}
 		// Keep this object if already trimmed
-		if(
-			start==newStart
-			&& end==newEnd
+		else if(
+			start == newStart
+			&& end == newEnd
 		) {
 			_trimmed = this;
-		} else {
-			// Check if empty
-			if(newStart==newEnd) {
-				_trimmed = EmptyResult.getInstance();
-			} else {
-				// Otherwise, return new substring
-				TempFileResult newTrimmed = new TempFileResult(
-					tempFile,
-					newStart,
-					newEnd
-				);
-				newTrimmed.trimmed.set(newTrimmed);
-				_trimmed = newTrimmed;
-			}
+		}
+		// Otherwise, return new substring
+		else {
+			TempFileResult newTrimmed = new TempFileResult(
+				tempFile,
+				newStart,
+				newEnd
+			);
+			newTrimmed.trimmed.set(newTrimmed);
+			_trimmed = newTrimmed;
 		}
 		if(this.trimmed.compareAndSet(null, _trimmed)) {
 			return _trimmed;
