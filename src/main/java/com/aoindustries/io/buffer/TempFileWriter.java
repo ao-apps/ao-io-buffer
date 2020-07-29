@@ -30,6 +30,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.channels.ClosedChannelException;
 import java.nio.charset.StandardCharsets;
+import java.util.logging.Logger;
 
 /**
  * Writes to a temp file buffer.
@@ -39,6 +40,8 @@ import java.nio.charset.StandardCharsets;
  * @author  AO Industries, Inc.
  */
 public class TempFileWriter extends BufferWriter {
+
+	private static final Logger logger = Logger.getLogger(TempFileWriter.class.getName());
 
 	/**
 	 * The length of the writer is the sum of the data written to the buffer.
@@ -202,9 +205,11 @@ public class TempFileWriter extends BufferWriter {
 		if(result == null) {
 			if(length == 0) {
 				result = EmptyResult.getInstance();
+				logger.finest("EmptyResult optimized result");
 			} else if(firstString != null) {
 				assert firstString.length() == length;
 				result = new StringResult(firstString);
+				logger.finest("StringResult optimized result");
 			} else {
 				result = new TempFileResult(tempFile, 0, length);
 			}

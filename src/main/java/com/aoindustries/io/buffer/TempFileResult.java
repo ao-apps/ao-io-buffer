@@ -232,6 +232,7 @@ public class TempFileResult implements BufferResult {
 			// Check if empty
 			if(newStart == newEnd) {
 				_trimmed = EmptyResult.getInstance();
+				logger.finest("EmptyResult optimized trim");
 			}
 			// Keep this object if already trimmed
 			else if(

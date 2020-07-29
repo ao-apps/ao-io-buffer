@@ -628,6 +628,7 @@ public class SegmentedResult implements BufferResult {
 			// Check if empty
 			if(newStart == newEnd) {
 				_trimmed = EmptyResult.getInstance();
+				logger.finest("EmptyResult optimized trim");
 			}
 			// Keep this object if already trimmed
 			else if(
@@ -646,6 +647,7 @@ public class SegmentedResult implements BufferResult {
 						newStartSegmentOffset + newStartSegmentLength,
 						true
 					);
+					logger.finest("StringResult optimized trim");
 				} else {
 					SegmentedResult newTrimmed = new SegmentedResult(
 						segmentTypes,

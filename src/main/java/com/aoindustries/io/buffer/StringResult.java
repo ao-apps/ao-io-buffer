@@ -28,6 +28,7 @@ import com.aoindustries.math.SafeMath;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Logger;
 
 /**
  * A result contained in a single {@link String}.
@@ -35,6 +36,8 @@ import java.util.concurrent.atomic.AtomicReference;
  * @author  AO Industries, Inc.
  */
 public class StringResult implements BufferResult {
+
+	private static final Logger logger = Logger.getLogger(StringResult.class.getName());
 
 	private final String buffer;
 
@@ -164,6 +167,7 @@ public class StringResult implements BufferResult {
 			// Check if empty
 			if(newStart == newEnd) {
 				_trimmed = EmptyResult.getInstance();
+				logger.finest("EmptyResult optimized trim");
 			}
 			// Keep this object if already trimmed
 			else if(

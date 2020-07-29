@@ -24,6 +24,7 @@ package com.aoindustries.io.buffer;
 
 import com.aoindustries.lang.EmptyArrays;
 import java.nio.channels.ClosedChannelException;
+import java.util.logging.Logger;
 
 /**
  * Buffers all writes in segments.  This is to hold references to strings instead
@@ -37,6 +38,8 @@ import java.nio.channels.ClosedChannelException;
  * @author  AO Industries, Inc.
  */
 public class SegmentedWriter extends BufferWriter {
+
+	private static final Logger logger = Logger.getLogger(SegmentedWriter.class.getName());
 
 	/**
 	 * The number of starting elements in segment arrays.
@@ -393,6 +396,7 @@ public class SegmentedWriter extends BufferWriter {
 		if(result == null) {
 			if(length == 0) {
 				result = EmptyResult.getInstance();
+				logger.finest("EmptyResult optimized result");
 			} else {
 				assert segmentCount > 0 : "When not empty and using segments, must have at least one segment";
 				if(segmentCount == 1 && segmentTypes[0] == TYPE_STRING) {
@@ -402,6 +406,7 @@ public class SegmentedWriter extends BufferWriter {
 					int len = segmentLengths[0];
 					assert len == length;
 					result = new StringResult(str, off, off + len);
+					logger.finest("StringResult optimized result");
 				} else {
 					int endSegmentIndex = segmentCount - 1;
 					result = new SegmentedResult(

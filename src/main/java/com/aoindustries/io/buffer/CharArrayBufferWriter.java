@@ -27,6 +27,7 @@ import com.aoindustries.util.BufferManager;
 import java.io.IOException;
 import java.nio.channels.ClosedChannelException;
 import java.util.Arrays;
+import java.util.logging.Logger;
 
 /**
  * Writes to a set of internally managed buffers.  When possible, the buffers are reused.
@@ -44,6 +45,8 @@ import java.util.Arrays;
  * @author  AO Industries, Inc.
  */
 public class CharArrayBufferWriter extends BufferWriter {
+
+	private static final Logger logger = Logger.getLogger(CharArrayBufferWriter.class.getName());
 
 	/**
 	 * The maximum buffer length is 2^30 due to array length limitations.
@@ -215,9 +218,11 @@ public class CharArrayBufferWriter extends BufferWriter {
 		if(result == null) {
 			if(length == 0) {
 				result = EmptyResult.getInstance();
+				logger.finest("EmptyResult optimized result");
 			} else if(firstString != null) {
 				assert firstString.length() == length;
 				result = new StringResult(firstString);
+				logger.finest("StringResult optimized result");
 			} else {
 				result = new CharArrayBufferResult(buffer, 0, length);
 			}
