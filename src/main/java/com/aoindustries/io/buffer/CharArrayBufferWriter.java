@@ -82,9 +82,12 @@ public class CharArrayBufferWriter extends BufferWriter {
 
 	/**
 	 * Keep the first string that was written, using it as the result when possible in order to maintain string identity
-	 * for in-context translation tools.
+	 * for in-context translation tools.  This also avoids allocating buffer space and copying characters when only a
+	 * single empty string is written.
 	 */
 	private String firstString;
+	private int firstStringBegin;
+	private int firstStringEnd;
 
 	public CharArrayBufferWriter() {
 	}
@@ -95,8 +98,11 @@ public class CharArrayBufferWriter extends BufferWriter {
 	 * @returns the possibly new buffer.
 	 */
 	private char[] getBuffer(int additional) throws IOException {
+		assert !isClosed;
+		assert additional > 0;
 		long newLen = (long)length + additional;
 		if(newLen > MAX_LENGTH) throw new IOException("Maximum buffer length is " + MAX_LENGTH + ", " + newLen + " requested");
+		String fs = firstString;
 		char[] buf = this.buffer;
 		int bufLen = buf.length;
 		if(newLen > bufLen) {
@@ -109,7 +115,9 @@ public class CharArrayBufferWriter extends BufferWriter {
 				(newBufLen == BufferManager.BUFFER_SIZE)
 				? BufferManager.getChars()
 				: new char[newBufLen];
-			System.arraycopy(buf, 0, newBuf, 0, length);
+			if(fs == null) {
+				System.arraycopy(buf, 0, newBuf, 0, length);
+			}
 			// Recycle buffer
 			if(bufLen == BufferManager.BUFFER_SIZE) {
 				BufferManager.release(buf, false);
@@ -117,13 +125,17 @@ public class CharArrayBufferWriter extends BufferWriter {
 			buf = newBuf;
 			this.buffer = buf;
 		}
+		if(fs != null) {
+			assert (firstStringEnd - firstStringBegin) == length;
+			fs.getChars(firstStringBegin, firstStringEnd, buf, 0);
+			firstString = null;
+		}
 		return buf;
 	}
 
 	@Override
 	public void write(int c) throws IOException {
 		if(isClosed) throw new ClosedChannelException();
-		firstString = null;
 		getBuffer(1)[length++] = (char)c;
 	}
 
@@ -131,9 +143,7 @@ public class CharArrayBufferWriter extends BufferWriter {
 	public void write(char cbuf[], int off, int len) throws IOException {
 		if(isClosed) throw new ClosedChannelException();
 		if(len > 0) {
-			firstString = null;
-			char[] buf = getBuffer(len);
-			System.arraycopy(cbuf, off, buf, length, len);
+			System.arraycopy(cbuf, off, getBuffer(len), length, len);
 			length += len;
 		}
 	}
@@ -142,13 +152,13 @@ public class CharArrayBufferWriter extends BufferWriter {
 	public void write(String str, int off, int len) throws IOException {
 		if(isClosed) throw new ClosedChannelException();
 		if(len > 0) {
-			if(length == 0 && off == 0 && len == str.length()) {
+			if(length == 0) {
 				firstString = str;
+				firstStringBegin = off;
+				firstStringEnd = off + len;
 			} else {
-				firstString = null;
+				str.getChars(off, off + len, getBuffer(len), length);
 			}
-			char[] buf = getBuffer(len);
-			str.getChars(off, off + len, buf, length);
 			length += len;
 		}
 	}
@@ -167,7 +177,7 @@ public class CharArrayBufferWriter extends BufferWriter {
 			// Avoid subSequence which copies characters in Java 1.8+
 			write((String)csq, start, end - start);
 		} else {
-			write(csq.subSequence(start, end).toString());
+			write(csq.subSequence(start, end).toString(), 0, end - start);
 		}
 		return this;
 	}
@@ -188,13 +198,15 @@ public class CharArrayBufferWriter extends BufferWriter {
 	public void close() {
 		isClosed = true;
 		int len = this.length;
-		if(len > 0) {
-			if(len <= COPY_THEN_RECYCLE_LIMIT) {
-				char[] oldBuf = buffer;
-				this.buffer = Arrays.copyOf(oldBuf, len);
-				if(oldBuf.length == BufferManager.BUFFER_SIZE) {
-					BufferManager.release(oldBuf, false);
-				}
+		if(
+			len > 0
+			&& len <= COPY_THEN_RECYCLE_LIMIT
+			&& firstString == null
+		) {
+			char[] oldBuf = buffer;
+			this.buffer = Arrays.copyOf(oldBuf, len);
+			if(oldBuf.length == BufferManager.BUFFER_SIZE) {
+				BufferManager.release(oldBuf, false);
 			}
 		}
 	}
@@ -219,13 +231,18 @@ public class CharArrayBufferWriter extends BufferWriter {
 			if(length == 0) {
 				result = EmptyResult.getInstance();
 				logger.finest("EmptyResult optimized result");
-			} else if(firstString != null) {
-				assert firstString.length() == length;
-				result = new StringResult(firstString);
-				logger.finest("StringResult optimized result");
 			} else {
-				result = new CharArrayBufferResult(buffer, 0, length);
+				String fs = firstString;
+				if(fs != null) {
+					assert (firstStringEnd - firstStringBegin) == length;
+					result = new StringResult(fs, firstStringBegin, firstStringEnd);
+					firstString = null;
+					logger.finest("StringResult optimized result");
+				} else {
+					result = new CharArrayBufferResult(buffer, 0, length);
+				}
 			}
+			buffer = null;
 		}
 		return result;
 	}

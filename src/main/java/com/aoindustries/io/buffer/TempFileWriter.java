@@ -64,6 +64,8 @@ public class TempFileWriter extends BufferWriter {
 	 * for in-context translation tools.
 	 */
 	private String firstString;
+	private int firstStringBegin;
+	private int firstStringEnd;
 
 	public TempFileWriter(TempFile tempFile) throws IOException {
 		this.length = 0;
@@ -74,8 +76,8 @@ public class TempFileWriter extends BufferWriter {
 	@Override
 	public void write(int c) throws IOException {
 		if(isClosed) throw new ClosedChannelException();
-		fileWriter.write(c);
 		firstString = null;
+		fileWriter.write(c);
 		length++;
 	}
 
@@ -84,8 +86,8 @@ public class TempFileWriter extends BufferWriter {
 		if(isClosed) throw new ClosedChannelException();
 		int len = cbuf.length;
 		if(len > 0) {
-			fileWriter.write(cbuf);
 			firstString = null;
+			fileWriter.write(cbuf);
 			length += len;
 		}
 	}
@@ -94,8 +96,8 @@ public class TempFileWriter extends BufferWriter {
 	public void write(char cbuf[], int off, int len) throws IOException {
 		if(isClosed) throw new ClosedChannelException();
 		if(len > 0) {
-			fileWriter.write(cbuf, off, len);
 			firstString = null;
+			fileWriter.write(cbuf, off, len);
 			length += len;
 		}
 	}
@@ -107,6 +109,8 @@ public class TempFileWriter extends BufferWriter {
 		if(len > 0) {
 			if(length == 0) {
 				firstString = str;
+				firstStringBegin = 0;
+				firstStringEnd = len;
 			} else {
 				firstString = null;
 			}
@@ -119,12 +123,14 @@ public class TempFileWriter extends BufferWriter {
 	public void write(String str, int off, int len) throws IOException {
 		if(isClosed) throw new ClosedChannelException();
 		if(len > 0) {
-			fileWriter.write(str, off, len);
-			if(length == 0 && off == 0 && len == str.length()) {
+			if(length == 0) {
 				firstString = str;
+				firstStringBegin = off;
+				firstStringEnd = off + len;
 			} else {
 				firstString = null;
 			}
+			fileWriter.write(str, off, len);
 			length += len;
 		}
 	}
@@ -135,12 +141,14 @@ public class TempFileWriter extends BufferWriter {
 		if(csq == null) csq = "null";
 		int len = csq.length();
 		if(len > 0) {
-			fileWriter.append(csq);
 			if(length == 0 && csq instanceof String) {
 				firstString = (String)csq;
+				firstStringBegin = 0;
+				firstStringEnd = len;
 			} else {
 				firstString = null;
 			}
+			fileWriter.append(csq);
 			length += len;
 		}
 		return this;
@@ -152,12 +160,14 @@ public class TempFileWriter extends BufferWriter {
 		if(csq == null) csq = "null";
 		int len = end - start;
 		if(len > 0) {
-			fileWriter.append(csq, start, end);
-			if(length == 0 && start == 0 && end == csq.length() && csq instanceof String) {
+			if(length == 0 && csq instanceof String) {
 				firstString = (String)csq;
+				firstStringBegin = start;
+				firstStringEnd = end;
 			} else {
 				firstString = null;
 			}
+			fileWriter.append(csq, start, end);
 			length += len;
 		}
 		return this;
@@ -206,12 +216,16 @@ public class TempFileWriter extends BufferWriter {
 			if(length == 0) {
 				result = EmptyResult.getInstance();
 				logger.finest("EmptyResult optimized result");
-			} else if(firstString != null) {
-				assert firstString.length() == length;
-				result = new StringResult(firstString);
-				logger.finest("StringResult optimized result");
 			} else {
-				result = new TempFileResult(tempFile, 0, length);
+				String fs = firstString;
+				if(fs != null) {
+					assert (firstStringEnd - firstStringBegin) == length;
+					result = new StringResult(fs, firstStringBegin, firstStringEnd);
+					firstString = null;
+					logger.finest("StringResult optimized result");
+				} else {
+					result = new TempFileResult(tempFile, 0, length);
+				}
 			}
 		}
 		return result;
