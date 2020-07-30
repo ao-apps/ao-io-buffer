@@ -274,7 +274,7 @@ public class SegmentedWriter extends BufferWriter {
 		if(csq == null) {
 			write("null");
 		} else {
-			final int len = end-start;
+			final int len = end - start;
 			if(len > 0) {
 				if(len == 1) {
 					// Prefer character shortcuts
