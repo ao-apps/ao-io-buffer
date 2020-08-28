@@ -68,8 +68,8 @@ along with ao-io-buffer.  If not, see <http://www.gnu.org/licenses />.
 							that string in place of the result where appropriate.
 						</p>
 						<p>
-							This may also provide tiny performance boost, since more places in the code convert results
-							to the new <code>StringResult</code>.
+							This may also provide a tiny performance boost, since more places in the code convert
+							results to the new <code>StringResult</code>.
 						</p>
 					</li>
 				</ul>
