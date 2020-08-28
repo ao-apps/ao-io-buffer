@@ -37,7 +37,7 @@ along with ao-io-buffer.  If not, see <http://www.gnu.org/licenses />.
 		shortTitle="Changelog"
 		tocLevels="1"
 		datePublished="2016-10-29T20:20:34-0500"
-		dateModified="2020-07-29T16:28:38-05:00"
+		dateModified="2020-08-27T22:15:55-05:00"
 	>
 		<!-- The current snapshot, unreleased version -->
 		<c:set var="version" value="@{com.aoindustries:ao-io-buffer:pom.version}" />
@@ -52,29 +52,38 @@ along with ao-io-buffer.  If not, see <http://www.gnu.org/licenses />.
 				groupId="@{project.groupId}"
 				artifactId="@{documented.artifactId}"
 				scmUrl="@{project.scm.url}"
-			>
-				<ul>
-					<li>New buffer result type <code>StringResult</code>.</li>
-					<li><code>BufferResult.isFastToString()</code> now true for all empty buffers of all types.</li>
-					<li>All <code>BufferResult</code> implementations are now thread-safe.</li>
-					<li>
-						All <code>BufferResult.trim()</code> implementations now cache the result for constant-time
-						secondary access to <code>trim()</code>.
-					</li>
-					<li>
-						<p>
-							Improved support for maintaining String identity for in-context translation tools.
-							The implementations of <code>BufferWriter</code> now track the first string written, and use
-							that string in place of the result where appropriate.
-						</p>
-						<p>
-							This may also provide a tiny performance boost, since more places in the code convert
-							results to the new <code>StringResult</code>.
-						</p>
-					</li>
-				</ul>
-			</changelog:release>
+			/>
 		</c:if>
+
+		<changelog:release
+			projectName="@{documented.name}"
+			version="3.3.0"
+			datePublished="2020-08-27T22:15:55-05:00"
+			groupId="@{project.groupId}"
+			artifactId="@{documented.artifactId}"
+			scmUrl="@{project.scm.url}"
+		>
+			<ul>
+				<li>New buffer result type <code>StringResult</code>.</li>
+				<li><code>BufferResult.isFastToString()</code> now true for all empty buffers of all types.</li>
+				<li>All <code>BufferResult</code> implementations are now thread-safe.</li>
+				<li>
+					All <code>BufferResult.trim()</code> implementations now cache the result for constant-time
+					secondary access to <code>trim()</code>.
+				</li>
+				<li>
+					<p>
+						Improved support for maintaining String identity for in-context translation tools.
+						The implementations of <code>BufferWriter</code> now track the first string written, and use
+						that string in place of the result where appropriate.
+					</p>
+					<p>
+						This may also provide a tiny performance boost, since more places in the code convert
+						results to the new <code>StringResult</code>.
+					</p>
+				</li>
+			</ul>
+		</changelog:release>
 
 		<changelog:release
 			projectName="@{documented.name}"
