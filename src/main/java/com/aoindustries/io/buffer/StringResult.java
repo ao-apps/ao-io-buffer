@@ -44,6 +44,7 @@ public class StringResult implements BufferResult {
 	private final int start;
 	private final int end;
 
+	@SuppressWarnings("LeakingThisInConstructor")
 	StringResult(
 		String buffer,
 		int start,

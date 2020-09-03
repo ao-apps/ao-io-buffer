@@ -72,7 +72,9 @@ public class LoggingWriter extends BufferWriter {
 		else if(ch < ' ') {
 			log.write("'\\u");
 			String hex = Integer.toHexString(ch);
-			for(int l = hex.length(); l < 4; l++) log.write('0');
+			for(int l = hex.length(); l < 4; l++) {
+				log.write('0');
+			}
 			log.write(hex);
 			log.write('\'');
 		} else {
@@ -102,7 +104,9 @@ public class LoggingWriter extends BufferWriter {
 				else if(ch < ' ') {
 					log.write("\\u");
 					String hex = Integer.toHexString(ch);
-					for(int l = hex.length(); l < 4; l++) log.write('0');
+					for(int l = hex.length(); l < 4; l++) {
+						log.write('0');
+					}
 					log.write(hex);
 				} else {
 					log.write(ch);

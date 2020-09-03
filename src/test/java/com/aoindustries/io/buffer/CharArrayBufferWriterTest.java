@@ -99,6 +99,7 @@ public class CharArrayBufferWriterTest extends BufferWriterTestParent {
 	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	protected void simulateCalls(BufferWriterFactory factory, Writer out) throws IOException {
 		// Assume overhead of writing to body content
 		Writer bodyContent = NullWriter.getInstance(); // TODO: out
