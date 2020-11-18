@@ -22,7 +22,6 @@
  */
 package com.aoindustries.io.buffer;
 
-import com.aoindustries.exception.WrappedException;
 import com.aoindustries.io.Encoder;
 import com.aoindustries.io.EncoderWriter;
 import com.aoindustries.io.IoUtils;
@@ -31,6 +30,7 @@ import com.aoindustries.tempfiles.TempFile;
 import com.aoindustries.util.BufferManager;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.io.UncheckedIOException;
 import java.io.Writer;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
@@ -119,7 +119,7 @@ public class TempFileResult implements BufferResult {
 					assert sb.length() == length : "sb.length() != length: " + sb.length() + " != " + length;
 					toStringCache = sb.toString();
 				} catch(IOException err) {
-					throw new WrappedException(err);
+					throw new UncheckedIOException(err);
 				}
 			}
 		}

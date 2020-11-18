@@ -22,10 +22,10 @@
  */
 package com.aoindustries.io.buffer;
 
-import com.aoindustries.exception.WrappedException;
 import com.aoindustries.util.AtomicSequence;
 import com.aoindustries.util.Sequence;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.io.Writer;
 
 /**
@@ -280,7 +280,7 @@ public class LoggingWriter extends BufferWriter {
 			log.write("].toString();\n");
 			log.flush();
 		} catch(IOException e) {
-			throw new WrappedException(e);
+			throw new UncheckedIOException(e);
 		}
 		return "LoggingWriter(" + wrapped.toString() + ")";
 	}

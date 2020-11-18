@@ -22,12 +22,12 @@
  */
 package com.aoindustries.io.buffer;
 
-import com.aoindustries.exception.WrappedException;
 import com.aoindustries.io.Encoder;
 import com.aoindustries.io.EncoderWriter;
 import com.aoindustries.util.AtomicSequence;
 import com.aoindustries.util.Sequence;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.io.Writer;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -140,7 +140,7 @@ public class LoggingResult implements BufferResult {
 				log.flush();
 			}
 		} catch(IOException e) {
-			throw new WrappedException(e);
+			throw new UncheckedIOException(e);
 		}
 		return wrapped.toString();
 	}
