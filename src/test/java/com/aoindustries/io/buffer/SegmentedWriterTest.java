@@ -74,7 +74,7 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		Writer jspWriter = NullWriter.getInstance();
 		BufferWriter[] writer = new BufferWriter[1000];
 		BufferResult[] result = new BufferResult[1000];
-		// The rest is from LoggingWriter (See AutoEncodingBufferedTag)
+		// The rest is from LoggingWriter (See EncodingBufferedSimpleTag)
 		writer[1] = factory.newBufferWriter();
 		writer[1].write("Select Domains", 0, 14);
 		writer[1].flush();
