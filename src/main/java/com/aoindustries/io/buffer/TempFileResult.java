@@ -37,13 +37,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * {@inheritDoc}
- * <p>
- * TODO: Performance: When reading blocks, align to block boundary instead of remaining offset by start / writeStart.
- * </p>
- *
  * @author  AO Industries, Inc.
  */
+// TODO: Performance: When reading blocks, align to block boundary instead of remaining offset by start / writeStart.
 public class TempFileResult implements BufferResult {
 
 	private static final Logger logger = Logger.getLogger(TempFileResult.class.getName());

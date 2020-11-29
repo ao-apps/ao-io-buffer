@@ -31,8 +31,6 @@ import java.util.logging.Logger;
 import org.apache.commons.lang3.NotImplementedException;
 
 /**
- * {@inheritDoc}
- *
  * @author  AO Industries, Inc.
  */
 public class SegmentedResult implements BufferResult {
