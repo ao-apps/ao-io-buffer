@@ -37,7 +37,7 @@ along with ao-io-buffer.  If not, see <http://www.gnu.org/licenses />.
 		shortTitle="Changelog"
 		tocLevels="1"
 		datePublished="2016-10-29T20:20:34-05:00"
-		dateModified="2021-05-31T01:04:26-05:00"
+		dateModified="2021-06-03T22:53:21-05:00"
 	>
 		<c:if test="${fn:endsWith('@{project.version}', '-SNAPSHOT') and !fn:endsWith('@{project.version}', '-POST-SNAPSHOT')}">
 			<changelog:release
@@ -50,6 +50,7 @@ along with ao-io-buffer.  If not, see <http://www.gnu.org/licenses />.
 			>
 				<ul>
 					<li>Maven artifact relocated from <code>com.aoindustries:ao-io-buffer</code> to <code>com.aoapps:ao-io-buffer</code>.</li>
+					<li>Package renamed from <code>com.aoindustries.io.buffer</code> to <code>com.aoapps.io.buffer</code>.</li>
 				</ul>
 			</changelog:release>
 		</c:if>
@@ -99,7 +100,7 @@ along with ao-io-buffer.  If not, see <http://www.gnu.org/licenses />.
 					This is to help 3rd-party parsers that fail to perform full Maven-compatible substitutions.
 				</li>
 				<li>
-					Implemented new <code>appendTo(…)</code> methods of <ao:a href="https://oss.aoapps.com/lang/apidocs/com/aoindustries/io/Writable.html">Writable</ao:a>,
+					Implemented new <code>appendTo(…)</code> methods of <ao:a href="https://oss.aoapps.com/lang/apidocs/com/aoapps/lang/io/Writable.html">Writable</ao:a>,
 					where default interface implementations are suboptimal.
 				</li>
 				<li>
@@ -158,9 +159,9 @@ along with ao-io-buffer.  If not, see <http://www.gnu.org/licenses />.
 					Using new <core:link book="/tempfiles" page="/index.jspx" /> project for temporary file management.
 					Affects the public API of:
 					<ol>
-						<li><ao:a href="apidocs/com/aoindustries/io/buffer/AutoTempFileWriter.html">AutoTempFileWriter</ao:a></li>
-						<li><ao:a href="apidocs/com/aoindustries/io/buffer/TempFileWriter.html">TempFileWriter</ao:a></li>
-						<li><ao:a href="apidocs/com/aoindustries/io/buffer/TempFileResult.html">TempFileResult</ao:a></li>
+						<li><ao:a href="apidocs/com/aoapps/io/buffer/AutoTempFileWriter.html">AutoTempFileWriter</ao:a></li>
+						<li><ao:a href="apidocs/com/aoapps/io/buffer/TempFileWriter.html">TempFileWriter</ao:a></li>
+						<li><ao:a href="apidocs/com/aoapps/io/buffer/TempFileResult.html">TempFileResult</ao:a></li>
 					</ol>
 				</li>
 			</ul>

@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2013, 2015, 2016, 2020  AO Industries, Inc.
+ * Copyright (C) 2013, 2015, 2016, 2020, 2021  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -20,12 +20,12 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with ao-io-buffer.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.aoindustries.io.buffer;
+package com.aoapps.io.buffer;
 
-import com.aoindustries.io.Encoder;
-import com.aoindustries.io.EncoderWriter;
-import com.aoindustries.util.AtomicSequence;
-import com.aoindustries.util.Sequence;
+import com.aoapps.lang.io.Encoder;
+import com.aoapps.lang.io.EncoderWriter;
+import com.aoapps.lang.util.AtomicSequence;
+import com.aoapps.lang.util.Sequence;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.io.Writer;
@@ -62,11 +62,11 @@ public class LoggingResult implements BufferResult {
 		else {
 			String className = encoder.getClass().getName();
 			// Some shortcuts from the ao-encoding project, classnames used here to avoid hard dependency
-			if("com.aoindustries.encoding.JavaScriptInXhtmlAttributeEncoder".equals(className)) {
+			if("com.aoapps.encoding.JavaScriptInXhtmlAttributeEncoder".equals(className)) {
 				log.write("javaScriptInXhtmlAttributeEncoder");
-			} else if("com.aoindustries.encoding.JavaScriptInXhtmlEncoder".equals(className)) {
+			} else if("com.aoapps.encoding.JavaScriptInXhtmlEncoder".equals(className)) {
 				log.write("javaScriptInXhtmlEncoder");
-			} else if("com.aoindustries.encoding.TextInXhtmlAttributeEncoder".equals(className)) {
+			} else if("com.aoapps.encoding.TextInXhtmlAttributeEncoder".equals(className)) {
 				log.write("textInXhtmlAttributeEncoder");
 			} else {
 				log.write(className);

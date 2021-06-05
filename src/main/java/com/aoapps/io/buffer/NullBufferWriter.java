@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2013, 2015, 2016  AO Industries, Inc.
+ * Copyright (C) 2013, 2015, 2016, 2021  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with ao-io-buffer.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.aoindustries.io.buffer;
+package com.aoapps.io.buffer;
 
 /**
  * Discards everything.  Not a proper buffer but useful to time the overhead of calling the buffers.

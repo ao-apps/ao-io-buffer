@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2013, 2015, 2016, 2020  AO Industries, Inc.
+ * Copyright (C) 2012, 2013, 2015, 2016, 2020, 2021  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -20,14 +20,14 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with ao-io-buffer.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.aoindustries.io.buffer;
+package com.aoapps.io.buffer;
 
-import static com.aoindustries.encoding.JavaScriptInXhtmlAttributeEncoder.javaScriptInXhtmlAttributeEncoder;
-import static com.aoindustries.encoding.JavaScriptInXhtmlEncoder.javaScriptInXhtmlEncoder;
-import com.aoindustries.encoding.EncodingContext;
-import com.aoindustries.encoding.MediaWriter;
-import static com.aoindustries.encoding.TextInXhtmlAttributeEncoder.textInXhtmlAttributeEncoder;
-import com.aoindustries.io.NullWriter;
+import com.aoapps.encoding.EncodingContext;
+import static com.aoapps.encoding.JavaScriptInXhtmlAttributeEncoder.javaScriptInXhtmlAttributeEncoder;
+import static com.aoapps.encoding.JavaScriptInXhtmlEncoder.javaScriptInXhtmlEncoder;
+import com.aoapps.encoding.MediaWriter;
+import static com.aoapps.encoding.TextInXhtmlAttributeEncoder.textInXhtmlAttributeEncoder;
+import com.aoapps.lang.io.NullWriter;
 import java.io.IOException;
 import java.io.Writer;
 import junit.framework.Test;
@@ -36,30 +36,63 @@ import junit.framework.TestSuite;
 /**
  * @author  AO Industries, Inc.
  */
-public class SegmentedWriterTest extends BufferWriterTestParent {
+public class CharArrayBufferWriterTest extends BufferWriterTestParent {
 
-	public SegmentedWriterTest(String testName) {
+	public CharArrayBufferWriterTest(String testName) {
 		super(testName);
 	}
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite(SegmentedWriterTest.class);
+		TestSuite suite = new TestSuite(CharArrayBufferWriterTest.class);
 		return suite;
 	}
 
+	/*
+	private static final char[][] strings = {
+		"Editeur : Mining Essential".toCharArray(),
+		"Langues : français, allemand, anglais, espagnol, portugais, italien, néerlandais, norvégien, suédois, arabe, hébreu, polonais, russe, turc, chinois, coréen, japonais, hindi, persan et grec.".toCharArray(),
+		"Formats de documents : txt (plein texte), html (hypertext markup language), doc (microsoft word), rtf (rich text format), pdf (portable document format), docx (microsoft word 2010).".toCharArray(),
+		"Version : 5.1".toCharArray(),
+		"Navigateurs web : Internet Explorer, Firefox, Chrome, Safari, Opéra".toCharArray(),
+		"Systèmes : Linux, Windows Server 2003, Windows Server 2008.".toCharArray(),
+		"".toCharArray(),
+		"L’API Java Essential Summarizer est destinée aux entreprises et aux développeurs. Elle peut être mise à disposition en vue de différentes intégrations de la fonctionnalité résumé automatique de texte.".toCharArray(),
+		"Il en est de même pour le Web Service Essential Summarizer.".toCharArray()
+	};
+
+	private void doBenchmark() throws IOException {
+		long startTime = System.nanoTime();
+		CharArrayBufferWriter writer = new CharArrayBufferWriter(32, 4 * 1024 * 1024);
+		try {
+			for(int i=0; i<10000; i++) {
+				for(char[] str : strings) writer.write(str);
+			}
+			long endTime = System.nanoTime();
+			System.out.println("Wrote " + writer.getLength()+" characters in " + BigDecimal.valueOf(endTime - startTime, 6)+" ms");
+		} finally {
+			writer.close();
+		}
+	}
+
+	public void testBenchmark() throws IOException {
+		for(int i=0; i<10; i++) {
+			doBenchmark();
+		}
+	}
+	*/
 	public void testBenchmarkSimulate() throws IOException {
 		benchmarkSimulate(
 			new BufferWriterFactory() {
 				@Override
 				public String getName() {
-					return SegmentedWriter.class.getName();
+					return CharArrayBufferWriter.class.getName();
 				}
 
 				@Override
 				public BufferWriter newBufferWriter() {
 					// To test call overhead:
 					// return NullBufferWriter.getInstance();
-					return new SegmentedWriter();
+					return new CharArrayBufferWriter();
 				}
 			}
 		);
@@ -605,17 +638,13 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[69].write("/essential-mining.com/images/emlogo_1.png", 0, 41);
 		writer[69].write("\" width=\"", 0, 9);
 		result[78].writeTo(textInXhtmlAttributeEncoder, bodyContent);
-		writer[69].write(49);
-		writer[69].write(54);
-		writer[69].write(48);
+		writer[69].write("160".toCharArray(), 0, 3);
 		writer[69].write("\" height=\"", 0, 10);
 		result[80].writeTo(textInXhtmlAttributeEncoder, bodyContent);
-		writer[69].write(49);
-		writer[69].write(52);
-		writer[69].write(53);
+		writer[69].write("145".toCharArray(), 0, 3);
 		writer[69].write("\" alt=\"", 0, 7);
 		result[76].writeTo(textInXhtmlAttributeEncoder, bodyContent);
-		writer[69].write("Logo", 0, 4);
+		writer[69].write("Logo".toCharArray(), 0, 4);
 		writer[69].write(34);
 		writer[69].write(" />", 0, 3);
 		writer[69].write("\n", 0, 1);
@@ -785,7 +814,7 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		result[99].writeTo(textInXhtmlAttributeEncoder, bodyContent);
 		writer[82].write("&lt;", 0, 4);
 		writer[82].write("&lt;", 0, 4);
-		writer[82].write(" Back", 0, 5);
+		writer[82].write("<< Back".toCharArray(), 2, 5);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("\n", 0, 1);
@@ -803,7 +832,7 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" value=\"", 0, 8);
 		result[101].writeTo(textInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("Next ", 0, 5);
+		writer[82].write("Next ".toCharArray(), 0, 5);
 		writer[82].write("&gt;", 0, 4);
 		writer[82].write("&gt;", 0, 4);
 		writer[82].write(34);
@@ -1018,9 +1047,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[103].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -1072,9 +1101,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[106].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -1126,9 +1155,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[109].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -1180,9 +1209,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[112].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -1234,9 +1263,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[115].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -1288,9 +1317,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[118].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -1342,9 +1371,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[121].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -1396,9 +1425,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[124].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -1450,9 +1479,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[127].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -1504,9 +1533,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[130].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -1558,9 +1587,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[133].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -1612,9 +1641,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[136].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -1666,9 +1695,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[139].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -1720,9 +1749,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[142].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -1774,9 +1803,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[145].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -1828,9 +1857,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[148].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -1882,9 +1911,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[151].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -1936,9 +1965,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[154].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -1990,9 +2019,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[157].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -2044,9 +2073,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[160].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -2098,9 +2127,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[163].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -2152,9 +2181,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[166].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -2206,9 +2235,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[169].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -2260,9 +2289,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[172].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -2314,9 +2343,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[175].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -2417,9 +2446,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[178].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -2471,9 +2500,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[181].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -2525,9 +2554,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[184].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -2579,9 +2608,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[187].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -2633,9 +2662,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[190].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -2687,9 +2716,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[193].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -2741,9 +2770,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[196].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -2795,9 +2824,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[199].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -2849,9 +2878,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[202].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -2903,9 +2932,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[205].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -2957,9 +2986,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[208].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -3011,9 +3040,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[211].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -3065,9 +3094,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[214].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -3119,9 +3148,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[217].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -3173,9 +3202,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[220].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -3227,9 +3256,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[223].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -3281,9 +3310,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[226].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -3335,9 +3364,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[229].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -3389,9 +3418,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[232].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -3443,9 +3472,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[235].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -3497,9 +3526,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[238].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -3551,9 +3580,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[241].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -3605,9 +3634,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[244].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -3659,9 +3688,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[247].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -3713,9 +3742,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[250].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -3767,9 +3796,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[253].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -3821,9 +3850,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[256].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -3875,9 +3904,9 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" onclick=\"", 0, 10);
 		result[259].writeTo(javaScriptInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("updateCostCalculator(this.form);", 0, 32);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);".toCharArray(), 53, 32);
 		writer[82].write("&#xA;", 0, 5);
-		writer[82].write("                                                    return true;", 0, 64);
+		writer[82].write("\n                                                    updateCostCalculator(this.form);\n                                                    return true;".toCharArray(), 86, 64);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("<label for=\"d_", 0, 14);
@@ -4307,7 +4336,7 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		result[262].writeTo(textInXhtmlAttributeEncoder, bodyContent);
 		writer[82].write("&lt;", 0, 4);
 		writer[82].write("&lt;", 0, 4);
-		writer[82].write(" Back", 0, 5);
+		writer[82].write("<< Back".toCharArray(), 2, 5);
 		writer[82].write(34);
 		writer[82].write(" />", 0, 3);
 		writer[82].write("\n", 0, 1);
@@ -4325,7 +4354,7 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[82].write(34);
 		writer[82].write(" value=\"", 0, 8);
 		result[264].writeTo(textInXhtmlAttributeEncoder, bodyContent);
-		writer[82].write("Next ", 0, 5);
+		writer[82].write("Next ".toCharArray(), 0, 5);
 		writer[82].write("&gt;", 0, 4);
 		writer[82].write("&gt;", 0, 4);
 		writer[82].write(34);
@@ -4736,15 +4765,13 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[207].write("/essential-mining.com/images/share/twitter.gif", 0, 46);
 		writer[207].write("\" width=\"", 0, 9);
 		result[282].writeTo(textInXhtmlAttributeEncoder, bodyContent);
-		writer[207].write(51);
-		writer[207].write(50);
+		writer[207].write("32".toCharArray(), 0, 2);
 		writer[207].write("\" height=\"", 0, 10);
 		result[284].writeTo(textInXhtmlAttributeEncoder, bodyContent);
-		writer[207].write(51);
-		writer[207].write(50);
+		writer[207].write("32".toCharArray(), 0, 2);
 		writer[207].write("\" alt=\"", 0, 7);
 		result[280].writeTo(textInXhtmlAttributeEncoder, bodyContent);
-		writer[207].write("Twitter", 0, 7);
+		writer[207].write("Twitter".toCharArray(), 0, 7);
 		writer[207].write(34);
 		writer[207].write(" />", 0, 3);
 		writer[207].write(10);
@@ -4800,15 +4827,13 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[213].write("/essential-mining.com/images/share/facebook.gif", 0, 47);
 		writer[213].write("\" width=\"", 0, 9);
 		result[292].writeTo(textInXhtmlAttributeEncoder, bodyContent);
-		writer[213].write(51);
-		writer[213].write(50);
+		writer[213].write("32".toCharArray(), 0, 2);
 		writer[213].write("\" height=\"", 0, 10);
 		result[294].writeTo(textInXhtmlAttributeEncoder, bodyContent);
-		writer[213].write(51);
-		writer[213].write(50);
+		writer[213].write("32".toCharArray(), 0, 2);
 		writer[213].write("\" alt=\"", 0, 7);
 		result[290].writeTo(textInXhtmlAttributeEncoder, bodyContent);
-		writer[213].write("Facebook", 0, 8);
+		writer[213].write("Facebook".toCharArray(), 0, 8);
 		writer[213].write(34);
 		writer[213].write(" />", 0, 3);
 		writer[213].write(10);
@@ -4864,15 +4889,13 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[219].write("/essential-mining.com/images/share/linkedin.gif", 0, 47);
 		writer[219].write("\" width=\"", 0, 9);
 		result[302].writeTo(textInXhtmlAttributeEncoder, bodyContent);
-		writer[219].write(51);
-		writer[219].write(50);
+		writer[219].write("32".toCharArray(), 0, 2);
 		writer[219].write("\" height=\"", 0, 10);
 		result[304].writeTo(textInXhtmlAttributeEncoder, bodyContent);
-		writer[219].write(51);
-		writer[219].write(50);
+		writer[219].write("32".toCharArray(), 0, 2);
 		writer[219].write("\" alt=\"", 0, 7);
 		result[300].writeTo(textInXhtmlAttributeEncoder, bodyContent);
-		writer[219].write("LinkedIn", 0, 8);
+		writer[219].write("LinkedIn".toCharArray(), 0, 8);
 		writer[219].write(34);
 		writer[219].write(" />", 0, 3);
 		writer[219].write(10);
@@ -4928,15 +4951,13 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[225].write("/essential-mining.com/images/share/myspace.gif", 0, 46);
 		writer[225].write("\" width=\"", 0, 9);
 		result[312].writeTo(textInXhtmlAttributeEncoder, bodyContent);
-		writer[225].write(51);
-		writer[225].write(50);
+		writer[225].write("32".toCharArray(), 0, 2);
 		writer[225].write("\" height=\"", 0, 10);
 		result[314].writeTo(textInXhtmlAttributeEncoder, bodyContent);
-		writer[225].write(51);
-		writer[225].write(50);
+		writer[225].write("32".toCharArray(), 0, 2);
 		writer[225].write("\" alt=\"", 0, 7);
 		result[310].writeTo(textInXhtmlAttributeEncoder, bodyContent);
-		writer[225].write("MySpace", 0, 7);
+		writer[225].write("MySpace".toCharArray(), 0, 7);
 		writer[225].write(34);
 		writer[225].write(" />", 0, 3);
 		writer[225].write(10);
@@ -4992,15 +5013,13 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 		writer[231].write("/essential-mining.com/images/share/digg.gif", 0, 43);
 		writer[231].write("\" width=\"", 0, 9);
 		result[322].writeTo(textInXhtmlAttributeEncoder, bodyContent);
-		writer[231].write(51);
-		writer[231].write(50);
+		writer[231].write("32".toCharArray(), 0, 2);
 		writer[231].write("\" height=\"", 0, 10);
 		result[324].writeTo(textInXhtmlAttributeEncoder, bodyContent);
-		writer[231].write(51);
-		writer[231].write(50);
+		writer[231].write("32".toCharArray(), 0, 2);
 		writer[231].write("\" alt=\"", 0, 7);
 		result[320].writeTo(textInXhtmlAttributeEncoder, bodyContent);
-		writer[231].write("Digg", 0, 4);
+		writer[231].write("Digg".toCharArray(), 0, 4);
 		writer[231].write(34);
 		writer[231].write(" />", 0, 3);
 		writer[231].write(10);

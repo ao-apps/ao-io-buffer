@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2010, 2011, 2012, 2013, 2015, 2016, 2017, 2020  AO Industries, Inc.
+ * Copyright (C) 2010, 2011, 2012, 2013, 2015, 2016, 2017, 2020, 2021  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -20,10 +20,10 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with ao-io-buffer.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.aoindustries.io.buffer;
+package com.aoapps.io.buffer;
 
-import com.aoindustries.tempfiles.TempFile;
-import com.aoindustries.tempfiles.TempFileContext;
+import com.aoapps.tempfiles.TempFile;
+import com.aoapps.tempfiles.TempFileContext;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
