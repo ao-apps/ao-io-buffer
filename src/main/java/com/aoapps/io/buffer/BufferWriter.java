@@ -31,7 +31,7 @@ import java.io.Writer;
  *
  * @author  AO Industries, Inc.
  */
-abstract public class BufferWriter extends Writer {
+public abstract class BufferWriter extends Writer {
 
 	protected BufferWriter() {
 	}
@@ -40,7 +40,7 @@ abstract public class BufferWriter extends Writer {
 	 * Gets the number of characters in this buffer.
 	 * Once closed, this length will not be modified.
 	 */
-	abstract public long getLength() throws IOException;
+	public abstract long getLength() throws IOException;
 
 	/**
 	 * Gets a short message (like type and length).
@@ -48,7 +48,7 @@ abstract public class BufferWriter extends Writer {
 	 * @see  #getResult()  To get access to the buffered content.
 	 */
 	@Override
-	abstract public String toString();
+	public abstract String toString();
 
 	/**
 	 * Gets the result from this buffer.
@@ -61,5 +61,5 @@ abstract public class BufferWriter extends Writer {
 	 *
 	 * @exception  IllegalStateException if not closed
 	 */
-	abstract public BufferResult getResult() throws IllegalStateException, IOException;
+	public abstract BufferResult getResult() throws IllegalStateException, IOException;
 }

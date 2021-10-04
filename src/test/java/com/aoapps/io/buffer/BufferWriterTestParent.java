@@ -33,7 +33,7 @@ import junit.framework.TestCase;
 /**
  * @author  AO Industries, Inc.
  */
-abstract public class BufferWriterTestParent extends TestCase {
+public abstract class BufferWriterTestParent extends TestCase {
 
 	public BufferWriterTestParent(String testName) {
 		super(testName);

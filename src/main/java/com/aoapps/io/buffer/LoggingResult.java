@@ -57,7 +57,7 @@ public class LoggingResult implements BufferResult {
 	/**
 	 * Provides detailed logging for a media encoder.
 	 */
-	synchronized private void log(Encoder encoder) throws IOException {
+	private synchronized void log(Encoder encoder) throws IOException {
 		if(encoder == null) log.write("null");
 		else {
 			String className = encoder.getClass().getName();
@@ -77,7 +77,7 @@ public class LoggingResult implements BufferResult {
 	/**
 	 * Provides detailed logging for a writer.
 	 */
-	synchronized private void log(Writer writer) throws IOException {
+	private synchronized void log(Writer writer) throws IOException {
 		if(writer == null) {
 			log.write("null");
 		} else if(writer instanceof LoggingWriter) {
@@ -103,7 +103,7 @@ public class LoggingResult implements BufferResult {
 	/**
 	 * Provides detailed logging for an appendable.
 	 */
-	synchronized private void log(Appendable appendable) throws IOException {
+	private synchronized void log(Appendable appendable) throws IOException {
 		if(appendable == null) {
 			log.write("null");
 		} else if(appendable instanceof Writer) {

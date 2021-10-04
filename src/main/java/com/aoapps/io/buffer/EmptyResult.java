@@ -30,7 +30,7 @@ import java.io.Writer;
  *
  * @author  AO Industries, Inc.
  */
-final public class EmptyResult implements BufferResult {
+public final class EmptyResult implements BufferResult {
 
 	private static final EmptyResult instance = new EmptyResult();
 

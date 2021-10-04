@@ -27,7 +27,7 @@ package com.aoapps.io.buffer;
  *
  * @author  AO Industries, Inc.
  */
-final public class NullBufferWriter extends BufferWriter {
+public final class NullBufferWriter extends BufferWriter {
 
 	private static final NullBufferWriter instance = new NullBufferWriter();
 
