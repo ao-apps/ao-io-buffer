@@ -97,7 +97,7 @@ public class AutoTempFileWriter extends BufferWriter {
 	}
 
 	@Override
-	public void write(char cbuf[]) throws IOException {
+	public void write(char[] cbuf) throws IOException {
 		if(isInitialBuffer) {
 			switchIfNeeded(buffer.getLength() + cbuf.length);
 		}
@@ -105,7 +105,7 @@ public class AutoTempFileWriter extends BufferWriter {
 	}
 
 	@Override
-	public void write(char cbuf[], int off, int len) throws IOException {
+	public void write(char[] cbuf, int off, int len) throws IOException {
 		if(isInitialBuffer) {
 			switchIfNeeded(buffer.getLength() + len);
 		}

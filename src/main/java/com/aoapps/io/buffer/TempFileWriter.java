@@ -82,7 +82,7 @@ public class TempFileWriter extends BufferWriter {
 	}
 
 	@Override
-	public void write(char cbuf[]) throws IOException {
+	public void write(char[] cbuf) throws IOException {
 		if(isClosed) throw new ClosedChannelException();
 		int len = cbuf.length;
 		if(len > 0) {
@@ -93,7 +93,7 @@ public class TempFileWriter extends BufferWriter {
 	}
 
 	@Override
-	public void write(char cbuf[], int off, int len) throws IOException {
+	public void write(char[] cbuf, int off, int len) throws IOException {
 		if(isClosed) throw new ClosedChannelException();
 		if(len > 0) {
 			firstString = null;

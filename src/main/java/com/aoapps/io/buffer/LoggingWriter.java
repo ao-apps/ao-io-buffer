@@ -128,7 +128,7 @@ public class LoggingWriter extends BufferWriter {
 	}
 
 	@Override
-	public void write(char cbuf[]) throws IOException {
+	public void write(char[] cbuf) throws IOException {
 		log.write("writer[");
 		log.write(Long.toString(id));
 		log.write("].write(");
@@ -150,7 +150,7 @@ public class LoggingWriter extends BufferWriter {
 	}
 
 	@Override
-	public void write(char cbuf[], int off, int len) throws IOException {
+	public void write(char[] cbuf, int off, int len) throws IOException {
 		log.write("writer[");
 		log.write(Long.toString(id));
 		log.write("].write(");

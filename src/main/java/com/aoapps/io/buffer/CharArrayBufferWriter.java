@@ -140,7 +140,7 @@ public class CharArrayBufferWriter extends BufferWriter {
 	}
 
 	@Override
-	public void write(char cbuf[], int off, int len) throws IOException {
+	public void write(char[] cbuf, int off, int len) throws IOException {
 		if(isClosed) throw new ClosedChannelException();
 		if(len > 0) {
 			System.arraycopy(cbuf, off, getBuffer(len), length, len);

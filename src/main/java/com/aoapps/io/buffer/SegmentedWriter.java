@@ -147,7 +147,7 @@ public class SegmentedWriter extends BufferWriter {
 	}
 
 	@Override
-	public void write(char cbuf[]) throws ClosedChannelException {
+	public void write(char[] cbuf) throws ClosedChannelException {
 		if(isClosed) throw new ClosedChannelException();
 		int len = cbuf.length;
 		if(len > 0) {
@@ -166,7 +166,7 @@ public class SegmentedWriter extends BufferWriter {
 	}
 
 	@Override
-	public void write(char cbuf[], int off, int len) throws ClosedChannelException {
+	public void write(char[] cbuf, int off, int len) throws ClosedChannelException {
 		if(isClosed) throw new ClosedChannelException();
 		if(len > 0) {
 			if(len == 1) {
