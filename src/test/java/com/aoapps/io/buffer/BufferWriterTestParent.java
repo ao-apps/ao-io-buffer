@@ -35,7 +35,7 @@ import junit.framework.TestCase;
  */
 public abstract class BufferWriterTestParent extends TestCase {
 
-	public BufferWriterTestParent(String testName) {
+	protected BufferWriterTestParent(String testName) {
 		super(testName);
 	}
 
