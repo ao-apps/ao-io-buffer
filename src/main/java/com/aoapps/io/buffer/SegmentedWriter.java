@@ -31,7 +31,7 @@ import java.util.logging.Logger;
  * of copying all the characters.
  *
  * This class is not thread safe.
- * 
+ *
  * Future: If writing to another segmented buffer, the segments could be shared between
  * the two instances. (or arraycopy instead of writing each)
  *
@@ -141,7 +141,7 @@ public class SegmentedWriter extends BufferWriter {
 				addSegment(TYPE_CHAR_QUOTE, null, 0, 1);
 				break;
 			default :
-				addSegment(TYPE_CHAR_OTHER, (Character)ch, 0, 1);
+				addSegment(TYPE_CHAR_OTHER, ch, 0, 1);
 		}
 		length++;
 	}
@@ -296,7 +296,7 @@ public class SegmentedWriter extends BufferWriter {
 							) {
 								addSegment(
 									TYPE_CHAR_OTHER,
-									(Character)ch,
+									ch,
 									0,
 									1
 								);
@@ -304,7 +304,7 @@ public class SegmentedWriter extends BufferWriter {
 								// Use offset for String
 								addSegment(
 									TYPE_STRING,
-									(String)csq,
+									csq,
 									start,
 									1
 								);
@@ -315,7 +315,7 @@ public class SegmentedWriter extends BufferWriter {
 						// Use offset for String
 						addSegment(
 							TYPE_STRING,
-							(String)csq,
+							csq,
 							start,
 							len
 						);
@@ -349,7 +349,7 @@ public class SegmentedWriter extends BufferWriter {
 				addSegment(TYPE_CHAR_QUOTE, null, 0, 1);
 				break;
 			default :
-				addSegment(TYPE_CHAR_OTHER, (Character)c, 0, 1);
+				addSegment(TYPE_CHAR_OTHER, c, 0, 1);
 		}
 		length++;
 		return this;
