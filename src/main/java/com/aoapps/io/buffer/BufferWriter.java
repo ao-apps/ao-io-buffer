@@ -34,6 +34,7 @@ import java.io.Writer;
 public abstract class BufferWriter extends Writer {
 
 	protected BufferWriter() {
+		// Do nothing
 	}
 
 	/**

@@ -39,6 +39,7 @@ public final class EmptyResult implements BufferResult {
 	}
 
 	private EmptyResult() {
+		// Do nothing
 	}
 
 	@Override

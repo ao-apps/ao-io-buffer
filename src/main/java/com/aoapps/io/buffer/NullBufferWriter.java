@@ -36,26 +36,32 @@ public final class NullBufferWriter extends BufferWriter {
 	}
 
 	private NullBufferWriter() {
+		// Do nothing
 	}
 
 	@Override
 	public void write(int c) {
+		// Do nothing
 	}
 
 	@Override
 	public void write(char[] cbuf) {
+		// Do nothing
 	}
 
 	@Override
 	public void write(char[] cbuf, int off, int len) {
+		// Do nothing
 	}
 
 	@Override
 	public void write(String str) {
+		// Do nothing
 	}
 
 	@Override
 	public void write(String str, int off, int len) {
+		// Do nothing
 	}
 
 	@Override
@@ -75,10 +81,12 @@ public final class NullBufferWriter extends BufferWriter {
 
 	@Override
 	public void flush() {
+		// Do nothing
 	}
 
 	@Override
 	public void close()  {
+		// Do nothing
 	}
 
 	@Override

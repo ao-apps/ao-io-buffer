@@ -89,9 +89,6 @@ public class CharArrayBufferWriter extends BufferWriter {
 	private int firstStringBegin;
 	private int firstStringEnd;
 
-	public CharArrayBufferWriter() {
-	}
-
 	/**
 	 * Grows as-needed to fit the provided new capacity.
 	 *
