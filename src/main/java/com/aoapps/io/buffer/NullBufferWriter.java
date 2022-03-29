@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2013, 2015, 2016, 2021  AO Industries, Inc.
+ * Copyright (C) 2013, 2015, 2016, 2021, 2022  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -22,12 +22,14 @@
  */
 package com.aoapps.io.buffer;
 
+import com.aoapps.lang.io.NoClose;
+
 /**
  * Discards everything.  Not a proper buffer but useful to time the overhead of calling the buffers.
  *
  * @author  AO Industries, Inc.
  */
-public final class NullBufferWriter extends BufferWriter {
+public final class NullBufferWriter extends BufferWriter implements NoClose {
 
 	private static final NullBufferWriter instance = new NullBufferWriter();
 
