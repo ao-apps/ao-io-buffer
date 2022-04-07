@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2013, 2015, 2016, 2020, 2021  AO Industries, Inc.
+ * Copyright (C) 2013, 2015, 2016, 2020, 2021, 2022  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -63,9 +63,9 @@ public class LoggingResult implements BufferResult {
 			String className = encoder.getClass().getName();
 			// Some shortcuts from the ao-encoding project, classnames used here to avoid hard dependency
 			if("com.aoapps.encoding.JavaScriptInXhtmlAttributeEncoder".equals(className)) {
-				log.write("javaScriptInXhtmlAttributeEncoder");
+				log.write("javascriptInXhtmlAttributeEncoder");
 			} else if("com.aoapps.encoding.JavaScriptInXhtmlEncoder".equals(className)) {
-				log.write("javaScriptInXhtmlEncoder");
+				log.write("javascriptInXhtmlEncoder");
 			} else if("com.aoapps.encoding.TextInXhtmlAttributeEncoder".equals(className)) {
 				log.write("textInXhtmlAttributeEncoder");
 			} else {
