@@ -33,73 +33,73 @@ import java.io.Writer;
  */
 public final class EmptyResult implements BufferResult {
 
-	private static final EmptyResult instance = new EmptyResult();
+  private static final EmptyResult instance = new EmptyResult();
 
-	public static EmptyResult getInstance() {
-		return instance;
-	}
+  public static EmptyResult getInstance() {
+    return instance;
+  }
 
-	private EmptyResult() {
-		// Do nothing
-	}
+  private EmptyResult() {
+    // Do nothing
+  }
 
-	@Override
-	public long getLength() {
-		return 0;
-	}
+  @Override
+  public long getLength() {
+    return 0;
+  }
 
-	@Override
-	public boolean isFastToString() {
-		return true;
-	}
+  @Override
+  public boolean isFastToString() {
+    return true;
+  }
 
-	@Override
-	public String toString() {
-		return "";
-	}
+  @Override
+  public String toString() {
+    return "";
+  }
 
-	@Override
-	public void writeTo(Writer out) {
-		// Nothing to write
-	}
+  @Override
+  public void writeTo(Writer out) {
+    // Nothing to write
+  }
 
-	@Override
-	public void writeTo(Writer out, long off, long len) {
-		// Nothing to write
-	}
+  @Override
+  public void writeTo(Writer out, long off, long len) {
+    // Nothing to write
+  }
 
-	@Override
-	public void writeTo(Encoder encoder, Writer out) {
-		// Nothing to write
-	}
+  @Override
+  public void writeTo(Encoder encoder, Writer out) {
+    // Nothing to write
+  }
 
-	@Override
-	public void writeTo(Encoder encoder, Writer out, long off, long len) {
-		// Nothing to write
-	}
+  @Override
+  public void writeTo(Encoder encoder, Writer out, long off, long len) {
+    // Nothing to write
+  }
 
-	@Override
-	public void appendTo(Appendable out) {
-		// Nothing to append
-	}
+  @Override
+  public void appendTo(Appendable out) {
+    // Nothing to append
+  }
 
-	@Override
-	public void appendTo(Appendable out, long start, long end) {
-		// Nothing to append
-	}
+  @Override
+  public void appendTo(Appendable out, long start, long end) {
+    // Nothing to append
+  }
 
-	@Override
-	public void appendTo(Encoder encoder, Appendable out) {
-		// Nothing to append
-	}
+  @Override
+  public void appendTo(Encoder encoder, Appendable out) {
+    // Nothing to append
+  }
 
-	@Override
-	public void appendTo(Encoder encoder, Appendable out, long start, long end) {
-		// Nothing to append
-	}
+  @Override
+  public void appendTo(Encoder encoder, Appendable out, long start, long end) {
+    // Nothing to append
+  }
 
-	@Override
-	public EmptyResult trim() {
-		return this;
-	}
+  @Override
+  public EmptyResult trim() {
+    return this;
+  }
 }

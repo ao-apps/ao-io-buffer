@@ -43,15 +43,15 @@ import java.io.IOException;
  */
 public interface BufferResult extends Writable {
 
-	/**
-	 * <p>
-	 * Trims the contents of this result, as per rules of {@link Strings#isWhitespace(int)},
-	 * returning the instance that represents this result trimmed.
-	 * </p>
-	 * <p>
-	 * All implementations cache the result for constant-time secondary access.
-	 * </p>
-	 */
-	@Override
-	BufferResult trim() throws IOException;
+  /**
+   * <p>
+   * Trims the contents of this result, as per rules of {@link Strings#isWhitespace(int)},
+   * returning the instance that represents this result trimmed.
+   * </p>
+   * <p>
+   * All implementations cache the result for constant-time secondary access.
+   * </p>
+   */
+  @Override
+  BufferResult trim() throws IOException;
 }

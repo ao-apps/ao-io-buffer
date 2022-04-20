@@ -34,34 +34,34 @@ import java.io.Writer;
  */
 public abstract class BufferWriter extends Writer {
 
-	protected BufferWriter() {
-		// Do nothing
-	}
+  protected BufferWriter() {
+    // Do nothing
+  }
 
-	/**
-	 * Gets the number of characters in this buffer.
-	 * Once closed, this length will not be modified.
-	 */
-	public abstract long getLength() throws IOException;
+  /**
+   * Gets the number of characters in this buffer.
+   * Once closed, this length will not be modified.
+   */
+  public abstract long getLength() throws IOException;
 
-	/**
-	 * Gets a short message (like type and length).
-	 *
-	 * @see  #getResult()  To get access to the buffered content.
-	 */
-	@Override
-	public abstract String toString();
+  /**
+   * Gets a short message (like type and length).
+   *
+   * @see  #getResult()  To get access to the buffered content.
+   */
+  @Override
+  public abstract String toString();
 
-	/**
-	 * Gets the result from this buffer.
-	 * The buffer must be closed.
-	 * <p>
-	 * Note: Although the {@link BufferWriter} are generally not thread-safe, the {@link BufferResult} is thread-safe.
-	 * It is expected to commonly create a buffer on one thread, but the be able to safely share the result among many
-	 * threads.
-	 * </p>
-	 *
-	 * @exception  IllegalStateException if not closed
-	 */
-	public abstract BufferResult getResult() throws IllegalStateException, IOException;
+  /**
+   * Gets the result from this buffer.
+   * The buffer must be closed.
+   * <p>
+   * Note: Although the {@link BufferWriter} are generally not thread-safe, the {@link BufferResult} is thread-safe.
+   * It is expected to commonly create a buffer on one thread, but the be able to safely share the result among many
+   * threads.
+   * </p>
+   *
+   * @exception  IllegalStateException if not closed
+   */
+  public abstract BufferResult getResult() throws IllegalStateException, IOException;
 }
