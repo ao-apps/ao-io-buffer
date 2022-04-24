@@ -83,19 +83,19 @@ public class CharArrayBufferWriterTest extends BufferWriterTestParent {
   */
   public void testBenchmarkSimulate() throws IOException {
     benchmarkSimulate(
-      new BufferWriterFactory() {
-        @Override
-        public String getName() {
-          return CharArrayBufferWriter.class.getName();
-        }
+        new BufferWriterFactory() {
+          @Override
+          public String getName() {
+            return CharArrayBufferWriter.class.getName();
+          }
 
-        @Override
-        public BufferWriter newBufferWriter() {
-          // To test call overhead:
-          // return NullBufferWriter.getInstance();
-          return new CharArrayBufferWriter();
+          @Override
+          public BufferWriter newBufferWriter() {
+            // To test call overhead:
+            // return NullBufferWriter.getInstance();
+            return new CharArrayBufferWriter();
+          }
         }
-      }
     );
   }
 

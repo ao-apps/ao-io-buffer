@@ -174,7 +174,7 @@ public class LoggingWriter extends BufferWriter {
     log.write("writer[");
     log.write(Long.toString(id));
     log.write("].write(");
-    log(new String(cbuf, 0, off+len));
+    log(new String(cbuf, 0, off + len));
     log.write(".toCharArray(), ");
     log.write(Integer.toString(off));
     log.write(", ");

@@ -56,9 +56,9 @@ public class AutoTempFileWriter extends BufferWriter {
   private boolean isInitialBuffer;
 
   public AutoTempFileWriter(
-    BufferWriter initialBuffer,
-    TempFileContext tempFileContext,
-    long tempFileThreshold
+      BufferWriter initialBuffer,
+      TempFileContext tempFileContext,
+      long tempFileThreshold
   ) {
     this.tempFileContext = tempFileContext;
     this.tempFileThreshold = tempFileThreshold;
@@ -71,9 +71,9 @@ public class AutoTempFileWriter extends BufferWriter {
    */
   public AutoTempFileWriter(BufferWriter initialBuffer, TempFileContext tempFileContext) {
     this(
-      initialBuffer,
-      tempFileContext,
-      DEFAULT_TEMP_FILE_THRESHOLD
+        initialBuffer,
+        tempFileContext,
+        DEFAULT_TEMP_FILE_THRESHOLD
     );
   }
 
@@ -143,7 +143,7 @@ public class AutoTempFileWriter extends BufferWriter {
   @Override
   public AutoTempFileWriter append(CharSequence csq, int start, int end) throws IOException {
     if (isInitialBuffer) {
-      switchIfNeeded(buffer.getLength() + (end-start));
+      switchIfNeeded(buffer.getLength() + (end - start));
     }
     buffer.append(csq, start, end);
     return this;

@@ -42,6 +42,7 @@ public abstract class BufferWriterTestParent extends TestCase {
 
   public static interface BufferWriterFactory {
     String getName();
+
     BufferWriter newBufferWriter();
   }
 
@@ -49,13 +50,13 @@ public abstract class BufferWriterTestParent extends TestCase {
   public void benchmarkSimulate(BufferWriterFactory factory) throws IOException {
     try (Writer out = new BufferedWriter(new FileWriter(new File("/dev/null")))) {
       final int loops = 1000;
-      for (int i=1; i <= 10; i++) {
+      for (int i = 1; i <= 10; i++) {
         long startTime = System.nanoTime();
-        for (int j=0; j<loops; j++) {
+        for (int j = 0; j < loops; j++) {
           simulateCalls(factory, out);
         }
         long endTime = System.nanoTime();
-        System.out.println(factory.getName() + ": " + i + ": Simulated " + loops + " calls in " + BigDecimal.valueOf(endTime - startTime, 6)+" ms");
+        System.out.println(factory.getName() + ": " + i + ": Simulated " + loops + " calls in " + BigDecimal.valueOf(endTime - startTime, 6) + " ms");
       }
     }
   }

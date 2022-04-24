@@ -157,7 +157,7 @@ public class TempFileWriter extends BufferWriter {
     int len = csq.length();
     if (len > 0) {
       if (length == 0 && csq instanceof String) {
-        firstString = (String)csq;
+        firstString = (String) csq;
         firstStringBegin = 0;
         firstStringEnd = len;
       } else {
@@ -180,7 +180,7 @@ public class TempFileWriter extends BufferWriter {
     int len = end - start;
     if (len > 0) {
       if (length == 0 && csq instanceof String) {
-        firstString = (String)csq;
+        firstString = (String) csq;
         firstStringBegin = start;
         firstStringEnd = end;
       } else {

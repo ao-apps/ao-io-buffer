@@ -61,14 +61,14 @@ public class SegmentedResult implements BufferResult {
   private final int endSegmentLength;
 
   private static void assertThingsMakeSense(
-    long start,
-    int startSegmentIndex,
-    int startSegmentOffset,
-    int startSegmentLength,
-    long end,
-    int endSegmentIndex,
-    int endSegmentOffset,
-    int endSegmentLength
+      long start,
+      int startSegmentIndex,
+      int startSegmentOffset,
+      int startSegmentLength,
+      long end,
+      int endSegmentIndex,
+      int endSegmentOffset,
+      int endSegmentLength
   ) {
     assert start <= end;
     assert startSegmentIndex <= endSegmentIndex;
@@ -79,18 +79,18 @@ public class SegmentedResult implements BufferResult {
   }
 
   protected SegmentedResult(
-    byte[] segmentTypes,
-    Object[] segmentValues,
-    int[] segmentOffsets,
-    int[] segmentLengths,
-    long start,
-    int startSegmentIndex,
-    int startSegmentOffset, // Start offset and length may have been affected by trimming
-    int startSegmentLength,
-    long end,
-    int endSegmentIndex,
-    int endSegmentOffset,
-    int endSegmentLength // End offset and length may have been affected by trimming
+      byte[] segmentTypes,
+      Object[] segmentValues,
+      int[] segmentOffsets,
+      int[] segmentLengths,
+      long start,
+      int startSegmentIndex,
+      int startSegmentOffset, // Start offset and length may have been affected by trimming
+      int startSegmentLength,
+      long end,
+      int endSegmentIndex,
+      int endSegmentOffset,
+      int endSegmentLength // End offset and length may have been affected by trimming
   ) {
     assertThingsMakeSense(start, startSegmentIndex, startSegmentOffset, startSegmentLength, end, endSegmentIndex, endSegmentOffset, endSegmentLength);
     this.segmentTypes = segmentTypes;
@@ -109,12 +109,12 @@ public class SegmentedResult implements BufferResult {
     assert endSegmentLength > 0 : "All empty results should have been converted to EmptyResult";
     this.endSegmentLength = endSegmentLength;
     assert
-      endSegmentIndex != startSegmentIndex
-      || (
-        startSegmentOffset == endSegmentOffset
-        && startSegmentLength == endSegmentLength
-      )
-      : "When start and end segments are at the same index, they must have the same offsets and lengths."
+        endSegmentIndex != startSegmentIndex
+            || (
+            startSegmentOffset == endSegmentOffset
+                && startSegmentLength == endSegmentLength
+        )
+        : "When start and end segments are at the same index, they must have the same offsets and lengths."
     ;
   }
 
@@ -131,9 +131,9 @@ public class SegmentedResult implements BufferResult {
       case SegmentedWriter.TYPE_STRING :
         int off = segmentOffsets[segmentIndex];
         buffer.append(
-          (String)segmentValues[segmentIndex],
-          off,
-          off + segmentLengths[segmentIndex]
+            (String) segmentValues[segmentIndex],
+            off,
+            off + segmentLengths[segmentIndex]
         );
         break;
       case SegmentedWriter.TYPE_CHAR_NEWLINE :
@@ -154,7 +154,7 @@ public class SegmentedResult implements BufferResult {
       case SegmentedWriter.TYPE_CHAR_OTHER :
         assert segmentOffsets[segmentIndex] == 0;
         assert segmentLengths[segmentIndex] == 1;
-        buffer.append(((Character)segmentValues[segmentIndex]).charValue());
+        buffer.append(((Character) segmentValues[segmentIndex]).charValue());
         break;
       default :
         throw new AssertionError();
@@ -168,9 +168,9 @@ public class SegmentedResult implements BufferResult {
     switch (segmentTypes[segmentIndex]) {
       case SegmentedWriter.TYPE_STRING :
         buffer.append(
-          (String)segmentValues[segmentIndex],
-          off,
-          off + len
+            (String) segmentValues[segmentIndex],
+            off,
+            off + len
         );
         break;
       case SegmentedWriter.TYPE_CHAR_NEWLINE :
@@ -191,7 +191,7 @@ public class SegmentedResult implements BufferResult {
       case SegmentedWriter.TYPE_CHAR_OTHER :
         assert off == 0;
         assert len == 1;
-        buffer.append(((Character)segmentValues[segmentIndex]).charValue());
+        buffer.append(((Character) segmentValues[segmentIndex]).charValue());
         break;
       default :
         throw new AssertionError();
@@ -205,10 +205,10 @@ public class SegmentedResult implements BufferResult {
     switch (segmentTypes[segmentIndex]) {
       case SegmentedWriter.TYPE_STRING :
         encoder.write(
-          (String)segmentValues[segmentIndex],
-          segmentOffsets[segmentIndex],
-          segmentLengths[segmentIndex],
-          out
+            (String) segmentValues[segmentIndex],
+            segmentOffsets[segmentIndex],
+            segmentLengths[segmentIndex],
+            out
         );
         break;
       case SegmentedWriter.TYPE_CHAR_NEWLINE :
@@ -229,7 +229,7 @@ public class SegmentedResult implements BufferResult {
       case SegmentedWriter.TYPE_CHAR_OTHER :
         assert segmentOffsets[segmentIndex] == 0;
         assert segmentLengths[segmentIndex] == 1;
-        encoder.write((Character)segmentValues[segmentIndex], out);
+        encoder.write((Character) segmentValues[segmentIndex], out);
         break;
       default :
         throw new AssertionError();
@@ -243,10 +243,10 @@ public class SegmentedResult implements BufferResult {
     switch (segmentTypes[segmentIndex]) {
       case SegmentedWriter.TYPE_STRING :
         encoder.write(
-          (String)segmentValues[segmentIndex],
-          off,
-          len,
-          out
+            (String) segmentValues[segmentIndex],
+            off,
+            len,
+            out
         );
         break;
       case SegmentedWriter.TYPE_CHAR_NEWLINE :
@@ -267,7 +267,7 @@ public class SegmentedResult implements BufferResult {
       case SegmentedWriter.TYPE_CHAR_OTHER :
         assert off == 0;
         assert len == 1;
-        encoder.write((Character)segmentValues[segmentIndex], out);
+        encoder.write((Character) segmentValues[segmentIndex], out);
         break;
       default :
         throw new AssertionError();
@@ -281,9 +281,9 @@ public class SegmentedResult implements BufferResult {
     switch (segmentTypes[segmentIndex]) {
       case SegmentedWriter.TYPE_STRING :
         out.write(
-          (String)segmentValues[segmentIndex],
-          segmentOffsets[segmentIndex],
-          segmentLengths[segmentIndex]
+            (String) segmentValues[segmentIndex],
+            segmentOffsets[segmentIndex],
+            segmentLengths[segmentIndex]
         );
         break;
       case SegmentedWriter.TYPE_CHAR_NEWLINE :
@@ -304,7 +304,7 @@ public class SegmentedResult implements BufferResult {
       case SegmentedWriter.TYPE_CHAR_OTHER :
         assert segmentOffsets[segmentIndex] == 0;
         assert segmentLengths[segmentIndex] == 1;
-        out.write((Character)segmentValues[segmentIndex]);
+        out.write((Character) segmentValues[segmentIndex]);
         break;
       default :
         throw new AssertionError();
@@ -318,9 +318,9 @@ public class SegmentedResult implements BufferResult {
     switch (segmentTypes[segmentIndex]) {
       case SegmentedWriter.TYPE_STRING :
         out.write(
-          (String)segmentValues[segmentIndex],
-          off,
-          len
+            (String) segmentValues[segmentIndex],
+            off,
+            len
         );
         break;
       case SegmentedWriter.TYPE_CHAR_NEWLINE :
@@ -341,7 +341,7 @@ public class SegmentedResult implements BufferResult {
       case SegmentedWriter.TYPE_CHAR_OTHER :
         assert off == 0;
         assert len == 1;
-        out.write((Character)segmentValues[segmentIndex]);
+        out.write((Character) segmentValues[segmentIndex]);
         break;
       default :
         throw new AssertionError();
@@ -355,7 +355,7 @@ public class SegmentedResult implements BufferResult {
   private static char charAt(byte type, Object value, int charIndex) {
     switch (type) {
       case SegmentedWriter.TYPE_STRING :
-        return ((String)value).charAt(charIndex);
+        return ((String) value).charAt(charIndex);
       case SegmentedWriter.TYPE_CHAR_NEWLINE :
         assert charIndex == 0;
         return '\n';
@@ -367,7 +367,7 @@ public class SegmentedResult implements BufferResult {
         return '\'';
       case SegmentedWriter.TYPE_CHAR_OTHER :
         assert charIndex == 0;
-        return (Character)value;
+        return (Character) value;
       default :
         throw new AssertionError();
     }
@@ -378,10 +378,10 @@ public class SegmentedResult implements BufferResult {
   @Override
   public boolean isFastToString() {
     if (
-      // Is empty
-      start == end
-      // Already converted, fast now
-      || toStringCache != null
+        // Is empty
+        start == end
+            // Already converted, fast now
+            || toStringCache != null
     ) {
       return true;
     }
@@ -396,7 +396,7 @@ public class SegmentedResult implements BufferResult {
         if (startSegmentOffset != 0) {
           return false;
         }
-        String str = (String)segmentValues[startSegmentIndex];
+        String str = (String) segmentValues[startSegmentIndex];
         // Is fast when covers entire string in this segment
         return startSegmentLength == str.length();
       case SegmentedWriter.TYPE_CHAR_NEWLINE :
@@ -420,7 +420,7 @@ public class SegmentedResult implements BufferResult {
         // Shortcut for one segment
         switch (segmentTypes[startSegmentIndex]) {
           case SegmentedWriter.TYPE_STRING :
-            toStringCache = ((String)segmentValues[startSegmentIndex]).substring(startSegmentOffset, startSegmentOffset + startSegmentLength);
+            toStringCache = ((String) segmentValues[startSegmentIndex]).substring(startSegmentOffset, startSegmentOffset + startSegmentLength);
             break;
           case SegmentedWriter.TYPE_CHAR_NEWLINE :
             assert startSegmentOffset == 0;
@@ -440,7 +440,7 @@ public class SegmentedResult implements BufferResult {
           case SegmentedWriter.TYPE_CHAR_OTHER :
             assert startSegmentOffset == 0;
             assert startSegmentLength == 1;
-            toStringCache = String.valueOf(((Character)segmentValues[startSegmentIndex]).charValue());
+            toStringCache = String.valueOf(((Character) segmentValues[startSegmentIndex]).charValue());
             break;
           default :
             throw new AssertionError();
@@ -451,7 +451,7 @@ public class SegmentedResult implements BufferResult {
         if (length > Integer.MAX_VALUE) {
           throw new RuntimeException("Buffer too large to convert to String: length = " + length);
         }
-        StringBuilder buffer = new StringBuilder((int)length);
+        StringBuilder buffer = new StringBuilder((int) length);
         // First segment
         append(startSegmentIndex, startSegmentOffset, startSegmentLength, buffer);
         // Middle segments
@@ -472,10 +472,10 @@ public class SegmentedResult implements BufferResult {
     // TODO: If copying to another SegmentedWriter, we have a chance here to share segment list
     // First segment
     writeSegment(
-      startSegmentIndex,
-      startSegmentOffset,
-      startSegmentLength,
-      out
+        startSegmentIndex,
+        startSegmentOffset,
+        startSegmentLength,
+        out
     );
     if (endSegmentIndex != startSegmentIndex) {
       // Middle segments
@@ -490,10 +490,10 @@ public class SegmentedResult implements BufferResult {
       }
       // End segment
       writeSegment(
-        endSegmentIndex,
-        endSegmentOffset,
-        endSegmentLength,
-        out
+          endSegmentIndex,
+          endSegmentOffset,
+          endSegmentLength,
+          out
       );
     }
   }
@@ -512,11 +512,11 @@ public class SegmentedResult implements BufferResult {
       // TODO: If copying to another SegmentedWriter, we have a chance here to share segment list
       // First segment
       writeSegment(
-        startSegmentIndex,
-        startSegmentOffset,
-        startSegmentLength,
-        encoder,
-        out
+          startSegmentIndex,
+          startSegmentOffset,
+          startSegmentLength,
+          encoder,
+          out
       );
       if (endSegmentIndex != startSegmentIndex) {
         // Middle segments
@@ -525,11 +525,11 @@ public class SegmentedResult implements BufferResult {
         }
         // End segment
         writeSegment(
-          endSegmentIndex,
-          endSegmentOffset,
-          endSegmentLength,
-          encoder,
-          out
+            endSegmentIndex,
+            endSegmentOffset,
+            endSegmentLength,
+            encoder,
+            out
         );
       }
     }
@@ -647,8 +647,8 @@ public class SegmentedResult implements BufferResult {
       }
       // Keep this object if already trimmed
       else if (
-        start == newStart
-        && end == newEnd
+          start == newStart
+              && end == newEnd
       ) {
         _trimmed = this;
       }
@@ -657,26 +657,26 @@ public class SegmentedResult implements BufferResult {
         if (newStartSegmentIndex == newEndSegmentIndex && segmentTypes[newStartSegmentIndex] == SegmentedWriter.TYPE_STRING) {
           // StringResult for single String segment
           _trimmed = new StringResult(
-            (String)segmentValues[newStartSegmentIndex],
-            newStartSegmentOffset,
-            newStartSegmentOffset + newStartSegmentLength,
-            true
+              (String) segmentValues[newStartSegmentIndex],
+              newStartSegmentOffset,
+              newStartSegmentOffset + newStartSegmentLength,
+              true
           );
           logger.finest("StringResult optimized trim");
         } else {
           SegmentedResult newTrimmed = new SegmentedResult(
-            segmentTypes,
-            segmentValues,
-            segmentOffsets,
-            segmentLengths,
-            newStart,
-            newStartSegmentIndex,
-            newStartSegmentOffset,
-            newStartSegmentLength,
-            newEnd,
-            newEndSegmentIndex,
-            newEndSegmentOffset,
-            newEndSegmentLength
+              segmentTypes,
+              segmentValues,
+              segmentOffsets,
+              segmentLengths,
+              newStart,
+              newStartSegmentIndex,
+              newStartSegmentOffset,
+              newStartSegmentLength,
+              newEnd,
+              newEndSegmentIndex,
+              newEndSegmentOffset,
+              newEndSegmentLength
           );
           newTrimmed.trimmed.set(newTrimmed);
           _trimmed = newTrimmed;

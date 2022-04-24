@@ -83,12 +83,12 @@ public class LoggingResult implements BufferResult {
     if (writer == null) {
       log.write("null");
     } else if (writer instanceof LoggingWriter) {
-      LoggingWriter loggingWriter = (LoggingWriter)writer;
+      LoggingWriter loggingWriter = (LoggingWriter) writer;
       log.write("writer[");
       log.write(Long.toString(loggingWriter.getId()));
       log.write(']');
     } else if (writer instanceof EncoderWriter) {
-      EncoderWriter encoderWriter = (EncoderWriter)writer;
+      EncoderWriter encoderWriter = (EncoderWriter) writer;
       log.write("new EncoderWriter(");
       log(encoderWriter.getEncoder());
       log.write(", ");
@@ -113,7 +113,7 @@ public class LoggingResult implements BufferResult {
     if (appendable == null) {
       log.write("null");
     } else if (appendable instanceof Writer) {
-      log((Writer)appendable);
+      log((Writer) appendable);
     } else {
       String classname = appendable.getClass().getName();
       log.write(classname);

@@ -50,19 +50,19 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
 
   public void testBenchmarkSimulate() throws IOException {
     benchmarkSimulate(
-      new BufferWriterFactory() {
-        @Override
-        public String getName() {
-          return SegmentedWriter.class.getName();
-        }
+        new BufferWriterFactory() {
+          @Override
+          public String getName() {
+            return SegmentedWriter.class.getName();
+          }
 
-        @Override
-        public BufferWriter newBufferWriter() {
-          // To test call overhead:
-          // return NullBufferWriter.getInstance();
-          return new SegmentedWriter();
+          @Override
+          public BufferWriter newBufferWriter() {
+            // To test call overhead:
+            // return NullBufferWriter.getInstance();
+            return new SegmentedWriter();
+          }
         }
-      }
     );
   }
 

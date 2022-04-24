@@ -52,9 +52,9 @@ public class CharArrayBufferResult implements BufferResult {
    * @param buffer  No defensive copy is made and assumes the array will not change
    */
   public CharArrayBufferResult(
-    char[] buffer,
-    int start,
-    int end
+      char[] buffer,
+      int start,
+      int end
   ) {
     this.buffer = buffer;
     this.start = start;
@@ -78,8 +78,8 @@ public class CharArrayBufferResult implements BufferResult {
   @Override
   public boolean isFastToString() {
     return
-      start == end
-      || toStringCache != null;
+        start == end
+            || toStringCache != null;
   }
 
   @Override
@@ -105,9 +105,9 @@ public class CharArrayBufferResult implements BufferResult {
       throw new IndexOutOfBoundsException();
     }
     out.write(
-      buffer,
-      SafeMath.castInt(start + off),
-      SafeMath.castInt(len)
+        buffer,
+        SafeMath.castInt(start + off),
+        SafeMath.castInt(len)
     );
   }
 
@@ -117,10 +117,10 @@ public class CharArrayBufferResult implements BufferResult {
       writeTo(out);
     } else {
       encoder.write(
-        buffer,
-        start,
-        end - start,
-        out
+          buffer,
+          start,
+          end - start,
+          out
       );
     }
   }
@@ -134,10 +134,10 @@ public class CharArrayBufferResult implements BufferResult {
         throw new IndexOutOfBoundsException();
       }
       encoder.write(
-        buffer,
-        SafeMath.castInt(start + off),
-        SafeMath.castInt(len),
-        out
+          buffer,
+          SafeMath.castInt(start + off),
+          SafeMath.castInt(len),
+          out
       );
     }
   }
@@ -176,17 +176,17 @@ public class CharArrayBufferResult implements BufferResult {
       }
       // Keep this object if already trimmed
       else if (
-        start == newStart
-        && end == newEnd
+          start == newStart
+              && end == newEnd
       ) {
         _trimmed = this;
       }
       // Otherwise, return new substring
       else {
         CharArrayBufferResult newTrimmed = new CharArrayBufferResult(
-          buffer,
-          newStart,
-          newEnd
+            buffer,
+            newStart,
+            newEnd
         );
         newTrimmed.trimmed.set(newTrimmed);
         _trimmed = newTrimmed;

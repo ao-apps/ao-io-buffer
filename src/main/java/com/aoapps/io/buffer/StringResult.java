@@ -47,10 +47,10 @@ public class StringResult implements BufferResult {
 
   @SuppressWarnings("LeakingThisInConstructor")
   StringResult(
-    String buffer,
-    int start,
-    int end,
-    boolean trimmed
+      String buffer,
+      int start,
+      int end,
+      boolean trimmed
   ) {
     this.buffer = buffer;
     this.start = start;
@@ -61,9 +61,9 @@ public class StringResult implements BufferResult {
   }
 
   public StringResult(
-    String buffer,
-    int start,
-    int end
+      String buffer,
+      int start,
+      int end
   ) {
     this(buffer, start, end, false);
   }
@@ -82,9 +82,9 @@ public class StringResult implements BufferResult {
   @Override
   public boolean isFastToString() {
     return
-      start == end
-      || (start == 0 && end == buffer.length())
-      || toStringCache != null;
+        start == end
+            || (start == 0 && end == buffer.length())
+            || toStringCache != null;
   }
 
   @Override
@@ -112,9 +112,9 @@ public class StringResult implements BufferResult {
       throw new IndexOutOfBoundsException();
     }
     out.write(
-      buffer,
-      SafeMath.castInt(start + off),
-      SafeMath.castInt(len)
+        buffer,
+        SafeMath.castInt(start + off),
+        SafeMath.castInt(len)
     );
   }
 
@@ -124,10 +124,10 @@ public class StringResult implements BufferResult {
       writeTo(out);
     } else {
       encoder.write(
-        buffer,
-        start,
-        end - start,
-        out
+          buffer,
+          start,
+          end - start,
+          out
       );
     }
   }
@@ -141,10 +141,10 @@ public class StringResult implements BufferResult {
         throw new IndexOutOfBoundsException();
       }
       encoder.write(
-        buffer,
-        SafeMath.castInt(start + off),
-        SafeMath.castInt(len),
-        out
+          buffer,
+          SafeMath.castInt(start + off),
+          SafeMath.castInt(len),
+          out
       );
     }
   }
@@ -183,18 +183,18 @@ public class StringResult implements BufferResult {
       }
       // Keep this object if already trimmed
       else if (
-        start == newStart
-        && end == newEnd
+          start == newStart
+              && end == newEnd
       ) {
         _trimmed = this;
       }
       // Otherwise, return new substring
       else {
         _trimmed = new StringResult(
-          buffer,
-          newStart,
-          newEnd,
-          true
+            buffer,
+            newStart,
+            newEnd,
+            true
         );
       }
       if (!this.trimmed.compareAndSet(null, _trimmed)) {

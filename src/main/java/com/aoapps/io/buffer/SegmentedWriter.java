@@ -51,11 +51,11 @@ public class SegmentedWriter extends BufferWriter {
    * The set of internal types supported.
    */
   static final byte
-    TYPE_STRING = 1,
-    TYPE_CHAR_NEWLINE = 2,
-    TYPE_CHAR_QUOTE = 3,
-    TYPE_CHAR_APOS = 4,
-    TYPE_CHAR_OTHER = 5
+      TYPE_STRING = 1,
+      TYPE_CHAR_NEWLINE = 2,
+      TYPE_CHAR_QUOTE = 3,
+      TYPE_CHAR_APOS = 4,
+      TYPE_CHAR_OTHER = 5
   ;
 
   /**
@@ -132,7 +132,7 @@ public class SegmentedWriter extends BufferWriter {
     if (isClosed) {
       throw new ClosedChannelException();
     }
-    char ch = (char)c;
+    char ch = (char) c;
     switch (ch) {
       case '\n' :
         addSegment(TYPE_CHAR_NEWLINE, null, 0, 1);
@@ -160,10 +160,10 @@ public class SegmentedWriter extends BufferWriter {
         write(cbuf[0]);
       } else {
         addSegment(
-          TYPE_STRING,
-          new String(cbuf),
-          0,
-          len
+            TYPE_STRING,
+            new String(cbuf),
+            0,
+            len
         );
         length += len;
       }
@@ -180,10 +180,10 @@ public class SegmentedWriter extends BufferWriter {
         write(cbuf[off]);
       } else {
         addSegment(
-          TYPE_STRING,
-          new String(cbuf, off, len),
-          0,
-          len
+            TYPE_STRING,
+            new String(cbuf, off, len),
+            0,
+            len
         );
         length += len;
       }
@@ -306,22 +306,22 @@ public class SegmentedWriter extends BufferWriter {
               break;
             default :
               if (
-                ch <= 127 // Always cached
-                || !(csq instanceof String) // Use Character for all non-Strings
+                  ch <= 127 // Always cached
+                      || !(csq instanceof String) // Use Character for all non-Strings
               ) {
                 addSegment(
-                  TYPE_CHAR_OTHER,
-                  ch,
-                  0,
-                  1
+                    TYPE_CHAR_OTHER,
+                    ch,
+                    0,
+                    1
                 );
               } else {
                 // Use offset for String
                 addSegment(
-                  TYPE_STRING,
-                  csq,
-                  start,
-                  1
+                    TYPE_STRING,
+                    csq,
+                    start,
+                    1
                 );
               }
           }
@@ -329,18 +329,18 @@ public class SegmentedWriter extends BufferWriter {
           if (csq instanceof String) {
             // Use offset for String
             addSegment(
-              TYPE_STRING,
-              csq,
-              start,
-              len
+                TYPE_STRING,
+                csq,
+                start,
+                len
             );
           } else {
             // Use subSequence().toString() for all non-Strings
             addSegment(
-              TYPE_STRING,
-              csq.subSequence(start, end).toString(),
-              0,
-              len
+                TYPE_STRING,
+                csq.subSequence(start, end).toString(),
+                0,
+                len
             );
           }
         }
@@ -401,7 +401,7 @@ public class SegmentedWriter extends BufferWriter {
 
   @Override
   public String toString() {
-    return "SegmentedWriter(length=" + length + ", count=" + segmentCount + ", capacity=" + segmentValues.length +")";
+    return "SegmentedWriter(length=" + length + ", count=" + segmentCount + ", capacity=" + segmentValues.length + ")";
   }
 
   // The result is cached after first created
@@ -420,7 +420,7 @@ public class SegmentedWriter extends BufferWriter {
         assert segmentCount > 0 : "When not empty and using segments, must have at least one segment";
         if (segmentCount == 1 && segmentTypes[0] == TYPE_STRING) {
           // StringResult for single String segment
-          String str = (String)segmentValues[0];
+          String str = (String) segmentValues[0];
           int off = segmentOffsets[0];
           int len = segmentLengths[0];
           assert len == length;
@@ -429,18 +429,18 @@ public class SegmentedWriter extends BufferWriter {
         } else {
           int endSegmentIndex = segmentCount - 1;
           result = new SegmentedResult(
-            segmentTypes,
-            segmentValues,
-            segmentOffsets,
-            segmentLengths,
-            0, // start
-            0, // startSegmentIndex
-            segmentOffsets[0],
-            segmentLengths[0],
-            length, // end
-            endSegmentIndex,
-            segmentOffsets[endSegmentIndex],
-            segmentLengths[endSegmentIndex]
+              segmentTypes,
+              segmentValues,
+              segmentOffsets,
+              segmentLengths,
+              0, // start
+              0, // startSegmentIndex
+              segmentOffsets[0],
+              segmentLengths[0],
+              length, // end
+              endSegmentIndex,
+              segmentOffsets[endSegmentIndex],
+              segmentLengths[endSegmentIndex]
           );
         }
       }

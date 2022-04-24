@@ -51,9 +51,9 @@ public class TempFileResult implements BufferResult {
   private final long end;
 
   public TempFileResult(
-    TempFile tempFile,
-    long start,
-    long end
+      TempFile tempFile,
+      long start,
+      long end
   ) {
     this.tempFile = tempFile;
     this.start = start;
@@ -70,8 +70,8 @@ public class TempFileResult implements BufferResult {
   @Override
   public boolean isFastToString() {
     return
-      start == end
-      || toStringCache != null;
+        start == end
+            || toStringCache != null;
   }
 
   @Override
@@ -83,16 +83,16 @@ public class TempFileResult implements BufferResult {
         try {
           if (logger.isLoggable(Level.INFO)) {
             logger.log(
-              Level.INFO,
-              "Creating String from temp file - benefits of buffering negated.",
-              new Throwable("Stack Trace")
+                Level.INFO,
+                "Creating String from temp file - benefits of buffering negated.",
+                new Throwable("Stack Trace")
             );
           }
           final long length = end - start;
           if (length > Integer.MAX_VALUE) {
             throw new RuntimeException("Buffer too large to convert to String: length = " + length);
           }
-          StringBuilder sb = new StringBuilder((int)length);
+          StringBuilder sb = new StringBuilder((int) length);
           try (RandomAccessFile raf = new RandomAccessFile(tempFile.getFile(), "r")) {
             byte[] bytes = BufferManager.getBytes();
             try {
@@ -101,7 +101,7 @@ public class TempFileResult implements BufferResult {
               while (index < end) {
                 // Read a block
                 long blockSizeLong = (end - index) << 1;
-                int blockSize = blockSizeLong > BufferManager.BUFFER_SIZE ? BufferManager.BUFFER_SIZE : (int)blockSizeLong;
+                int blockSize = blockSizeLong > BufferManager.BUFFER_SIZE ? BufferManager.BUFFER_SIZE : (int) blockSizeLong;
                 assert (blockSize & 1) == 0 : "Must be an even number for UTF-16 conversion";
                 raf.readFully(bytes, 0, blockSize);
                 // Convert to characters in sb
@@ -141,20 +141,20 @@ public class TempFileResult implements BufferResult {
   @Override
   public void writeTo(Encoder encoder, Writer out) throws IOException {
     writeTo(
-      encoder != null
-        ? new EncoderWriter(encoder, out)
-        : out
+        encoder != null
+            ? new EncoderWriter(encoder, out)
+            : out
     );
   }
 
   @Override
   public void writeTo(Encoder encoder, Writer out, long off, long len) throws IOException {
     writeTo(
-      encoder != null
-        ? new EncoderWriter(encoder, out)
-        : out,
-      off,
-      len
+        encoder != null
+            ? new EncoderWriter(encoder, out)
+            : out,
+        off,
+        len
     );
   }
 
@@ -176,7 +176,7 @@ public class TempFileResult implements BufferResult {
           while (index < writeEnd) {
             // Read a block
             long blockSizeLong = (writeEnd - index) << 1;
-            int blockSize = blockSizeLong > BufferManager.BUFFER_SIZE ? BufferManager.BUFFER_SIZE : (int)blockSizeLong;
+            int blockSize = blockSizeLong > BufferManager.BUFFER_SIZE ? BufferManager.BUFFER_SIZE : (int) blockSizeLong;
             assert (blockSize & 1) == 0 : "Must be an even number for UTF-16 conversion";
             raf.readFully(bytes, 0, blockSize);
             // Convert to characters
@@ -225,7 +225,7 @@ public class TempFileResult implements BufferResult {
         // Skip past the ending whitespace characters
         newEnd = end;
         while (newEnd > newStart) {
-          raf.seek((newEnd-1) << 1);
+          raf.seek((newEnd - 1) << 1);
           char ch = raf.readChar();
           // TODO: Support surrogates: there are no whitespace characters outside the BMP as of Unicode 12.1, so this is not a high priority
           if (!Strings.isWhitespace(ch)) {
@@ -241,17 +241,17 @@ public class TempFileResult implements BufferResult {
       }
       // Keep this object if already trimmed
       else if (
-        start == newStart
-        && end == newEnd
+          start == newStart
+              && end == newEnd
       ) {
         _trimmed = this;
       }
       // Otherwise, return new substring
       else {
         TempFileResult newTrimmed = new TempFileResult(
-          tempFile,
-          newStart,
-          newEnd
+            tempFile,
+            newStart,
+            newEnd
         );
         newTrimmed.trimmed.set(newTrimmed);
         _trimmed = newTrimmed;

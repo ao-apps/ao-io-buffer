@@ -98,7 +98,7 @@ public class CharArrayBufferWriter extends BufferWriter {
   private char[] getBuffer(int additional) throws IOException {
     assert !isClosed;
     assert additional > 0;
-    long newLen = (long)length + additional;
+    long newLen = (long) length + additional;
     if (newLen > MAX_LENGTH) {
       throw new IOException("Maximum buffer length is " + MAX_LENGTH + ", " + newLen + " requested");
     }
@@ -112,9 +112,9 @@ public class CharArrayBufferWriter extends BufferWriter {
         newBufLen <<= 1;
       }
       char[] newBuf =
-        (newBufLen == BufferManager.BUFFER_SIZE)
-        ? BufferManager.getChars()
-        : new char[newBufLen];
+          (newBufLen == BufferManager.BUFFER_SIZE)
+              ? BufferManager.getChars()
+              : new char[newBufLen];
       if (fs == null) {
         System.arraycopy(buf, 0, newBuf, 0, length);
       }
@@ -138,7 +138,7 @@ public class CharArrayBufferWriter extends BufferWriter {
     if (isClosed) {
       throw new ClosedChannelException();
     }
-    getBuffer(1)[length++] = (char)c;
+    getBuffer(1)[length++] = (char) c;
   }
 
   @Override
@@ -183,7 +183,7 @@ public class CharArrayBufferWriter extends BufferWriter {
       write("null", start, end - start);
     } else if (csq instanceof String) {
       // Avoid subSequence which copies characters in Java 1.8+
-      write((String)csq, start, end - start);
+      write((String) csq, start, end - start);
     } else {
       write(csq.subSequence(start, end).toString(), 0, end - start);
     }
@@ -209,9 +209,9 @@ public class CharArrayBufferWriter extends BufferWriter {
     isClosed = true;
     int len = this.length;
     if (
-      len > 0
-      && len <= COPY_THEN_RECYCLE_LIMIT
-      && firstString == null
+        len > 0
+            && len <= COPY_THEN_RECYCLE_LIMIT
+            && firstString == null
     ) {
       char[] oldBuf = buffer;
       this.buffer = Arrays.copyOf(oldBuf, len);
