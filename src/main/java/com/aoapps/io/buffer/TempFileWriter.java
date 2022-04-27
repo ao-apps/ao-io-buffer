@@ -54,7 +54,7 @@ public class TempFileWriter extends BufferWriter {
    * Once closed, no further information may be written.
    * Manipulations are only active once closed.
    */
-  private boolean isClosed = false;
+  private boolean isClosed;
 
   // The temp file is in UTF16-BE encoding
   private final TempFile tempFile;

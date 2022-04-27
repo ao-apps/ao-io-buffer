@@ -64,7 +64,7 @@ public class CharArrayBufferWriter extends BufferWriter {
    * The length of the writer is the sum of the data written to the buffer.
    * Once closed, this length will not be modified.
    */
-  private int length = 0;
+  private int length;
 
   /**
    * The buffer used to capture data.
@@ -79,7 +79,7 @@ public class CharArrayBufferWriter extends BufferWriter {
    * Once closed, no further information may be written.
    * Manipulations are only active once closed.
    */
-  private boolean isClosed = false;
+  private boolean isClosed;
 
   /**
    * Keep the first string that was written, using it as the result when possible in order to maintain string identity

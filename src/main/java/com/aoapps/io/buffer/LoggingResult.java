@@ -96,9 +96,9 @@ public class LoggingResult implements BufferResult {
       log.write(')');
     } else {
       String classname = writer.getClass().getName();
-      if (classname.equals("org.apache.jasper.runtime.BodyContentImpl")) {
+      if ("org.apache.jasper.runtime.BodyContentImpl".equals(classname)) {
         log.write("bodyContent");
-      } else if (classname.equals("org.apache.jasper.runtime.JspWriterImpl")) {
+      } else if ("org.apache.jasper.runtime.JspWriterImpl".equals(classname)) {
         log.write("jspWriter");
       } else {
         log.write(classname);
