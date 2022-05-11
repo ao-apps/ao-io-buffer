@@ -69,9 +69,10 @@ public class CharArrayBufferWriter extends BufferWriter {
   /**
    * The buffer used to capture data.
    * Once closed, this buffer will not be modified.
-   *
+   * <p>
    * TODO: Consider a set of buffers to avoid copying on resize.
    *       This would also allow beyond 32-bit limit.
+   * </p>
    */
   private char[] buffer = EmptyArrays.EMPTY_CHAR_ARRAY;
 

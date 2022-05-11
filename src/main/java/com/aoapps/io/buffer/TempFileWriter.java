@@ -35,8 +35,9 @@ import java.util.logging.Logger;
 
 /**
  * Writes to a temp file buffer.
- *
+ * <p>
  * This class is not thread safe.
+ * </p>
  *
  * @author  AO Industries, Inc.
  */

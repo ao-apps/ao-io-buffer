@@ -23,11 +23,12 @@
 
 package com.aoapps.io.buffer;
 
-import com.aoapps.encoding.EncodingContext;
 import static com.aoapps.encoding.JavaScriptInXhtmlAttributeEncoder.javascriptInXhtmlAttributeEncoder;
 import static com.aoapps.encoding.JavaScriptInXhtmlEncoder.javascriptInXhtmlEncoder;
-import com.aoapps.encoding.JavaScriptWriter;
 import static com.aoapps.encoding.TextInXhtmlAttributeEncoder.textInXhtmlAttributeEncoder;
+
+import com.aoapps.encoding.EncodingContext;
+import com.aoapps.encoding.JavaScriptWriter;
 import com.aoapps.lang.io.NullWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -70,11 +71,11 @@ public class SegmentedWriterTest extends BufferWriterTestParent {
   @SuppressWarnings("deprecation")
   protected void simulateCalls(BufferWriterFactory factory, Writer out) throws IOException {
     // Assume overhead of writing to body content
-    Writer bodyContent = NullWriter.getInstance(); // TODO: out
+    final Writer bodyContent = NullWriter.getInstance(); // TODO: out
     // Assume no overhead for jsp writers?
-    Writer jspWriter = NullWriter.getInstance();
-    BufferWriter[] writer = new BufferWriter[1000];
-    BufferResult[] result = new BufferResult[1000];
+    final Writer jspWriter = NullWriter.getInstance();
+    final BufferWriter[] writer = new BufferWriter[1000];
+    final BufferResult[] result = new BufferResult[1000];
     // The rest is from LoggingWriter (See EncodingBufferedTag)
     writer[1] = factory.newBufferWriter();
     writer[1].write("Select Domains", 0, 14);

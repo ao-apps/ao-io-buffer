@@ -31,8 +31,9 @@ import java.util.logging.Logger;
 
 /**
  * Writes to an initial buffer then switches to a temp file when the threshold is reached.
- *
+ * <p>
  * This class is not thread safe.
+ * </p>
  *
  * @author  AO Industries, Inc.
  */

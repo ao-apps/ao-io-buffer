@@ -30,11 +30,13 @@ import java.util.logging.Logger;
 /**
  * Buffers all writes in segments.  This is to hold references to strings instead
  * of copying all the characters.
- *
+ * <p>
  * This class is not thread safe.
- *
+ * </p>
+ * <p>
  * Future: If writing to another segmented buffer, the segments could be shared between
  * the two instances. (or arraycopy instead of writing each)
+ * </p>
  *
  * @author  AO Industries, Inc.
  */
@@ -48,15 +50,29 @@ public class SegmentedWriter extends BufferWriter {
   private static final int START_LEN = 16;
 
   /**
-   * The set of internal types supported.
+   * The set of internal types supported: {@link String}.
    */
-  static final byte
-      TYPE_STRING = 1,
-      TYPE_CHAR_NEWLINE = 2,
-      TYPE_CHAR_QUOTE = 3,
-      TYPE_CHAR_APOS = 4,
-      TYPE_CHAR_OTHER = 5
-  ;
+  static final byte TYPE_STRING = 1;
+
+  /**
+   * The set of internal types supported: {@code '\n'}.
+   */
+  static final byte TYPE_CHAR_NEWLINE = 2;
+
+  /**
+   * The set of internal types supported: {@code '"'}.
+   */
+  static final byte TYPE_CHAR_QUOTE = 3;
+
+  /**
+   * The set of internal types supported: {@code '\''}.
+   */
+  static final byte TYPE_CHAR_APOS = 4;
+
+  /**
+   * The set of internal types supported: Any other {@code char}.
+   */
+  static final byte TYPE_CHAR_OTHER = 5;
 
   /**
    * The length of the writer is the sum of the length of all its segments.
@@ -134,16 +150,16 @@ public class SegmentedWriter extends BufferWriter {
     }
     char ch = (char) c;
     switch (ch) {
-      case '\n' :
+      case '\n':
         addSegment(TYPE_CHAR_NEWLINE, null, 0, 1);
         break;
-      case '\'' :
+      case '\'':
         addSegment(TYPE_CHAR_APOS, null, 0, 1);
         break;
-      case '"' :
+      case '"':
         addSegment(TYPE_CHAR_QUOTE, null, 0, 1);
         break;
-      default :
+      default:
         addSegment(TYPE_CHAR_OTHER, ch, 0, 1);
     }
     length++;
@@ -200,16 +216,16 @@ public class SegmentedWriter extends BufferWriter {
       if (len == 1) {
         // Prefer character shortcuts
         switch (str.charAt(0)) {
-          case '\n' :
+          case '\n':
             addSegment(TYPE_CHAR_NEWLINE, null, 0, 1);
             break;
-          case '\'' :
+          case '\'':
             addSegment(TYPE_CHAR_APOS, null, 0, 1);
             break;
-          case '"' :
+          case '"':
             addSegment(TYPE_CHAR_QUOTE, null, 0, 1);
             break;
-          default :
+          default:
             addSegment(TYPE_STRING, str, 0, 1);
         }
       } else {
@@ -228,16 +244,16 @@ public class SegmentedWriter extends BufferWriter {
       if (len == 1) {
         // Prefer character shortcuts
         switch (str.charAt(off)) {
-          case '\n' :
+          case '\n':
             addSegment(TYPE_CHAR_NEWLINE, null, 0, 1);
             break;
-          case '\'' :
+          case '\'':
             addSegment(TYPE_CHAR_APOS, null, 0, 1);
             break;
-          case '"' :
+          case '"':
             addSegment(TYPE_CHAR_QUOTE, null, 0, 1);
             break;
-          default :
+          default:
             addSegment(TYPE_STRING, str, off, 1);
         }
       } else {
@@ -260,16 +276,16 @@ public class SegmentedWriter extends BufferWriter {
         if (len == 1) {
           // Prefer character shortcuts
           switch (csq.charAt(0)) {
-            case '\n' :
+            case '\n':
               addSegment(TYPE_CHAR_NEWLINE, null, 0, 1);
               break;
-            case '\'' :
+            case '\'':
               addSegment(TYPE_CHAR_APOS, null, 0, 1);
               break;
-            case '"' :
+            case '"':
               addSegment(TYPE_CHAR_QUOTE, null, 0, 1);
               break;
-            default :
+            default:
               addSegment(TYPE_STRING, csq.toString(), 0, 1);
           }
         } else {
@@ -295,16 +311,16 @@ public class SegmentedWriter extends BufferWriter {
           // Prefer character shortcuts
           char ch = csq.charAt(start);
           switch (ch) {
-            case '\n' :
+            case '\n':
               addSegment(TYPE_CHAR_NEWLINE, null, 0, 1);
               break;
-            case '\'' :
+            case '\'':
               addSegment(TYPE_CHAR_APOS, null, 0, 1);
               break;
-            case '"' :
+            case '"':
               addSegment(TYPE_CHAR_QUOTE, null, 0, 1);
               break;
-            default :
+            default:
               if (
                   ch <= 127 // Always cached
                       || !(csq instanceof String) // Use Character for all non-Strings
@@ -356,16 +372,16 @@ public class SegmentedWriter extends BufferWriter {
       throw new ClosedChannelException();
     }
     switch (c) {
-      case '\n' :
+      case '\n':
         addSegment(TYPE_CHAR_NEWLINE, null, 0, 1);
         break;
-      case '\'' :
+      case '\'':
         addSegment(TYPE_CHAR_APOS, null, 0, 1);
         break;
-      case '"' :
+      case '"':
         addSegment(TYPE_CHAR_QUOTE, null, 0, 1);
         break;
-      default :
+      default:
         addSegment(TYPE_CHAR_OTHER, c, 0, 1);
     }
     length++;
@@ -386,8 +402,7 @@ public class SegmentedWriter extends BufferWriter {
       segmentTypes.length * Byte.SIZE
       + segmentValues.length * 8 // assume 64-bit data for worst-case numbers
       + segmentOffsets.length * Integer.SIZE
-      + segmentLengths.length * Integer.SIZE
-    ;
+      + segmentLengths.length * Integer.SIZE;
     if (heap > biggest) {
       biggest = heap;
       System.err.println("SegmentedWriter: Biggest heap: " + biggest);

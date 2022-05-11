@@ -32,8 +32,9 @@ import java.io.Writer;
 /**
  * Logs all write calls in a way that can be put into Java source code.
  * This is used to capture real-world scenarios for unit testing.
- *
+ * <p>
  * This class is not thread safe.
+ * </p>
  *
  * @author  AO Industries, Inc.
  */

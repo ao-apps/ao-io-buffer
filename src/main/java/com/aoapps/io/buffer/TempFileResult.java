@@ -159,7 +159,7 @@ public class TempFileResult implements BufferResult {
   }
 
   /**
-   * Implementation of writeTo
+   * Implementation of {@link #writeTo(java.io.Writer)}.
    *
    * @param writeStart  The absolute index to write from
    * @param writeEnd    The absolute index one past last character to write
@@ -180,10 +180,9 @@ public class TempFileResult implements BufferResult {
             assert (blockSize & 1) == 0 : "Must be an even number for UTF-16 conversion";
             raf.readFully(bytes, 0, blockSize);
             // Convert to characters
-            for (
-              int bpos = 0, cpos = 0;
-              bpos < blockSize;
-              bpos += 2, cpos++
+            for (int bpos = 0, cpos = 0;
+                bpos < blockSize;
+                bpos += 2, cpos++
             ) {
               chars[cpos] = IoUtils.bufferToChar(bytes, bpos);
             }
@@ -205,8 +204,8 @@ public class TempFileResult implements BufferResult {
 
   @Override
   public BufferResult trim() throws IOException {
-    BufferResult _trimmed = this.trimmed.get();
-    if (_trimmed == null) {
+    BufferResult myTrimmed = this.trimmed.get();
+    if (myTrimmed == null) {
       // Trim from temp file
       long newStart;
       long newEnd;
@@ -236,30 +235,28 @@ public class TempFileResult implements BufferResult {
       }
       // Check if empty
       if (newStart == newEnd) {
-        _trimmed = EmptyResult.getInstance();
+        myTrimmed = EmptyResult.getInstance();
         logger.finest("EmptyResult optimized trim");
-      }
-      // Keep this object if already trimmed
-      else if (
+      } else if (
+          // Keep this object if already trimmed
           start == newStart
               && end == newEnd
       ) {
-        _trimmed = this;
-      }
-      // Otherwise, return new substring
-      else {
+        myTrimmed = this;
+      } else {
+        // Otherwise, return new substring
         TempFileResult newTrimmed = new TempFileResult(
             tempFile,
             newStart,
             newEnd
         );
         newTrimmed.trimmed.set(newTrimmed);
-        _trimmed = newTrimmed;
+        myTrimmed = newTrimmed;
       }
-      if (!this.trimmed.compareAndSet(null, _trimmed)) {
-        _trimmed = this.trimmed.get();
+      if (!this.trimmed.compareAndSet(null, myTrimmed)) {
+        myTrimmed = this.trimmed.get();
       }
     }
-    return _trimmed;
+    return myTrimmed;
   }
 }

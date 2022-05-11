@@ -146,8 +146,8 @@ public class CharArrayBufferResult implements BufferResult {
 
   @Override
   public BufferResult trim() {
-    BufferResult _trimmed = this.trimmed.get();
-    if (_trimmed == null) {
+    BufferResult myTrimmed = this.trimmed.get();
+    if (myTrimmed == null) {
       int newStart = this.start;
       final char[] buf = buffer;
       // Skip past the beginning whitespace characters
@@ -171,30 +171,28 @@ public class CharArrayBufferResult implements BufferResult {
       }
       // Check if empty
       if (newStart == newEnd) {
-        _trimmed = EmptyResult.getInstance();
+        myTrimmed = EmptyResult.getInstance();
         logger.finest("EmptyResult optimized trim");
-      }
-      // Keep this object if already trimmed
-      else if (
+      } else if (
+          // Keep this object if already trimmed
           start == newStart
               && end == newEnd
       ) {
-        _trimmed = this;
-      }
-      // Otherwise, return new substring
-      else {
+        myTrimmed = this;
+      } else {
+        // Otherwise, return new substring
         CharArrayBufferResult newTrimmed = new CharArrayBufferResult(
             buffer,
             newStart,
             newEnd
         );
         newTrimmed.trimmed.set(newTrimmed);
-        _trimmed = newTrimmed;
+        myTrimmed = newTrimmed;
       }
-      if (!this.trimmed.compareAndSet(null, _trimmed)) {
-        _trimmed = this.trimmed.get();
+      if (!this.trimmed.compareAndSet(null, myTrimmed)) {
+        myTrimmed = this.trimmed.get();
       }
     }
-    return _trimmed;
+    return myTrimmed;
   }
 }

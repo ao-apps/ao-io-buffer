@@ -283,27 +283,27 @@ public class LoggingResult implements BufferResult {
 
   @Override
   public LoggingResult trim() throws IOException {
-    LoggingResult _trimmed = this.trimmed.get();
-    if (_trimmed == null) {
+    LoggingResult myTrimmed = this.trimmed.get();
+    if (myTrimmed == null) {
       BufferResult wrappedTrimmed = wrapped.trim();
       if (wrappedTrimmed == wrapped) {
-        _trimmed = this;
+        myTrimmed = this;
       } else {
-        _trimmed = new LoggingResult(wrappedTrimmed, log);
-        _trimmed.trimmed.set(_trimmed);
+        myTrimmed = new LoggingResult(wrappedTrimmed, log);
+        myTrimmed.trimmed.set(myTrimmed);
       }
-      if (!this.trimmed.compareAndSet(null, _trimmed)) {
-        _trimmed = this.trimmed.get();
+      if (!this.trimmed.compareAndSet(null, myTrimmed)) {
+        myTrimmed = this.trimmed.get();
       }
       synchronized (this) {
         log.write("result[");
-        log.write(Long.toString(_trimmed.id));
+        log.write(Long.toString(myTrimmed.id));
         log.write("] = result[");
         log.write(Long.toString(id));
         log.write("].trim();\n");
         log.flush();
       }
     }
-    return _trimmed;
+    return myTrimmed;
   }
 }
