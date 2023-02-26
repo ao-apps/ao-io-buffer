@@ -22,7 +22,7 @@ Output buffering library.
 * [Project Home](https://oss.aoapps.com/io-buffer/)
 * [Changelog](https://oss.aoapps.com/io-buffer/changelog)
 * [API Docs](https://oss.aoapps.com/io-buffer/apidocs/)
-* [Maven Central Repository](https://search.maven.org/artifact/com.aoapps/ao-io-buffer)
+* [Maven Central Repository](https://central.sonatype.com/search?namespace=com.aoapps&q=a%3Aao-io-buffer)
 * [GitHub](https://github.com/ao-apps/ao-io-buffer)
 
 ## Contact Us
