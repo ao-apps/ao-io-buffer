@@ -157,6 +157,16 @@ along with ao-io-buffer.  If not, see <https://www.gnu.org/licenses/>.
           <failOnError>false</failOnError>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.jacoco</groupId><artifactId>jacoco-maven-plugin</artifactId>
+        <configuration>
+          <!-- Avoid org.jacoco.agent.rt.internal_4a7f17c.asm.MethodTooLargeException -->
+          <excludes>
+            <exclude>com/aoapps/io/buffer/CharArrayBufferWriterTest</exclude>
+            <exclude>com/aoapps/io/buffer/SegmentedWriterTest</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 
