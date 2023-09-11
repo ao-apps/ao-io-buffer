@@ -52,7 +52,7 @@ public class AutoTempFileWriter extends BufferWriter {
   private BufferWriter buffer;
 
   /**
-   * Flags that we are currently writing to a temp file.
+   * Flags that we are still storing in memory (not yet writing to a temp file).
    */
   private boolean isInitialBuffer;
 
