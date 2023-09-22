@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2012, 2013, 2015, 2016, 2020, 2021, 2022  AO Industries, Inc.
+ * Copyright (C) 2012, 2013, 2015, 2016, 2020, 2021, 2022, 2023  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -5114,7 +5114,7 @@ public class CharArrayBufferWriterTest extends BufferWriterTestParent {
     writer[249] = factory.newBufferWriter();
     writer[249].write("\n", 0, 1);
     writer[249].write("      var _gaq = _gaq || [];\n", 0, 26);
-    writer[249].write("      _gaq.push(['_setAccount', 'UA-16755233-1']);\n", 0, 48);
+    writer[249].write("      _gaq.push(['_setAccount', 'UA-XXXXXXXX-X']);\n", 0, 48);
     writer[249].write("      _gaq.push(['_trackPageview']);\n", 0, 34);
     writer[249].write("\n", 0, 1);
     writer[249].write("      (function() {\n", 0, 17);
