@@ -275,11 +275,11 @@ along with ao-io-buffer.  If not, see <https://www.gnu.org/licenses/>.
         <groupId>com.aoapps</groupId><artifactId>ao-hodgepodge</artifactId><version>5.2.0${POST-SNAPSHOT}</version>
       </dependency>
       <dependency>
-        <groupId>org.hamcrest</groupId><artifactId>hamcrest</artifactId><version>2.2</version>
+        <groupId>org.hamcrest</groupId><artifactId>hamcrest</artifactId><version>3.0</version>
       </dependency>
       <dependency>
         <!-- Shim for junit 4.13.2 -->
-        <groupId>org.hamcrest</groupId><artifactId>hamcrest-core</artifactId><version>2.2</version>
+        <groupId>org.hamcrest</groupId><artifactId>hamcrest-core</artifactId><version>3.0</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
