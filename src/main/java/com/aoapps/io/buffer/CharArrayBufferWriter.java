@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2010, 2011, 2012, 2013, 2015, 2016, 2017, 2019, 2020, 2021, 2022  AO Industries, Inc.
+ * Copyright (C) 2010, 2011, 2012, 2013, 2015, 2016, 2017, 2019, 2020, 2021, 2022, 2024  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -32,14 +32,12 @@ import java.util.logging.Logger;
 
 /**
  * Writes to a set of internally managed buffers.  When possible, the buffers are reused.
- * <p>
- * Maximum length is 2 ^ 30 characters (about 1 billion).
+ *
+ * <p>Maximum length is 2 ^ 30 characters (about 1 billion).
  * When this limit is insufficient, consider using along with
- * {@link AutoTempFileWriter}.
- * </p>
- * <p>
- * This class is not thread safe.
- * </p>
+ * {@link AutoTempFileWriter}.</p>
+ *
+ * <p>This class is not thread safe.</p>
  *
  * @see  SegmentedWriter  for a possibly more efficient implementation.
  *
@@ -69,10 +67,9 @@ public class CharArrayBufferWriter extends BufferWriter {
   /**
    * The buffer used to capture data.
    * Once closed, this buffer will not be modified.
-   * <p>
-   * TODO: Consider a set of buffers to avoid copying on resize.
-   *       This would also allow beyond 32-bit limit.
-   * </p>
+   *
+   * <p>TODO: Consider a set of buffers to avoid copying on resize.
+   *       This would also allow beyond 32-bit limit.</p>
    */
   private char[] buffer = EmptyArrays.EMPTY_CHAR_ARRAY;
 

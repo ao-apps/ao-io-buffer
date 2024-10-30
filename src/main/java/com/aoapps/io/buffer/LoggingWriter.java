@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2013, 2015, 2016, 2020, 2021, 2022  AO Industries, Inc.
+ * Copyright (C) 2013, 2015, 2016, 2020, 2021, 2022, 2024  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -32,9 +32,8 @@ import java.io.Writer;
 /**
  * Logs all write calls in a way that can be put into Java source code.
  * This is used to capture real-world scenarios for unit testing.
- * <p>
- * This class is not thread safe.
- * </p>
+ *
+ * <p>This class is not thread safe.</p>
  *
  * @author  AO Industries, Inc.
  */
