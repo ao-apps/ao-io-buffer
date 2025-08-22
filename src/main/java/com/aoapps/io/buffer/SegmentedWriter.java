@@ -391,7 +391,7 @@ public class SegmentedWriter extends BufferWriter {
     // Nothing to do
   }
 
-  //private static long biggest = 0;
+  // private static long biggest = 0;
   @Override
   public void close() {
     isClosed = true;
