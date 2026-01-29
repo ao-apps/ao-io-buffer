@@ -159,7 +159,7 @@ public class TempFileResult implements BufferResult {
   }
 
   /**
-   * Implementation of {@link #writeTo(java.io.Writer)}.
+   * Implementation of {@link TempFileResult#writeTo(java.io.Writer)}.
    *
    * @param writeStart  The absolute index to write from
    * @param writeEnd    The absolute index one past last character to write

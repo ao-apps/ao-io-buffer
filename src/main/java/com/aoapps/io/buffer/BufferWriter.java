@@ -47,7 +47,7 @@ public abstract class BufferWriter extends Writer {
   /**
    * Gets a short message (like type and length).
    *
-   * @see  #getResult()  To get access to the buffered content.
+   * @see  BufferWriter#getResult()  To get access to the buffered content.
    */
   @Override
   public abstract String toString();
