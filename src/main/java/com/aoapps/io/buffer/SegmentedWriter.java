@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2013, 2014, 2015, 2016, 2019, 2020, 2021, 2022, 2024  AO Industries, Inc.
+ * Copyright (C) 2013, 2014, 2015, 2016, 2019, 2020, 2021, 2022, 2024, 2026  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -395,16 +395,15 @@ public class SegmentedWriter extends BufferWriter {
   @Override
   public void close() {
     isClosed = true;
-    /*
-    long heap =
-      segmentTypes.length * Byte.SIZE
-      + segmentValues.length * 8 // assume 64-bit data for worst-case numbers
-      + segmentOffsets.length * Integer.SIZE
-      + segmentLengths.length * Integer.SIZE;
-    if (heap > biggest) {
-      biggest = heap;
-      System.err.println("SegmentedWriter: Biggest heap: " + biggest);
-    }*/
+    // long heap =
+    //   segmentTypes.length * Byte.SIZE
+    //   + segmentValues.length * 8 // assume 64-bit data for worst-case numbers
+    //   + segmentOffsets.length * Integer.SIZE
+    //   + segmentLengths.length * Integer.SIZE;
+    // if (heap > biggest) {
+    //   biggest = heap;
+    //   System.err.println("SegmentedWriter: Biggest heap: " + biggest);
+    // }
   }
 
   @Override

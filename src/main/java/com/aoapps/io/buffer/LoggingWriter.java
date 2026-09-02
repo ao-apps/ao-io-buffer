@@ -1,6 +1,6 @@
 /*
  * ao-io-buffer - Output buffering library.
- * Copyright (C) 2013, 2015, 2016, 2020, 2021, 2022, 2024  AO Industries, Inc.
+ * Copyright (C) 2013, 2015, 2016, 2020, 2021, 2022, 2024, 2026  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -150,21 +150,19 @@ public class LoggingWriter extends BufferWriter {
     log.write("].write(");
     log(new String(cbuf));
     log.write(".toCharArray());\n");
-    /*
-    log.write("writer[");
-    log.write(Long.toString(id));
-    log.write("].write(new char[] {");
-    for (int i = 0, end = cbuf.length; i < end; i++) {
-      if ((i % 50) == 0) {
-        log.write("\n    ");
-      }
-      if (i > 0) {
-        log.write(',');
-      }
-      log(cbuf[i]);
-    }
-    log.write("\n});\n");
-    */
+    // log.write("writer[");
+    // log.write(Long.toString(id));
+    // log.write("].write(new char[] {");
+    // for (int i = 0, end = cbuf.length; i < end; i++) {
+    //   if ((i % 50) == 0) {
+    //     log.write("\n    ");
+    //   }
+    //   if (i > 0) {
+    //     log.write(',');
+    //   }
+    //   log(cbuf[i]);
+    // }
+    // log.write("\n});\n");
     log.flush();
     wrapped.write(cbuf);
   }
@@ -180,25 +178,23 @@ public class LoggingWriter extends BufferWriter {
     log.write(", ");
     log.write(Integer.toString(len));
     log.write(");\n");
-    /*
-    log.write("writer[");
-    log.write(Long.toString(id));
-    log.write("].write(new char[] {");
-    for (int i = 0, end = off + len; i < end; i++) {
-      if ((i % 50) == 0) {
-        log.write("\n    ");
-      }
-      if (i > 0) {
-        log.write(',');
-      }
-      log(cbuf[i]);
-    }
-    log.write("\n}, ");
-    log.write(Integer.toString(off));
-    log.write(", ");
-    log.write(Integer.toString(len));
-    log.write(");\n");
-    */
+    // log.write("writer[");
+    // log.write(Long.toString(id));
+    // log.write("].write(new char[] {");
+    // for (int i = 0, end = off + len; i < end; i++) {
+    //   if ((i % 50) == 0) {
+    //     log.write("\n    ");
+    //   }
+    //   if (i > 0) {
+    //     log.write(',');
+    //   }
+    //   log(cbuf[i]);
+    // }
+    // log.write("\n}, ");
+    // log.write(Integer.toString(off));
+    // log.write(", ");
+    // log.write(Integer.toString(len));
+    // log.write(");\n");
     log.flush();
     wrapped.write(cbuf, off, len);
   }
